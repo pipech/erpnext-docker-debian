@@ -5,11 +5,11 @@ RUN apt-get -y update \
     && apt-get -y install \
     build-essential \
     python-setuptools \
-	curl \
+    curl \
     wget \
     nano \
     sudo \
-	supervisor
+    supervisor
 
 # add users without sudo password
 ENV systemUser=frappe
