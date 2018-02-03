@@ -54,7 +54,7 @@ RUN  sudo service mysql start \
     --mariadb-root-password $mysqlPass  \
     --admin-password $adminPass \
     # install erpnext
-    && bench get-app erpnext $erpnextRepo \
+    && bench get-app erpnext $erpnextRepo --branch $branch \
     && bench --site $siteName install-app erpnext \
     # switch to master branch
     && bench switch-to-branch $branch \
