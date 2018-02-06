@@ -5,24 +5,36 @@ services:
     image: mariadb:10.2.12
     deploy:
       replicas: 1
-    restart: always
     environment:
-      - MYSQL_USER=root
-      - MYSQL_ROOT_PASSWORD=123
+      - MYSQL_USER="/run/secrets/MYSQL_USER"
+      - MYSQL_ROOT_PASSWORD="/run/secrets/MYSQL_ROOT_PASSWORD"
+    secrets:
+      - MYSQL_USER
+      - MYSQL_ROOT_PASSWORD
     configs:
-      - source: mysql-conf
+      - source: mariadb-conf
         target: /etc/mysql/conf.d/mariadb.cnf
     volumes:
-      # storage
       - db-volumes:/var/lib/mysql
     ports:
       - "3307:3306"
+
+  nginx:
+    image: nginx:1.12.2
+    deploy:
+      replicas: 1
+    configs:
+      - source: nginx-conf
+        target: /etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+    volumes:
+      - frappe-volumes:/home/frappe/bench
 
   redis-cache:
     image: redis:alpine
     deploy:
       replicas: 1
-    restart: always
     configs:
       - source: redis-cache-conf
         target: /etc/conf.d/redis.conf
@@ -32,7 +44,6 @@ services:
     image: redis:alpine
     deploy:
       replicas: 1
-    restart: always
     configs:
       - source: redis-queue-conf
         target: /etc/conf.d/redis.conf
@@ -42,37 +53,17 @@ services:
     image: redis:alpine
     deploy:
       replicas: 1
-    restart: always
     configs:
       - source: redis-socketio-conf
         target: /etc/conf.d/redis.conf
     command: ["redis-server","/etc/conf.d/redis.conf"]
 
-  nginx:
-    image: nginx:1.12.2
-    deploy:
-      replicas: 1
-    restart: always
-    configs:
-      - source: nginx-conf
-        target: /etc/nginx/conf.d/default.conf
-    ports:
-      - "80:80"
-    volumes:
-      # shared
-      - frappe-volumes:/home/frappe/bench
-
   frappe:
     image: pipech/erpnext_debian:latest
     deploy:
-      replicas: 1
-    restart: always
     ports:
-      # webserver_port
       - "8000:8000"
-      # socketio_port
       - "9000:9000"
-      # file_watcher_port
       - "6787:6787"
     volumes:
       # config
@@ -89,13 +80,19 @@ volumes:
   db-volumes:
 
 configs:
+  mariadb-conf:
+    file: ./conf/mariadb-conf/mariadb.cnf
+  nginx-conf:
+    file: ./conf/nginx-conf/nginx.conf
   redis-cache-conf:
     file: ./conf/redis-conf/redis_cache.conf
   redis-queue-conf:
     file: ./conf/redis-conf/redis_queue.conf
   redis-socketio-conf:
     file: ./conf/redis-conf/redis_socketio.conf
-  nginx-conf:
-    file: ./conf/nginx-conf/nginx.conf
-  mysql-conf:
-    file: ./conf/mariadb-conf/mariadb.cnf
+
+secrets:
+  MYSQL_USER:
+    external: true
+  MYSQL_ROOT_PASSWORD:
+    external: true
