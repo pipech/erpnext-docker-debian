@@ -1,26 +1,27 @@
 # MariaDB-specific config file.
 # Read by /etc/mysql/my.cnf
 
+
+[mysql]
+default-character-set = utf8mb4
+
+
 [client]
 # Default is Latin1, if you need UTF-8 set this (also in server section)
 #default-character-set = utf8
 
+
 [mysqld]
-#
-# * Character sets
-#
+# Character sets
 # Default is Latin1, if you need UTF-8 set all this (also in client section)
-#
 #character-set-server  = utf8
 #collation-server      = utf8_general_ci
-#character_set_server   = utf8
-#collation_server       = utf8_general_ci
+
 # Import all .cnf files from configuration directory
-bind-address = 0.0.0.0
 !includedir /etc/mysql/mariadb.conf.d/
 
+bind-address = 0.0.0.0
 
-[mysqld]
 innodb-file-format=barracuda
 innodb-file-per-table=1
 innodb-large-prefix=1
@@ -28,5 +29,13 @@ character-set-client-handshake = FALSE
 character-set-server = utf8mb4
 collation-server = utf8mb4_unicode_ci
 
-[mysql]
-default-character-set = utf8mb4
+
+[mysqld_safe]
+skip_log_error
+syslog
+
+
+[mysqldump]
+quick
+quote-names
+max_allowed_packet	= 16M

@@ -1,0 +1,101 @@
+version: '3.3'
+services:
+
+  mariadb:
+    image: mariadb:10.2.12
+    deploy:
+      replicas: 1
+    restart: always
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=123
+    configs:
+      - source: mysql-conf
+        target: /etc/mysql/conf.d/mariadb.cnf
+    volumes:
+      # storage
+      - db-volumes:/var/lib/mysql
+    ports:
+      - "3307:3306"
+
+  redis-cache:
+    image: redis:alpine
+    deploy:
+      replicas: 1
+    restart: always
+    configs:
+      - source: redis-cache-conf
+        target: /etc/conf.d/redis.conf
+    command: ["redis-server","/etc/conf.d/redis.conf"]
+
+  redis-queue:
+    image: redis:alpine
+    deploy:
+      replicas: 1
+    restart: always
+    configs:
+      - source: redis-queue-conf
+        target: /etc/conf.d/redis.conf
+    command: ["redis-server","/etc/conf.d/redis.conf"]
+
+  redis-socketio:
+    image: redis:alpine
+    deploy:
+      replicas: 1
+    restart: always
+    configs:
+      - source: redis-socketio-conf
+        target: /etc/conf.d/redis.conf
+    command: ["redis-server","/etc/conf.d/redis.conf"]
+
+  nginx:
+    image: nginx:1.12.2
+    deploy:
+      replicas: 1
+    restart: always
+    configs:
+      - source: nginx-conf
+        target: /etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+    volumes:
+      # shared
+      - frappe-volumes:/home/frappe/bench
+
+  frappe:
+    image: pipech/erpnext_debian:latest
+    deploy:
+      replicas: 1
+    restart: always
+    ports:
+      # webserver_port
+      - "8000:8000"
+      # socketio_port
+      - "9000:9000"
+      # file_watcher_port
+      - "6787:6787"
+    volumes:
+      # config
+      - ./conf/frappe-docker-conf/supervisor.conf:/etc/supervisor/conf.d/docker_supervisor.conf
+      - ./conf/frappe-docker-conf:/home/frappe/frappe-docker-conf
+      # shared
+      - frappe-volumes:/home/frappe/bench
+    stdin_open: true
+    tty: true
+
+volumes:
+  frappe-volumes:
+  site-volumes:
+  db-volumes:
+
+configs:
+  redis-cache-conf:
+    file: ./conf/redis-conf/redis_cache.conf
+  redis-queue-conf:
+    file: ./conf/redis-conf/redis_queue.conf
+  redis-socketio-conf:
+    file: ./conf/redis-conf/redis_socketio.conf
+  nginx-conf:
+    file: ./conf/nginx-conf/nginx.conf
+  mysql-conf:
+    file: ./conf/mariadb-conf/mariadb.cnf

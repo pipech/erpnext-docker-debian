@@ -18,7 +18,6 @@ cd ..
 
 echo "----------------------- [ config bench ] ---------------------------------"
 
-cp ~/frappe-docker-conf/Procfile_docker $benchWD/Procfile
 cp ~/frappe-docker-conf/common_site_config_docker.json $benchWD/sites/common_site_config.json
 
 bench set-mariadb-host mariadb
