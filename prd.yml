@@ -11,8 +11,6 @@ services:
     configs:
       - source: mariadb-conf
         target: /etc/mysql/conf.d/mariadb.cnf
-    volumes:
-      - db-volumes:/var/lib/mysql
     ports:
       - "3307:3306"
 
@@ -26,6 +24,7 @@ services:
     ports:
       - "80:80"
     volumes:
+      # shared volume from frappe container
       - frappe-sites-volumes:/home/frappe/bench/sites
       - frappe-apps-volumes:/home/frappe/bench/apps
 
@@ -59,15 +58,20 @@ services:
   frappe:
     image: pipech/erpnext_debian:latest
     deploy:
+      replicas: 1
+    environment:
+      - benchNewSiteName=prdsite1.local
     ports:
-      - "8000:8000"
-      - "9000:9000"
-      - "6787:6787"
+      - "8000:8000"   #webserver_port
+      - "9000:9000"   #socketio_port
+      - "6787:6787"   #file_watcher_port
+    configs:
+      - source: frappe-supervisor-conf
+        target: /etc/supervisor/conf.d/docker_supervisor.conf
     volumes:
-      # config
-      - ./conf/frappe-docker-conf/supervisor.conf:/etc/supervisor/conf.d/docker_supervisor.conf
+      # shared with host [bind mount]
       - ./conf/frappe-docker-conf:/home/frappe/frappe-docker-conf
-      # shared
+      # shared with container [volume mount,]
       - frappe-sites-volumes:/home/frappe/bench/sites
       - frappe-apps-volumes:/home/frappe/bench/apps
     stdin_open: true
@@ -76,7 +80,6 @@ services:
 volumes:
   frappe-sites-volumes:
   frappe-apps-volumes:
-  db-volumes:
 
 configs:
   mariadb-conf:
@@ -89,9 +92,5 @@ configs:
     file: ./conf/redis-conf/redis_queue.conf
   redis-socketio-conf:
     file: ./conf/redis-conf/redis_socketio.conf
-
-secrets:
-  MYSQL_USER:
-    external: true
-  MYSQL_ROOT_PASSWORD:
-    external: true
+  frappe-supervisor-conf:
+    file: ./conf/frappe-supervisor-conf/supervisor.conf
