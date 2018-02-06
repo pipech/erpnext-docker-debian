@@ -6,11 +6,8 @@ services:
     deploy:
       replicas: 1
     environment:
-      - MYSQL_USER="/run/secrets/MYSQL_USER"
-      - MYSQL_ROOT_PASSWORD="/run/secrets/MYSQL_ROOT_PASSWORD"
-    secrets:
-      - MYSQL_USER
-      - MYSQL_ROOT_PASSWORD
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=123
     configs:
       - source: mariadb-conf
         target: /etc/mysql/conf.d/mariadb.cnf
@@ -29,7 +26,8 @@ services:
     ports:
       - "80:80"
     volumes:
-      - frappe-volumes:/home/frappe/bench
+      - frappe-sites-volumes:/home/frappe/bench/sites
+      - frappe-apps-volumes:/home/frappe/bench/apps
 
   redis-cache:
     image: redis:alpine
@@ -70,13 +68,14 @@ services:
       - ./conf/frappe-docker-conf/supervisor.conf:/etc/supervisor/conf.d/docker_supervisor.conf
       - ./conf/frappe-docker-conf:/home/frappe/frappe-docker-conf
       # shared
-      - frappe-volumes:/home/frappe/bench
+      - frappe-sites-volumes:/home/frappe/bench/sites
+      - frappe-apps-volumes:/home/frappe/bench/apps
     stdin_open: true
     tty: true
 
 volumes:
-  frappe-volumes:
-  site-volumes:
+  frappe-sites-volumes:
+  frappe-apps-volumes:
   db-volumes:
 
 configs:
