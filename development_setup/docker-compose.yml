@@ -1,0 +1,18 @@
+version: '2'
+services:
+
+  frappe:
+    image: pipech/erpnext_debian:latest
+    ports:
+      - "8001:8001"   #webserver_port
+      - "9001:9001"   #socketio_port
+      - "6787:6787"   #file_watcher_port
+    volumes:
+      - ./frappe-docker-conf:/home/frappe/frappe-docker-conf
+      - ./data/bench-dev/apps:/home/frappe/bench-dev/apps
+      - ./data/bench-dev/sites:/home/frappe/bench-dev/sites
+    environment:
+      - benchDevSiteName=devsite1.local
+      - benchNewSiteAdminPass=12345
+    stdin_open: true
+    tty: true
