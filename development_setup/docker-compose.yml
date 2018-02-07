@@ -2,7 +2,7 @@ version: '2'
 services:
 
   frappe:
-    image: pipech/erpnext_debian:latest
+    image: pipech/erpnext-docker-debian:stable
     ports:
       - "8001:8001"   #webserver_port
       - "9001:9001"   #socketio_port

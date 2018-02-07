@@ -11,7 +11,7 @@ and some will be bugs.
 
 ##### Solution
 
-Using docker we can pre-build images and push it to Docker hub,
+Using docker we can pre-build images and push it to [Docker hub](https://hub.docker.com/r/pipech/erpnext-docker-debian/),
 so you will always have usable images and can choose which version you want to use.
 
 ## How to use
@@ -19,6 +19,14 @@ so you will always have usable images and can choose which version you want to u
 ### Prerequisite
 
 * [Docker](https://docs.docker.com/get-started/#conclusion-of-part-one)
+
+### Images Tags
+
+* Tag : `latest` > latest image build
+
+* Tag : `stable` > we can login and access ERPNext desk
+
+* Tag : `v10.0.20` > the higher version of ERPNext or Frappe
 
 ## Trial  Setup
 
@@ -29,7 +37,7 @@ it will run pre-build docker image from Docker hub.
 
 * Run latest erpnext_debian image from pipech Docker hub
 
-    `docker run -it -p 8000:8000 -p 9000:9000 --name test01 pipech/erpnext_debian:latest bash`
+    `docker run -it -p 8000:8000 -p 9000:9000 --name test01 pipech/erpnext-docker-debian:stable bash`
 
 * Start mysql service
     
@@ -141,3 +149,9 @@ and instead of running all service in single container we separate some and put 
 * Go to web browser and access ERPNext
 
     `http://localhost`
+
+## Contributing
+Pull requests for new features, bug fixes, and suggestions are welcome!
+
+## License
+MIT

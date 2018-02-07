@@ -56,7 +56,7 @@ services:
     command: ["redis-server","/etc/conf.d/redis.conf"]
 
   frappe:
-    image: pipech/erpnext_debian:latest
+    image: pipech/erpnext-docker-debian:stable
     deploy:
       replicas: 1
     environment:
