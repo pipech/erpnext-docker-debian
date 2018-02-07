@@ -111,7 +111,10 @@ and sites folder to host machine so you could explore the code.
 
     `docker-compose down`
     
-## Production Setup
+## ~~Production Setup~~
+
+This is not production ready, as soon as container went down docker will create new container
+and Boom!!! everything went down.
 
 In this setup we use the same ERPNext image as we use in trail setup 
 and config it to run production
