@@ -11,6 +11,8 @@ services:
     configs:
       - source: mariadb-conf
         target: /etc/mysql/conf.d/mariadb.cnf
+    volumes:
+      - mariadb-data-volumes:/var/lib/mysql
     ports:
       - "3307:3306"
 
@@ -56,7 +58,7 @@ services:
     command: ["redis-server","/etc/conf.d/redis.conf"]
 
   frappe:
-    image: pipech/erpnext-docker-debian:stable
+    image: pipech/erpnext:002
     deploy:
       replicas: 1
     environment:
@@ -65,9 +67,6 @@ services:
       - "8000:8000"   #webserver_port
       - "9000:9000"   #socketio_port
       - "6787:6787"   #file_watcher_port
-    configs:
-      - source: frappe-supervisor-conf
-        target: /etc/supervisor/conf.d/docker_supervisor.conf
     volumes:
       # shared with host [bind mount]
       - ./conf/frappe-docker-conf:/home/frappe/frappe-docker-conf
@@ -80,6 +79,7 @@ services:
 volumes:
   frappe-sites-volumes:
   frappe-apps-volumes:
+  mariadb-data-volumes:
 
 configs:
   mariadb-conf:
@@ -92,5 +92,3 @@ configs:
     file: ./conf/redis-conf/redis_queue.conf
   redis-socketio-conf:
     file: ./conf/redis-conf/redis_socketio.conf
-  frappe-supervisor-conf:
-    file: ./conf/frappe-supervisor-conf/supervisor.conf

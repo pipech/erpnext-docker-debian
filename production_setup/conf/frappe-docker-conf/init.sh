@@ -6,7 +6,11 @@ set -x
 # env has been set from dockerfile
 benchWD=/home/$systemUser/$benchName
 
+echo "----------------------- [ move to bench directory ] ---------------------------------"
 cd $benchWD
+
+echo "----------------------- [ move sites folder ] ---------------------------------"
+mv ./sites-ori/* ./sites/
 
 echo "----------------------- [ remove old site ] ---------------------------------"
 cd sites
@@ -14,7 +18,6 @@ rm -rf $siteName
 cd ..
 
 echo "----------------------- [ config bench ] ---------------------------------"
-cp ~/frappe-docker-conf/common_site_config_docker.json $benchWD/sites/common_site_config.json
 bench set-mariadb-host mariadb
 
 echo "----------------------- [ create new site ] ---------------------------------"
@@ -26,9 +29,6 @@ bench install-app erpnext
 
 echo "----------------------- [ fixed JS error ] ---------------------------------"
 bench update --build
-
-echo "----------------------- [ start supervisor ] ---------------------------------"
-sudo /usr/bin/supervisord
 
 # turn off debug mode
 set +x
