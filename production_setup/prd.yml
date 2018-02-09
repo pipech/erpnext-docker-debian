@@ -11,6 +11,8 @@ services:
     configs:
       - source: mariadb-conf
         target: /etc/mysql/conf.d/mariadb.cnf
+      - source: mariadb-init-conf
+        target: /home/init.sql
     volumes:
       - mariadb-data-volumes:/var/lib/mysql
     ports:
@@ -26,7 +28,6 @@ services:
     ports:
       - "80:80"
     volumes:
-      # shared volume from frappe container
       - frappe-sites-volumes:/home/frappe/bench/sites
       - frappe-apps-volumes:/home/frappe/bench/apps
 
@@ -67,10 +68,10 @@ services:
       - "8000:8000"   #webserver_port
       - "9000:9000"   #socketio_port
       - "6787:6787"   #file_watcher_port
+    configs:
+      - source: frappe-init-conf
+        target: /home/frappe/init.sh
     volumes:
-      # shared with host [bind mount]
-      - ./conf/frappe-docker-conf:/home/frappe/frappe-docker-conf
-      # shared with container [volume mount,]
       - frappe-sites-volumes:/home/frappe/bench/sites
       - frappe-apps-volumes:/home/frappe/bench/apps
     stdin_open: true
@@ -84,6 +85,8 @@ volumes:
 configs:
   mariadb-conf:
     file: ./conf/mariadb-conf/mariadb.cnf
+  mariadb-init-conf:
+    file: ./conf/mariadb-conf/init.sql
   nginx-conf:
     file: ./conf/nginx-conf/nginx.conf
   redis-cache-conf:
@@ -92,3 +95,5 @@ configs:
     file: ./conf/redis-conf/redis_queue.conf
   redis-socketio-conf:
     file: ./conf/redis-conf/redis_socketio.conf
+  frappe-init-conf:
+    file: ./conf/frappe-docker-conf/init.sh

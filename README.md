@@ -16,6 +16,16 @@ so you will always have usable images and can choose which version you want to u
 
 ## How to use
 
+In any command if there are `<something>` that means it just a name or container id
+you should change it to suit your environment.
+
+Example :
+
+Change this >
+`docker run -it -p 8000:8000 -p 9000:9000 --name <container_name> pipech/erpnext-docker-debian:stable bash`
+
+To this > `docker run -it -p 8000:8000 -p 9000:9000 --name anything pipech/erpnext-docker-debian:stable bash`
+
 ### Prerequisite
 
 * [Docker](https://docs.docker.com/get-started/#conclusion-of-part-one)
@@ -37,7 +47,7 @@ it will run pre-build docker image from Docker hub.
 
 * Run latest erpnext_debian image from pipech Docker hub
 
-    `docker run -it -p 8000:8000 -p 9000:9000 --name test01 pipech/erpnext-docker-debian:stable bash`
+    `docker run -it -p 8000:8000 -p 9000:9000 --name <container_name> pipech/erpnext-docker-debian:stable bash`
 
 * Start mysql service
     
@@ -61,13 +71,9 @@ it will run pre-build docker image from Docker hub.
 
     `exit`
     
-* Find frappe container id
-
-    `docker ps -a`
-    
 * Remove container
 
-    `docker rm -f frappe_container_id`
+    `docker rm -f <container_name>`
     
 ## Development Setup
 
@@ -87,7 +93,7 @@ and sites folder to host machine so you could explore the code.
 
 * Find frappe container id
 
-    `docker exec -it frappe_container_id bash`
+    `docker exec -it <frappe_container_id> bash`
     
 * Run init.sh
 
@@ -111,10 +117,7 @@ and sites folder to host machine so you could explore the code.
 
     `docker-compose down`
     
-## ~~Production Setup~~
-
-**This is not production ready, as soon as container went down docker will create new container
-and Boom!!! everything went down.**
+## Production Setup
 
 In this setup we use the same ERPNext image as we use in trail setup 
 and config it to run production
@@ -135,7 +138,7 @@ and instead of running all service in single container we separate some and put 
 
 * Deploy stack using prd.yml as prd1 stack (In production folder where prd.yml is)
 
-    `docker stack deploy -c prd.yml prd1`
+    `docker stack deploy -c prd.yml <stack_name>`
 
 * Find frappe container id
 
@@ -143,18 +146,36 @@ and instead of running all service in single container we separate some and put 
 
 * Find frappe container id
 
-    `docker exec -it frappe_container_id bash`
+    `docker exec -it <frappe_container_id> bash`
     
 * Run init.sh
 
-    `cd /home/frappe/frappe-docker-conf && . init.sh`
+    `cd .. && . init.sh`
+    
+* Exit from container
+
+    `exit`
+    
+* Restart supervisor
+
+    `docker exec -d <frappe_container_id> sudo service supervisor stop`
+    
+    `docker exec -d <frappe_container_id> sudo service supervisor start`
+
+* Config mysql
+
+    `docker exec -it <mysql_container_id> bash`
+
+    `mysql -u "root" "-p123" < "/home/init.sql"`
 
 * Go to web browser and access ERPNext
 
     `http://localhost`
 
 ## Contributing
+
 Pull requests for new features, bug fixes, and suggestions are welcome!
 
 ## License
+
 MIT
