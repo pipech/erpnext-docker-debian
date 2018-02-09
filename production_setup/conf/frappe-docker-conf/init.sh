@@ -11,6 +11,7 @@ cd $benchWD
 
 echo "----------------------- [ move sites folder ] ---------------------------------"
 mv ./sites-ori/* ./sites/
+mv ./logs-ori/* ./logs/
 
 echo "----------------------- [ remove old site ] ---------------------------------"
 cd sites

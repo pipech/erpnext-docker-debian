@@ -11,6 +11,9 @@ COPY ./conf/frappe-docker-conf/common_site_config_docker.json ./sites/common_sit
 RUN mkdir sites-ori \
     && mv ./sites/* ./sites-ori/
 
+RUN mkdir logs-ori \
+    && mv ./logs/* ./logs-ori/
+
 # copy supervisor conf
 COPY ./conf/frappe-supervisor-conf/supervisor.conf /etc/supervisor/conf.d/docker_supervisor.conf
 

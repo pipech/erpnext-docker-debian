@@ -74,12 +74,14 @@ services:
     volumes:
       - frappe-sites-volumes:/home/frappe/bench/sites
       - frappe-apps-volumes:/home/frappe/bench/apps
+      - frappe-logs-volumes:/home/frappe/bench/logs
     stdin_open: true
     tty: true
 
 volumes:
   frappe-sites-volumes:
   frappe-apps-volumes:
+  frappe-logs-volumes:
   mariadb-data-volumes:
 
 configs:
