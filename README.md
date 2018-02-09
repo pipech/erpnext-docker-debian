@@ -176,17 +176,19 @@ and instead of running all service in single container we separate some and put 
 
     `exit`
     
-* Restart supervisor
-
-    `docker exec -d <frappe_container_id> sudo service supervisor stop`
-    
-    `docker exec -d <frappe_container_id> sudo service supervisor start`
-
 * Config mysql
 
     `docker exec -it <mysql_container_id> bash`
 
     `mysql -u "root" "-p123" < "/home/init.sql"`
+
+* Exit from container
+
+    `exit`
+
+* Restart frappe continaer
+
+    `docker service update --force <stack_name>_frappe`
 
 * Go to web browser and access ERPNext
 
