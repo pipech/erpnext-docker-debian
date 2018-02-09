@@ -38,6 +38,8 @@ To this > `docker run -it -p 8000:8000 -p 9000:9000 --name anything pipech/erpne
 
 * [Docker](https://docs.docker.com/get-started/#conclusion-of-part-one)
 
+* [Git](https://git-scm.com/download/linux)
+
 ### Images Tags
 
 * Tag : `latest` > latest image build
@@ -95,9 +97,17 @@ and sites folder to host machine so you could explore the code.
     
 ### Usage
 
+* Clone repository
+
+    `git clone https://github.com/pipech/erpnext-docker-debian.git`
+
 * Pull image
 
     `docker pull pipech/erpnext-docker-debian:stable`
+    
+* Change work directory
+
+    `cd erpnext-docker-debian/development_setup`
 
 * Run image using docker-compose (In development folder where docker-compose.yml is)
 
@@ -155,6 +165,14 @@ and instead of running all service in single container we separate some and put 
 * Init swarm
 
     `docker swarm init`
+    
+* Clone repository
+
+    `git clone https://github.com/pipech/erpnext-docker-debian.git`
+    
+* Change work directory
+
+    `cd erpnext-docker-debian/production_setup`
 
 * Deploy stack using prd.yml as prd1 stack (In production folder where prd.yml is)
 
@@ -193,6 +211,47 @@ and instead of running all service in single container we separate some and put 
 * Go to web browser and access ERPNext
 
     `http://localhost`
+
+### Health-check
+
+* All 6 container should running, some might exit but there have to be 6 container running
+
+    `docker ps -a`
+    ```
+    CONTAINER ID        IMAGE                                            COMMAND                  CREATED             STATUS                     PORTS                               NAMES
+    9e56c741a6a6        pipech/erpnext-docker-debian-production:stable   "sudo /usr/bin/sup..."   4 minutes ago       Up 4 minutes               3306-3307/tcp, 8000/tcp, 9000/tcp   erpnext_frappe.1.vrh0qzzkh6hmou2gk0gqxkpd0
+    384d2793df39        nginx:1.12.2                                     "nginx -g 'daemon ..."   7 minutes ago       Up 7 minutes               80/tcp                              erpnext_nginx.1.0fe57owsq5mdgdbkbi33doamk
+    391840076d9f        nginx:1.12.2                                     "nginx -g 'daemon ..."   7 minutes ago       Exited (1) 7 minutes ago                                       erpnext_nginx.1.q1yu20jar4jmddzecikdt82sv
+    b8ea6922ce3b        nginx:1.12.2                                     "nginx -g 'daemon ..."   7 minutes ago       Exited (1) 7 minutes ago                                       erpnext_nginx.1.riw1gd8vmqmcezkepqrdq35bi
+    e2528e1b7bae        pipech/erpnext-docker-debian-production:stable   "sudo /usr/bin/sup..."   7 minutes ago       Exited (0) 4 minutes ago                                       erpnext_frappe.1.pl64cb3nqymyoopzew02gjdu9
+    5ec8a5aee49d        redis:alpine                                     "docker-entrypoint..."   7 minutes ago       Up 7 minutes               6379/tcp                            erpnext_redis-queue.1.n0ghgn710k6v9wnrqsuupojqn
+    8c45f2b831ee        redis:alpine                                     "docker-entrypoint..."   7 minutes ago       Up 7 minutes               6379/tcp                            erpnext_redis-socketio.1.c1s0mn5x0uiwwv19hcgud8ipu
+    a9ece252518d        nginx:1.12.2                                     "nginx -g 'daemon ..."   7 minutes ago       Exited (1) 7 minutes ago                                       erpnext_nginx.1.xau7shgy81e5ap4eonlhzi7s1
+    aea2d2ffb36b        redis:alpine                                     "docker-entrypoint..."   7 minutes ago       Up 7 minutes               6379/tcp                            erpnext_redis-cache.1.wbiosu2sc4g87v6d4iaiikq8z
+    0c594aaf9846        mariadb:10.2.12                                  "docker-entrypoint..."   7 minutes ago       Up 7 minutes               3306/tcp                            erpnext_mariadb.1.aufnny4nt9h0vnm5h083njbqq
+    a6e7f6f0acaa        nginx:1.12.2                                     "nginx -g 'daemon ..."   7 minutes ago       Exited (1) 7 minutes ago                                       erpnext_nginx.1.lq158amte714526tys4bkj4ch
+    ```
+
+* Check service in frappe container, all 6 services should run with success
+
+    `docker logs <frappe_container_id>`
+    
+    ```
+    2018-02-09 07:10:53,185 CRIT Supervisor running as root (no user in config file)
+    2018-02-09 07:10:53,192 INFO supervisord started with pid 5
+    2018-02-09 07:10:54,196 INFO spawned: 'bench-frappe-schedule' with pid 8
+    2018-02-09 07:10:54,197 INFO spawned: 'bench-frappe-default-worker-0' with pid 9
+    2018-02-09 07:10:54,198 INFO spawned: 'bench-frappe-long-worker-0' with pid 10
+    2018-02-09 07:10:54,200 INFO spawned: 'bench-frappe-short-worker-0' with pid 11
+    2018-02-09 07:10:54,207 INFO spawned: 'bench-node-socketio' with pid 12
+    2018-02-09 07:10:54,217 INFO spawned: 'bench-frappe-web' with pid 13
+    2018-02-09 07:10:55,232 INFO success: bench-frappe-schedule entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+    2018-02-09 07:10:55,232 INFO success: bench-frappe-default-worker-0 entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+    2018-02-09 07:10:55,232 INFO success: bench-frappe-long-worker-0 entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+    2018-02-09 07:10:55,232 INFO success: bench-frappe-short-worker-0 entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+    2018-02-09 07:10:55,233 INFO success: bench-node-socketio entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+    2018-02-09 07:10:55,233 INFO success: bench-frappe-web entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+    ```
 
 ## Contributing
 
