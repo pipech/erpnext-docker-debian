@@ -16,6 +16,14 @@ so you will always have usable images and can choose which version you want to u
 
 ## How to use
 
+There are 3 way to use [erpnext-docker-debian](https://hub.docker.com/r/pipech/erpnext-docker-debian/) image.
+
+1. Trial setup
+
+2. Development setup
+
+3. Production setup
+
 In any command if there are `<something>` that means it just a name or container id
 you should change it to suit your environment.
 
@@ -44,6 +52,10 @@ This setup is the most easy and straightforward way to run ERPNext on Docker,
 it will run pre-build docker image from Docker hub. 
 
 ### Usage
+
+* Pull image
+
+    `docker pull pipech/erpnext-docker-debian:stable`
 
 * Run latest erpnext_debian image from pipech Docker hub
 
@@ -82,6 +94,10 @@ from frappe repository development branch and it will share apps
 and sites folder to host machine so you could explore the code.
     
 ### Usage
+
+* Pull image
+
+    `docker pull pipech/erpnext-docker-debian:stable`
 
 * Run image using docker-compose (In development folder where docker-compose.yml is)
 
@@ -131,6 +147,10 @@ and instead of running all service in single container we separate some and put 
 6. redis socketio
 
 ### Usage
+
+* Pull image
+
+    `docker pull pipech/erpnext-docker-debian-production:stable`
 
 * Init swarm
 
