@@ -5,8 +5,11 @@ services:
     image: pipech/erpnext-docker-debian:stable
     ports:
       - "8001:8001"   #webserver_port
+      - "8000:8000"
       - "9001:9001"   #socketio_port
+      - "9000:9000"
       - "6787:6787"   #file_watcher_port
+      - "3306:3306"   #mysql _port
     volumes:
       - ./frappe-docker-conf:/home/frappe/frappe-docker-conf
       - ./data/bench-dev/apps:/home/frappe/bench-dev/apps
@@ -14,5 +17,9 @@ services:
     environment:
       - benchDevSiteName=devsite1.local
       - benchNewSiteAdminPass=12345
+      - LC_ALL=en_US.UTF-8
+      - LC_CTYPE=en_US.UTF-8
+      - LANG=en_US.UTF-8
+      - LANGUAGE=en_US.UTF-8
     stdin_open: true
     tty: true

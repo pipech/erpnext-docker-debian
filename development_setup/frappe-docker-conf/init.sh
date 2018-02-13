@@ -24,6 +24,9 @@ echo "----------------------- [ install erpnext ] ------------------------------
 bench get-app erpnext https://github.com/frappe/erpnext
 bench install-app erpnext
 
+echo "----------------------- [ fix bench start error ] ---------------------------------"
+bench update --patch
+
 # turn off debug mode
 set +x
 
