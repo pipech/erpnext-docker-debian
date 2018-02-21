@@ -112,17 +112,43 @@ so you could explore the code.
 
     `docker ps -a`
 
-* Find frappe container id
+* Call bash in frappe container
 
     `docker exec -it <frappe_container_id> bash`
     
 * Run init.sh
 
     `. init.sh`
+    
+* Restart container
+
+    ```
+    exit
+    docker stop <frappe_container_id>
+    docker start <frappe_container_id>
+    ```
+    
+* Call bash in frappe container
+
+    `docker exec -it <frappe_container_id> bash`
+
+
+* Start development server
+
+    `bench start`
 
 * Go to web browser and access ERPNext
 
     `http://localhost:8000`
+    
+* Access mysql using [MySQL Workbench](https://www.mysql.com/products/workbench)
+
+    ```
+    Hostname : localhost
+    Port : 3306
+    User : remote
+    Pass : 12345
+    ```
 
 ### Clean-up
 
