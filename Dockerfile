@@ -60,5 +60,8 @@ RUN  sudo service mysql start \
     && bench switch-to-branch $branch \
     && bench update --patch
 
+# run start mysql service when container start
+CMD ["sudo", "mysqld"]
+
 # expose port
-EXPOSE 8000 9000 3306 3307
+EXPOSE 8000-8005 9000-9005 3306-3307

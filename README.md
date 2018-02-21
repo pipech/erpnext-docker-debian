@@ -61,11 +61,7 @@ it will run pre-build docker image from Docker hub.
 
 * Run latest erpnext_debian image from pipech Docker hub
 
-    `docker run -it -p 8000:8000 -p 9000:9000 --name <container_name> pipech/erpnext-docker-debian:stable bash`
-
-* Start mysql service
-    
-    `sudo service mysql start`
+    `docker run -it --name <container_name> pipech/erpnext-docker-debian:stable bash`
     
 * Start development server
 
@@ -91,9 +87,8 @@ it will run pre-build docker image from Docker hub.
     
 ## Development Setup
 
-This setup will pull latest Frappe and ERPNext code 
-from frappe repository development branch and it will share apps 
-and sites folder to host machine so you could explore the code.
+This setup will share apps and sites folder to host machine 
+so you could explore the code.
     
 ### Usage
 
@@ -123,11 +118,11 @@ and sites folder to host machine so you could explore the code.
     
 * Run init.sh
 
-    `cd /home/frappe/frappe-docker-conf && . init.sh`
+    `. init.sh`
 
 * Go to web browser and access ERPNext
 
-    `http://localhost:8001`
+    `http://localhost:8000`
 
 ### Clean-up
 

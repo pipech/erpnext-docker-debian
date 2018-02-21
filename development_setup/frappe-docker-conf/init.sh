@@ -3,28 +3,14 @@
 # turn on debug mode
 set -x
 
-cd ..
+echo "----------------------- [ change sites and apps folder to it's original folder] ---------------------------------"
 
-# env has been set from dockerfile and docker-compose file
-echo "----------------------- [ change owner of bench-dev folder ] ---------------------------------"
-sudo chown frappe bench-dev
+sudo mv ./sites-dev/* ./sites/
+sudo mv ./apps-dev/* ./apps/
 
-echo "----------------------- [ init bench ] ---------------------------------"
-bench init bench-dev --ignore-exist
-cd  bench-dev
+sudo chown frappe sites
+sudo chown frappe apps
 
-echo "----------------------- [ start mysql ] ---------------------------------"
-sudo service mysql start
-
-echo "----------------------- [ new site ] ---------------------------------"
-bench new-site $benchDevSiteName --mariadb-root-password $mysqlPass --admin-password $benchNewSiteAdminPass
-bench use $benchDevSiteName
-
-echo "----------------------- [ install erpnext ] ---------------------------------"
-bench get-app erpnext https://github.com/frappe/erpnext
-bench install-app erpnext
-
-echo "----------------------- [ fix bench start error ] ---------------------------------"
 bench update --patch
 
 # turn off debug mode
