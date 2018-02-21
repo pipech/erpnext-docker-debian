@@ -19,7 +19,7 @@ sudo sed -i '/bind-address/ s/^/#/' /etc/mysql/my.cnf
 
 echo "----------------------- [ create mysql remote user and grant all privilege ] ---------------------------------"
 
-mysql -u "root" "-p123" < "./init.sql"
+mysql -u "root" "-p12345" < "./init.sql"
 
 # turn off debug mode
 set +x
