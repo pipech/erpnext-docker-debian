@@ -61,7 +61,11 @@ it will run pre-build docker image from Docker hub.
 
 * Run latest erpnext_debian image from pipech Docker hub
 
-    `docker run -it --name <container_name> pipech/erpnext-docker-debian:stable bash`
+    `docker run -it --name <container_name> -p 8000-8005:8000-8005 -p 9000-9005:9000-9005 -p 3306-3307:3306-3307 pipech/erpnext-docker-debian:stable bash`
+    
+* Start mysql
+
+    `sudo service mysql start`
     
 * Start development server
 
@@ -185,6 +189,11 @@ and instead of running all service in single container we separate some and put 
     AMI: Amazon Linux AMI 2017.09.1 (HVM), SSD Volume Type
     Type: t2.small (2GB of Ram)
     
+**Update Security Group**
+
+* Update Inbound Rules
+
+    `Add rules > HTTP`
 
 **Connect to instance using ssh**
 
