@@ -179,14 +179,14 @@ and instead of running all service in single container we separate some and put 
 
 ### Prerequisite using Amazon EC2
 
-Launch new instance
+**Launch new instance**
 
-    ```
+    
     AMI: Amazon Linux AMI 2017.09.1 (HVM), SSD Volume Type
     Type: t2.small (2GB of Ram)
-    ```
+    
 
-Connect to instance using ssh
+**Connect to instance using ssh**
 
 * Update instance
 
