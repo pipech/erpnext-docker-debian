@@ -177,6 +177,41 @@ and instead of running all service in single container we separate some and put 
 5. redis queue
 6. redis socketio
 
+### Prerequisite using Amazon EC2
+
+Launch new instance
+
+    ```
+    AMI: Amazon Linux AMI 2017.09.1 (HVM), SSD Volume Type
+    Type: t2.small (2GB of Ram)
+    ```
+
+Connect to instance using ssh
+
+* Update instance
+
+    `sudo yum update -y`
+
+* Install Docker and Git
+
+    `sudo yum install -y docker git`
+    
+* Start Docker
+
+    `sudo service docker start`
+    
+* Add permissions for ec2-user to use Docker
+
+    `sudo usermod -a -G docker ec2-user`
+    
+* Log out and log back in again to pick up the new docker group permissions. 
+    
+    You can accomplish this by closing your current SSH terminal window and reconnecting to your instance in a new one.
+
+* Check ec2-user permission
+
+    `docker info`
+
 ### Usage
 
 * Pull image
