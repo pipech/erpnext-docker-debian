@@ -172,7 +172,8 @@ so you could explore the code.
 
 In this setup we use the same ERPNext image as we use in trail setup 
 and config it to run production
-and instead of running all service in single container we separate some and put it into 6 container.
+and instead of running all service in single container we separate some and put it into 6 container,
+and most important thing is it separate data volumes from container to docker volumes.
 
 1. frappe
 2. mariadb
@@ -185,7 +186,6 @@ and instead of running all service in single container we separate some and put 
 
 **Launch new instance**
 
-    
     AMI: Amazon Linux AMI 2017.09.1 (HVM), SSD Volume Type
     Type: t2.small (2GB of Ram)
     
@@ -195,7 +195,9 @@ and instead of running all service in single container we separate some and put 
 
     `Add rules > HTTP`
 
-**Connect to instance using ssh**
+**[Install docker and git](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/docker-basics.html)**
+
+* Connect to instance using ssh
 
 * Update instance
 
@@ -220,6 +222,30 @@ and instead of running all service in single container we separate some and put 
 * Check ec2-user permission
 
     `docker info`
+    
+**[Set timezone](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/set-time.html#configure-amazon-time-service)**
+
+* Connect to instance using ssh
+
+* Find timezone in /usr/share/zoneinfo
+
+    `ls /usr/share/zoneinfo`
+
+* Update timezone in /etc/sysconfig/clock
+
+    `sudo nano /etc/sysconfig/clock`
+
+* Replace ZONE with your timezone
+
+    `ZONE="America/Los_Angeles"`
+
+* Create symbolic link /etc/localtime and your time zone file 
+
+    `sudo ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime`
+
+* Reboot
+
+    `sudo reboot`
 
 ### Usage
 
