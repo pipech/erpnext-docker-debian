@@ -9,7 +9,22 @@ RUN apt-get -y update \
     wget \
     nano \
     sudo \
-    supervisor
+    supervisor \
+    cron
+
+# work around for  "cmd": "chsh frappe -s $(which bash)", "stderr": "Password: chsh: PAM: Authentication failure"
+# caused by > bench/playbooks/create_user.yml > shell: "chsh {{ frappe_user }} -s $(which bash)"
+RUN sed -i 's/auth       required   pam_shells.so/auth       sufficient   pam_shells.so/' /etc/pam.d/chsh
+
+# Set locales
+RUN apt-get -y update \
+    && apt-get -y install locales \
+    && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
+    && locale-gen
+
+ENV LC_ALL=en_US.UTF-8 \
+    LC_CTYPE=en_US.UTF-8 \
+    LANG=en_US.UTF-8
 
 # add users without sudo password
 ENV systemUser=frappe
@@ -22,22 +37,28 @@ RUN adduser --disabled-password --gecos "" $systemUser \
 USER $systemUser
 WORKDIR /home/$systemUser
 
-# install bench with easy install script
-ENV easyinstallRepo='https://raw.githubusercontent.com/frappe/bench/master/playbooks/install.py' \
-    adminPass=12345 \
-    mysqlPass=12345 \
-    benchSetup=develop \
-    benchBranch=master \
-    benchName=bench
+# install prerequisite for bench with easy install script
+ENV easyinstallRepo='https://raw.githubusercontent.com/frappe/bench/master/playbooks/install.py'
 
 RUN wget $easyinstallRepo \
     && python install.py \
-    --without-site \
-    --$benchSetup \
-    --mysql-root-password $mysqlPass  \
-    --admin-password $adminPass  \
-    --bench-name $benchName  \
-    --bench-branch $benchBranch
+    --without-bench-setup
+
+# install bench & init bench folder
+ENV benchPath=bench-repo \
+    benchRepo='https://github.com/frappe/bench' \
+    benchBranch=master \
+    frappeRepo='https://github.com/frappe/frappe' \
+    frappeBranch=master \
+    # for python 2 use = python
+    # for python 3 use = python3 or python3.6 for centos
+    pythonVersion=python \
+    benchName=bench
+
+RUN rm -rf bench \
+    && git clone -b $benchBranch $benchRepo $benchPath  \
+    && sudo pip install -e $benchPath \
+    && bench init $benchName --frappe-path $frappeRepo --frappe-branch $frappeBranch --python $pythonVersion
 
 # set workdir
 USER $systemUser
@@ -45,8 +66,11 @@ WORKDIR /home/$systemUser/$benchName
 
 # create new site & install erpnext & switch to branch master
 ENV erpnextRepo='https://github.com/frappe/erpnext' \
+    erpnextBranch=master \
     siteName=site1.local \
-    branch=master
+    branch=master \
+    adminPass=12345 \
+    mysqlPass=travis
 
 RUN  sudo service mysql start \
     # create new site
@@ -54,11 +78,18 @@ RUN  sudo service mysql start \
     --mariadb-root-password $mysqlPass  \
     --admin-password $adminPass \
     # install erpnext
-    && bench get-app erpnext $erpnextRepo --branch $branch \
+    && bench get-app erpnext $erpnextRepo --branch $erpnextBranch \
     && bench --site $siteName install-app erpnext \
     # switch to master branch
     && bench switch-to-branch $branch \
     && bench update --patch
+
+# change back config for work around for  "cmd": "chsh frappe -s $(which bash)", "stderr": "Password: chsh: PAM: Authentication failure"
+RUN sudo sed -i 's/auth       sufficient   pam_shells.so/auth       required   pam_shells.so/' /etc/pam.d/chsh
+
+# work around for worker | Error: no such option: --quiet
+# caused by > bench/bench/config/templates/Procfile > worker_short: bench worker --queue short --quiet
+RUN sed -i 's/--quiet//' /home/frappe/bench/Procfile
 
 # run start mysql service when container start
 CMD ["sudo", "mysqld"]
