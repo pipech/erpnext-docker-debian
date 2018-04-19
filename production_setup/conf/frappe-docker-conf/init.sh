@@ -4,7 +4,7 @@
 set -x
 
 # env has been set from dockerfile
-benchWD=/home/$systemUser/benchFolderName
+benchWD=/home/$systemUser/$benchFolderName
 
 echo "----------------------- [ move to bench directory ] ---------------------------------"
 cd $benchWD
