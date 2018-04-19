@@ -2,7 +2,7 @@ FROM pipech/erpnext-docker-debian:stable
 
 # set workdir
 USER $systemUser
-WORKDIR /home/$systemUser/$benchName
+WORKDIR /home/$systemUser/$benchFolderName
 
 # move sites and apps sites
 RUN mkdir sites-dev \
@@ -11,7 +11,7 @@ RUN mkdir sites-dev \
 RUN mkdir apps-dev \
     && mv ./apps/* ./apps-dev/
 
-COPY ./frappe-docker-conf /home/$systemUser/$benchName
+COPY ./frappe-docker-conf /home/$systemUser/$benchFolderName
 
 # run start mysql service when container start
 CMD ["sudo", "mysqld"]

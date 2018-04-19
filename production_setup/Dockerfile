@@ -2,7 +2,7 @@ FROM pipech/erpnext-docker-debian:stable
 
 # set workdir
 USER $systemUser
-WORKDIR /home/$systemUser/$benchName
+WORKDIR /home/$systemUser/$benchFolderName
 
 # copy config
 COPY ./conf/frappe-docker-conf/common_site_config_docker.json ./sites/common_site_config.json
