@@ -13,14 +13,6 @@ sudo chown frappe apps
 
 bench update --patch
 
-echo "----------------------- [ comment bind-address line in my.cnf ] ---------------------------------"
-
-sudo sed -i '/bind-address/ s/^/#/' /etc/mysql/my.cnf
-
-echo "----------------------- [ create mysql remote user and grant all privilege ] ---------------------------------"
-
-mysql -u "root" "-p$mysqlPass" < "./init.sql"
-
 # turn off debug mode
 set +x
 

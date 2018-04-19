@@ -11,12 +11,6 @@ services:
     volumes:
       - ./data/bench/apps:/home/frappe/bench/apps
       - ./data/bench/sites:/home/frappe/bench/sites
-    environment:
-      - benchDevSiteName=devsite1.local
-      - benchNewSiteAdminPass=12345
-      - LC_ALL=en_US.UTF-8
-      - LC_CTYPE=en_US.UTF-8
-      - LANG=en_US.UTF-8
-      - LANGUAGE=en_US.UTF-8
+
     stdin_open: true
     tty: true
