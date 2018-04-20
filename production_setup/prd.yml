@@ -1,6 +1,66 @@
 version: '3.3'
 services:
 
+  nginx-proxy:
+    image: nginx
+    labels:
+      - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - nginx-conf-volumes:/etc/nginx/conf.d
+      - nginx-vhost-volumes:/etc/nginx/vhost.d
+      - certs-volumes:/etc/nginx/certs:ro
+    networks:
+      - proxy-tier
+
+  docker-gen:
+    image: jwilder/docker-gen
+    labels:
+      - com.github.jrcs.letsencrypt_nginx_proxy_companion.docker_gen
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - nginx-conf-volumes:/etc/nginx/conf.d
+      - nginx-vhost-volumes:/etc/nginx/vhost.d
+    configs:
+      - source: nginx-tmpl-conf
+        target: /etc/docker-gen/templates/nginx.tmpl
+    entrypoint:
+      - /usr/local/bin/docker-gen
+      - -notify-sighup
+      - nginx
+      - -watch
+      - -only-exposed
+      - -wait 5s:30s
+      - /etc/docker-gen/templates/nginx.tmpl
+      - /etc/nginx/conf.d/default.conf
+
+  nginx-letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - nginx-conf-volumes:/etc/nginx/conf.d
+      - nginx-vhost-volumes:/etc/nginx/vhost.d
+      - certs-volumes:/etc/nginx/certs:rw
+
+  nginx-frappe:
+    image: nginx:1.12.2
+    deploy:
+      replicas: 1
+    configs:
+      - source: nginx-conf
+        target: /etc/nginx/conf.d/default.conf
+    environment:
+      - VIRTUAL_HOST=testing.spacecode.co.th
+      - LETSENCRYPT_HOST=testing.spacecode.co.th
+      - LETSENCRYPT_EMAIL=poranut@spacecode.co.th
+    volumes:
+      - frappe-sites-volumes:/home/frappe/bench/sites
+      - frappe-apps-volumes:/home/frappe/bench/apps
+    networks:
+      - proxy-tier
+
   mariadb:
     image: mariadb:10.2.12
     deploy:
@@ -17,19 +77,6 @@ services:
       - mariadb-data-volumes:/var/lib/mysql
     ports:
       - "3307:3306"
-
-  nginx:
-    image: nginx:1.12.2
-    deploy:
-      replicas: 1
-    configs:
-      - source: nginx-conf
-        target: /etc/nginx/conf.d/default.conf
-    ports:
-      - "80:80"
-    volumes:
-      - frappe-sites-volumes:/home/frappe/bench/sites
-      - frappe-apps-volumes:/home/frappe/bench/apps
 
   redis-cache:
     image: redis:alpine
@@ -63,7 +110,7 @@ services:
     deploy:
       replicas: 1
     environment:
-      - benchNewSiteName=prdsite1.local
+      - benchNewSiteName=testing.spacecode.co.th
     ports:
       - "8000:8000"   #webserver_port
       - "9000:9000"   #socketio_port
@@ -83,6 +130,9 @@ volumes:
   frappe-apps-volumes:
   frappe-logs-volumes:
   mariadb-data-volumes:
+  nginx-conf-volumes:
+  nginx-vhost-volumes:
+  certs-volumes:
 
 configs:
   mariadb-conf:
@@ -99,3 +149,10 @@ configs:
     file: ./conf/redis-conf/redis_socketio.conf
   frappe-init-conf:
     file: ./conf/frappe-docker-conf/init.sh
+  nginx-tmpl-conf:
+    file: ./conf/nginx-tmpl-conf/nginx.tmpl
+
+networks:
+  proxy-tier:
+    external:
+      name: nginx-proxy

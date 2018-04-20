@@ -19,5 +19,3 @@ COPY ./conf/frappe-supervisor-conf/supervisor.conf /etc/supervisor/conf.d/docker
 
 # run start.sh when container start
 CMD ["sudo", "/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/docker_supervisor.conf"]
-
-
