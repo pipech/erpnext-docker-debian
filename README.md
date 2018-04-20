@@ -230,6 +230,8 @@ and most important thing is it separate data volumes from container to docker vo
 * Find timezone in /usr/share/zoneinfo
 
     `ls /usr/share/zoneinfo`
+    
+    `ls /usr/share/zoneinfo/Asia`
 
 * Update timezone in /etc/sysconfig/clock
 
@@ -237,15 +239,19 @@ and most important thing is it separate data volumes from container to docker vo
 
 * Replace ZONE with your timezone
 
-    `ZONE="America/Los_Angeles"`
+    `ZONE="Asia/Bangkok"`
 
 * Create symbolic link /etc/localtime and your time zone file 
 
-    `sudo ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime`
+    `sudo ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime`
 
 * Reboot
 
     `sudo reboot`
+
+* Check setting
+
+    `date`
 
 ### Usage
 
@@ -264,6 +270,10 @@ and most important thing is it separate data volumes from container to docker vo
 * Change work directory
 
     `cd erpnext-docker-debian/production_setup`
+
+* Create network
+
+    `docker network create --scope swarm nginx-proxy`
 
 * Deploy stack using prd.yml as prd1 stack (In production folder where prd.yml is)
 

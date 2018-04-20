@@ -4,13 +4,14 @@ services:
   nginx-proxy:
     image: nginx
     labels:
-      - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - nginx-conf-volumes:/etc/nginx/conf.d
       - nginx-vhost-volumes:/etc/nginx/vhost.d
+      - nginx-html-volumes:/usr/share/nginx/html
       - certs-volumes:/etc/nginx/certs:ro
     networks:
       - proxy-tier
@@ -18,30 +19,24 @@ services:
   docker-gen:
     image: jwilder/docker-gen
     labels:
-      - com.github.jrcs.letsencrypt_nginx_proxy_companion.docker_gen
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.docker_gen"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - nginx-conf-volumes:/etc/nginx/conf.d
       - nginx-vhost-volumes:/etc/nginx/vhost.d
+      - nginx-html-volumes:/usr/share/nginx/html
     configs:
       - source: nginx-tmpl-conf
         target: /etc/docker-gen/templates/nginx.tmpl
-    entrypoint:
-      - /usr/local/bin/docker-gen
-      - -notify-sighup
-      - nginx
-      - -watch
-      - -only-exposed
-      - -wait 5s:30s
-      - /etc/docker-gen/templates/nginx.tmpl
-      - /etc/nginx/conf.d/default.conf
+    entrypoint: /usr/local/bin/docker-gen -notify-sighup nginx -watch -only-exposed -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
 
   nginx-letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - nginx-conf-volumes:/etc/nginx/conf.d
       - nginx-vhost-volumes:/etc/nginx/vhost.d
+      - nginx-html-volumes:/usr/share/nginx/html
       - certs-volumes:/etc/nginx/certs:rw
 
   nginx-frappe:
@@ -77,6 +72,8 @@ services:
       - mariadb-data-volumes:/var/lib/mysql
     ports:
       - "3307:3306"
+    networks:
+      - proxy-tier
 
   redis-cache:
     image: redis:alpine
@@ -86,6 +83,8 @@ services:
       - source: redis-cache-conf
         target: /etc/conf.d/redis.conf
     command: ["redis-server","/etc/conf.d/redis.conf"]
+    networks:
+      - proxy-tier
 
   redis-queue:
     image: redis:alpine
@@ -95,6 +94,8 @@ services:
       - source: redis-queue-conf
         target: /etc/conf.d/redis.conf
     command: ["redis-server","/etc/conf.d/redis.conf"]
+    networks:
+      - proxy-tier
 
   redis-socketio:
     image: redis:alpine
@@ -104,6 +105,8 @@ services:
       - source: redis-socketio-conf
         target: /etc/conf.d/redis.conf
     command: ["redis-server","/etc/conf.d/redis.conf"]
+    networks:
+      - proxy-tier
 
   frappe:
     image: pipech/erpnext-docker-debian-production:stable
@@ -124,6 +127,8 @@ services:
       - frappe-logs-volumes:/home/frappe/bench/logs
     stdin_open: true
     tty: true
+    networks:
+      - proxy-tier
 
 volumes:
   frappe-sites-volumes:
@@ -132,6 +137,7 @@ volumes:
   mariadb-data-volumes:
   nginx-conf-volumes:
   nginx-vhost-volumes:
+  nginx-html-volumes:
   certs-volumes:
 
 configs:
