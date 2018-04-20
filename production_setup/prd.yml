@@ -13,8 +13,6 @@ services:
       - nginx-vhost-volumes:/etc/nginx/vhost.d
       - nginx-html-volumes:/usr/share/nginx/html
       - certs-volumes:/etc/nginx/certs:ro
-    networks:
-      - proxy-tier
 
   docker-gen:
     image: jwilder/docker-gen
@@ -53,8 +51,6 @@ services:
     volumes:
       - frappe-sites-volumes:/home/frappe/bench/sites
       - frappe-apps-volumes:/home/frappe/bench/apps
-    networks:
-      - proxy-tier
 
   mariadb:
     image: mariadb:10.2.12
@@ -72,8 +68,6 @@ services:
       - mariadb-data-volumes:/var/lib/mysql
     ports:
       - "3307:3306"
-    networks:
-      - proxy-tier
 
   redis-cache:
     image: redis:alpine
@@ -83,8 +77,6 @@ services:
       - source: redis-cache-conf
         target: /etc/conf.d/redis.conf
     command: ["redis-server","/etc/conf.d/redis.conf"]
-    networks:
-      - proxy-tier
 
   redis-queue:
     image: redis:alpine
@@ -94,8 +86,6 @@ services:
       - source: redis-queue-conf
         target: /etc/conf.d/redis.conf
     command: ["redis-server","/etc/conf.d/redis.conf"]
-    networks:
-      - proxy-tier
 
   redis-socketio:
     image: redis:alpine
@@ -105,8 +95,6 @@ services:
       - source: redis-socketio-conf
         target: /etc/conf.d/redis.conf
     command: ["redis-server","/etc/conf.d/redis.conf"]
-    networks:
-      - proxy-tier
 
   frappe:
     image: pipech/erpnext-docker-debian-production:stable
@@ -127,8 +115,6 @@ services:
       - frappe-logs-volumes:/home/frappe/bench/logs
     stdin_open: true
     tty: true
-    networks:
-      - proxy-tier
 
 volumes:
   frappe-sites-volumes:
@@ -157,8 +143,3 @@ configs:
     file: ./conf/frappe-docker-conf/init.sh
   nginx-tmpl-conf:
     file: ./conf/nginx-tmpl-conf/nginx.tmpl
-
-networks:
-  proxy-tier:
-    external:
-      name: nginx-proxy
