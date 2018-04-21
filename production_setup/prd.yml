@@ -23,6 +23,7 @@ services:
       - nginx-conf-volumes:/etc/nginx/conf.d
       - nginx-vhost-volumes:/etc/nginx/vhost.d
       - nginx-html-volumes:/usr/share/nginx/html
+      - certs-volumes:/etc/nginx/certs:ro
     configs:
       - source: nginx-tmpl-conf
         target: /etc/docker-gen/templates/nginx.tmpl
