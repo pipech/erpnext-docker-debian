@@ -2,22 +2,12 @@ version: '3.3'
 services:
 
   nginx-proxy:
-    image: nginx
+    image: jwilder/nginx-proxy
     labels:
       - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - nginx-conf-volumes:/etc/nginx/conf.d
-      - nginx-vhost-volumes:/etc/nginx/vhost.d
-      - nginx-html-volumes:/usr/share/nginx/html
-      - certs-volumes:/etc/nginx/certs:ro
-
-  docker-gen:
-    image: jwilder/docker-gen
-    labels:
-      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.docker_gen"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - nginx-conf-volumes:/etc/nginx/conf.d
@@ -25,11 +15,7 @@ services:
       - nginx-html-volumes:/usr/share/nginx/html
       - certs-volumes:/etc/nginx/certs:ro
     environment:
-      - DEFAULT_HOST=testing.spacecode.co.th
-    configs:
-      - source: nginx-tmpl-conf
-        target: /etc/docker-gen/templates/nginx.tmpl
-    entrypoint: /usr/local/bin/docker-gen -notify-sighup nginx -watch -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
+      - DEFAULT_HOST=t01.spacecode.co.th
 
   nginx-letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
@@ -50,8 +36,8 @@ services:
     ports:
       - "8080:80"       # directly connect to nginx-frappe container without going through nginx-proxy container via port 8080
     environment:
-      - VIRTUAL_HOST=testing.spacecode.co.th
-      - LETSENCRYPT_HOST=testing.spacecode.co.th
+      - VIRTUAL_HOST=t01.spacecode.co.th
+      - LETSENCRYPT_HOST=t01.spacecode.co.th
       - LETSENCRYPT_EMAIL=poranut@spacecode.co.th
     volumes:
       - frappe-sites-volumes:/home/frappe/bench/sites
@@ -106,6 +92,7 @@ services:
     deploy:
       replicas: 1
     environment:
+    # beware prdsite1.local has been hardcoded into nginx-conf/nginx.conf
       - benchNewSiteName=prdsite1.local
     ports:
       - "8000:8000"   #webserver_port
