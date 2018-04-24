@@ -13,6 +13,8 @@ services:
       - nginx-vhost-volumes:/etc/nginx/vhost.d
       - nginx-html-volumes:/usr/share/nginx/html
       - certs-volumes:/etc/nginx/certs:ro
+    environment:
+      - DEFAULT_HOST=testing.spacecode.co.th
 
   docker-gen:
     image: jwilder/docker-gen
