@@ -17,6 +17,6 @@ header_pages:
 
 # Build settings
 markdown: kramdown
-remote_theme: minima
+remote_theme: jekyll/minima
 plugins:
   - jekyll-feed
