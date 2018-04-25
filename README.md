@@ -273,6 +273,15 @@ and most important thing is it separate data volumes from container to docker vo
 
     `cd erpnext-docker-debian/production_setup`
 
+* Change Environment in prd.yml file
+
+    ```
+    - DEFAULT_HOST
+    - VIRTUAL_HOST
+    - LETSENCRYPT_HOST
+    - LETSENCRYPT_EMAIL
+    ```
+
 * Deploy stack using prd.yml as prd1 stack (In production folder where prd.yml is)
 
     `docker stack deploy -c prd.yml <stack_name>`
@@ -311,9 +320,9 @@ and most important thing is it separate data volumes from container to docker vo
 
     `docker rm $(docker ps -a -q)`
 
-* Go to web browser and access ERPNext
+* Go to web browser and access ERPNext or your domain
 
-    `http://localhost`
+    `http://yourdomain.com`
 
 ### Finishing up
 
