@@ -12,6 +12,7 @@ url: "https://pipech.github.io" # the base hostname & protocol for your site, e.
 
 # Set navigation links
 header_pages:
+  - github_code.html
   - setup_docker.md
   - ec2.md
 
