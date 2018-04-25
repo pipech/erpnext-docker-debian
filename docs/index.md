@@ -3,11 +3,11 @@
 
 There are 3 way to use [erpnext-docker-debian](https://hub.docker.com/r/pipech/erpnext-docker-debian/) image.
 
-1. [Trial setup]
+1. [Trial setup](trial_setup.md)
 
-2. [Development setup]
+2. [Development setup](development_setup.md)
 
-3. [Production setup]
+3. [Production setup](production_setup.md)
 
 In any command if there are `<something>` that means it just a name or container id
 you should change it to suit your environment.
