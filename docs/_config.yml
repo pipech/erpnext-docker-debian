@@ -12,7 +12,7 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 
 # Set navigation links
 header_pages:
-  - setup.md
+  - setup_docker.md
   - ec2.md
 
 # Build settings
