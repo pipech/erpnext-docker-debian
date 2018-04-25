@@ -2,7 +2,10 @@
 layout: home
 setup: setup.md
 ec2: ec2.md
+remove_header: remove-header.html
 ---
+
+{% include {{ page.remove_header }} %}
 
 ## How to use
 
