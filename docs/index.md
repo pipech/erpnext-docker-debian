@@ -7,7 +7,7 @@ remove_header: remove-header.html
 
 {% include {{ page.remove_header }} %}
 
-## How to use
+# How to use
 
 {% include {{ page.setup }} %}
 
@@ -35,6 +35,6 @@ To this > `docker run -it -p 8000:8000 -p 9000:9000 --name anything pipech/erpne
 
 * Tag : `v10.0.20` > the higher version of ERPNext or Frappe
 
-## Usage on AWS EC2
+# Usage on AWS EC2
 
 {% include {{ page.ec2 }} %}
