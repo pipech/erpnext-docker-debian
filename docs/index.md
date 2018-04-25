@@ -39,3 +39,11 @@ To this > `docker run -it -p 8000:8000 -p 9000:9000 --name anything pipech/erpne
 * Tag : `stable` > we can login and access ERPNext desk
 
 * Tag : `v10.0.20` > the higher version of ERPNext or Frappe
+
+## Usage on AWS EC2
+
+Guide to setup EC2 instance for running erpnext-docker-debian image.
+
+* [Setup AWS EC2](setup_ec2.md)
+
+* [Backup AWS EC2 to AMI](https://github.com/pipech/aws-lambda-ami-backup)
