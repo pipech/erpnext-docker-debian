@@ -1,6 +1,10 @@
-## Production Setup
+---
+layout: page
+title: Production Setup
+permalink: /production_setup/
+---
 
-In this setup we use the same ERPNext image as we use in trial setup 
+In this setup we use the same ERPNext image as we use in trial setup
 and config it to run production
 and instead of running all service in single container we separate some and put it into 8 container,
 and most important thing is it separate data volumes from container to docker volumes.
@@ -23,11 +27,11 @@ and most important thing is it separate data volumes from container to docker vo
 * Init swarm
 
     `docker swarm init`
-    
+
 * Clone repository
 
     `git clone https://github.com/pipech/erpnext-docker-debian.git`
-    
+
 * Change work directory
 
     `cd erpnext-docker-debian/production_setup`
@@ -52,15 +56,15 @@ and most important thing is it separate data volumes from container to docker vo
 * Find frappe container id
 
     `docker exec -it <frappe_container_id> bash`
-    
+
 * Run init.sh
 
     `cd .. && . init.sh`
-    
+
 * Exit from container
 
     `exit`
-    
+
 * Config mysql
 
     `docker exec -it <mysql_container_id> bash`
@@ -74,7 +78,7 @@ and most important thing is it separate data volumes from container to docker vo
 * Restart frappe container
 
     `docker service update --force <stack_name>_frappe`
-    
+
 * Remove all exited container
 
     `docker rm $(docker ps -a -q)`
@@ -112,7 +116,7 @@ and most important thing is it separate data volumes from container to docker vo
 * Check service in frappe container, all 6 services should run with success
 
     `docker logs <frappe_container_id>`
-    
+
     ```
     2018-02-09 07:10:53,185 CRIT Supervisor running as root (no user in config file)
     2018-02-09 07:10:53,192 INFO supervisord started with pid 5

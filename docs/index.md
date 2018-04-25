@@ -1,20 +1,12 @@
+---
+layout: home
+setup: setup.md
+ec2: ec2.md
+---
+
 ## How to use
 
-There are 3 way to use [erpnext-docker-debian](https://hub.docker.com/r/pipech/erpnext-docker-debian/) image.
-
-1. [Trial setup](trial_setup.md)
-This setup is the most easy and straightforward way to run ERPNext on Docker, 
-it will run pre-build docker image from Docker hub. 
-
-2. [Development setup](development_setup.md)
-This setup will share apps and sites folder to host machine 
-so you could explore the code.
-
-3. [Production setup](production_setup.md)
-In this setup we use the same ERPNext image as we use in trial setup 
-and config it to run production
-and instead of running all service in single container we separate some and put it into 8 container,
-and most important thing is it separate data volumes from container to docker volumes.
+{% include {{ page.setup }} %}
 
 In any command if there are `<something>` that means it just a name or container id
 you should change it to suit your environment.
@@ -42,8 +34,4 @@ To this > `docker run -it -p 8000:8000 -p 9000:9000 --name anything pipech/erpne
 
 ## Usage on AWS EC2
 
-Guide to setup EC2 instance for running erpnext-docker-debian image.
-
-* [Setup AWS EC2](setup_ec2.md)
-
-* [Backup AWS EC2 to AMI](https://github.com/pipech/aws-lambda-ami-backup)
+{% include {{ page.ec2 }} %}
