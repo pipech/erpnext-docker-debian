@@ -38,3 +38,23 @@ To this > `docker run -it -p 8000:8000 -p 9000:9000 --name anything pipech/erpne
 # Usage on AWS EC2
 
 {% include {{ page.ec2 }} %}
+
+# Installing custom app
+
+### Production setup & Trial setup
+
+    bench get-app https://github.com/frappe/erpnext_shopify
+    bench install-app erpnext_shopify
+
+### Development setup
+
+Has to run this way because of in development setup Apps and Sites folder 
+own by root user when we run `bench get-app https://pipech@bitbucket.org/pipech/erpnext-thai-localize.git`
+we will get `OSError: [Errno 13] Permission denied` error. This is a work around method.
+
+    bench new-app erpnext_shopify
+    cd apps && rm -rf erpnext_shopify
+    git clone https://github.com/frappe/erpnext_shopify
+    cd ..
+    bench install-app erpnext_shopify
+    
