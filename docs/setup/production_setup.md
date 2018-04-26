@@ -89,12 +89,19 @@ and most important thing is it separate data volumes from container to docker vo
 
 ### Finishing up
 
-* Don't forget to change administrator password
+* Change administrator password by login in to http://yourdomain.com
 
     ```
+    ERPNext
     User : Administrator
     Pass : admin
     ```
+
+* Change MySQL password
+
+    `docker exec -it <mysql_container_id> mysql -u "root" "-p123"`
+    
+    `ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';`
 
 ### Health-check
 
