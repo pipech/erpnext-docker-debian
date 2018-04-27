@@ -45,6 +45,7 @@ To this > `docker run -it -p 8000:8000 -p 9000:9000 --name anything pipech/erpne
 
     bench get-app https://github.com/frappe/erpnext_shopify
     bench install-app erpnext_shopify
+    bench update --build
 
 ### Development setup
 
@@ -57,4 +58,5 @@ we will get `OSError: [Errno 13] Permission denied` error. This is a work around
     git clone https://github.com/frappe/erpnext_shopify
     cd ..
     bench install-app erpnext_shopify
+    bench update --build
     
