@@ -131,5 +131,3 @@ configs:
     file: ./conf/redis-conf/redis_socketio.conf
   frappe-init-conf:
     file: ./conf/frappe-docker-conf/init.sh
-  nginx-tmpl-conf:
-    file: ./conf/nginx-tmpl-conf/nginx.tmpl
