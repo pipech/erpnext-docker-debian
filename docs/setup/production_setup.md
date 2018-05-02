@@ -18,11 +18,16 @@ and most important thing is it separate data volumes from container to docker vo
 7. nginx-proxy
 8. nginx-letsencrypt
 
+Note that every time you want to update app or install new app on frappe image
+you have to create new frappe image and that image must have blank bench/logs and bench/sites folder.
+
+Because if unfortunate unknown event that might cause frappe service to go down
+docker swarm will try to maintain that service by create new container using image that define in compose file.
+If you update app or install new app and don't create new image as soon as service fail
+your site will fail as well.
+
+
 ### Usage
-
-* Pull image
-
-    `docker pull pipech/erpnext-docker-debian-production:stable`
 
 * Init swarm
 
@@ -36,7 +41,18 @@ and most important thing is it separate data volumes from container to docker vo
 
     `cd erpnext-docker-debian/production_setup`
 
-* Change Environment in prd.yml file
+* If you want to install custom app
+
+    * [Create custom app](/erpnext-docker-debian//create_custom_app_image)
+
+    * Change image of frappe service in production_setup/prd.yml
+    
+        ```
+        frappe:
+            image: <docker_hub_username>/<docker_hub_repo_name>:<tag>
+        ```
+
+* Change Environment in production_setup/prd.yml file
 
     ```
     - DEFAULT_HOST
@@ -83,7 +99,7 @@ and most important thing is it separate data volumes from container to docker vo
 
     `docker rm $(docker ps -a -q)`
 
-* Go to web browser and access ERPNext or your domain
+* Go to web browser and access ERPNext via your domain
 
     `http://yourdomain.com`
 
