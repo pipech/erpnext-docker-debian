@@ -26,7 +26,6 @@ docker swarm will try to maintain that service by create new container using ima
 If you update app or install new app and don't create new image as soon as service fail
 your site will fail as well.
 
-
 ### Usage
 
 * Init swarm
@@ -43,7 +42,7 @@ your site will fail as well.
 
 * If you want to install custom app
 
-    * [Create custom app](/erpnext-docker-debian//create_custom_app_image)
+    * [Create custom app](/erpnext-docker-debian/create_custom_app_image)
 
     * Change image of frappe service in production_setup/prd.yml
     
@@ -69,7 +68,7 @@ your site will fail as well.
 
     `docker ps -a`
 
-* Find frappe container id
+* Call bash in frappe container
 
     `docker exec -it <frappe_container_id> bash`
 
@@ -156,3 +155,11 @@ your site will fail as well.
     2018-02-09 07:10:55,233 INFO success: bench-node-socketio entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
     2018-02-09 07:10:55,233 INFO success: bench-frappe-web entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
     ```
+
+### Update image
+
+You can update any service image simply by run
+
+    docker service update --image <image>:<tag> <stack_name>_<service>
+
+To update custom app frappe image please go to [Update custom image](/erpnext-docker-debian/update_custom_app_image)
