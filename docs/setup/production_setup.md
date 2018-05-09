@@ -40,17 +40,6 @@ your site will fail as well.
 
     `cd erpnext-docker-debian/production_setup`
 
-* If you want to install custom app
-
-    * [Create custom app](/erpnext-docker-debian/create_custom_app_image)
-
-    * Change image of frappe service in production_setup/prd.yml
-    
-        ```
-        frappe:
-            image: <docker_hub_username>/<docker_hub_repo_name>:<tag>
-        ```
-
 * Change Environment in production_setup/prd.yml file
 
     ```
@@ -161,5 +150,3 @@ your site will fail as well.
 You can update any service image simply by run
 
     docker service update --image <image>:<tag> <stack_name>_<service>
-
-To update custom app frappe image please go to [Update custom image](/erpnext-docker-debian/update_custom_app_image)
