@@ -1,6 +1,7 @@
 {
  "auto_update": false,
  "background_workers": 1,
+"dns_multitenant": true,
  "db_host": "mariadb",
  "file_watcher_port": 6787,
  "frappe_user": "frappe",
