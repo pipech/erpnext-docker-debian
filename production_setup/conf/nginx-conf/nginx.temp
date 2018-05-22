@@ -9,7 +9,7 @@ upstream bench-dev-socketio-server {
 server {
         listen 80;
         server_name
-                prdsite1.local
+                ${benchNewSiteName}
                 ;
 
         root /home/frappe/bench/sites;

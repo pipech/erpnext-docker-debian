@@ -31,11 +31,12 @@ services:
       replicas: 1
     configs:
       - source: nginx-conf
-        target: /etc/nginx/conf.d/default.conf
+        target: /etc/nginx/conf.d/nginx.temp
     env_file: domain.env
     volumes:
       - frappe-sites-volumes:/home/frappe/bench/sites
       - frappe-apps-volumes:/home/frappe/bench/apps
+    command: /bin/bash -c "envsubst '$$benchNewSiteName' < /etc/nginx/conf.d/nginx.temp > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
 
   mariadb:
     image: mariadb:10.2.12
