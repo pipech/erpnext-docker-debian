@@ -153,3 +153,28 @@ your site will fail as well.
 You can update any service image simply by run
 
     docker service update --image <image>:<tag> <stack_name>_<service>
+
+Or edit prd.yml file and run
+
+    docker stack deploy -c prd.yml <stack_name>
+    
+### Adding new site
+
+* Call bash in frappe container
+
+    `docker exec -it <frappe_container_id> bash`
+
+* Create new site
+
+    `bench new-site <site_domain>`
+    
+* Install app
+
+    `  bench --site <site_domain> install-app <app_name>`
+    
+* Add domain to production_setup/env
+
+    ```
+    - env/nginx_proxy.env
+    - env/frappe_nginx.env
+    ```

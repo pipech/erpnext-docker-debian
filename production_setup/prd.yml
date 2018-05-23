@@ -36,7 +36,7 @@ services:
     volumes:
       - frappe-sites-volumes:/home/frappe/bench/sites
       - frappe-apps-volumes:/home/frappe/bench/apps
-    command: /bin/bash -c "envsubst '$$VIRTUAL_HOST' < /etc/nginx/conf.d/nginx.temp > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+    command: /bin/bash -c "envsubst '$$NGINX_SERVER_NAME' < /etc/nginx/conf.d/nginx.temp > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
 
   mariadb:
     image: mariadb:10.2.12

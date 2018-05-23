@@ -9,7 +9,7 @@ upstream bench-socketio-server {
 server {
         listen 80;
         server_name
-                ${VIRTUAL_HOST}
+                ${NGINX_SERVER_NAME}
                 ;
 
         root /home/frappe/bench/sites;
