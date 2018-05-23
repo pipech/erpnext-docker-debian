@@ -40,14 +40,17 @@ your site will fail as well.
 
     `cd erpnext-docker-debian/production_setup`
 
-* Change Environment in production_setup/prd.yml file
+* Change Environment in production_setup/env/ file
 
     ```
-    - DEFAULT_HOST
-    - VIRTUAL_HOST
-    - LETSENCRYPT_HOST
-    - LETSENCRYPT_EMAIL
+    - frappe_app.env
+    - frappe_nginx.env
+    - nginx_proxy.env
     ```
+
+    note: Now you can't access website through localhost, 
+    you should've set domain point to machine ip address
+    and access through that domain.
 
 * Deploy stack using prd.yml as prd1 stack (In production folder where prd.yml is)
 
