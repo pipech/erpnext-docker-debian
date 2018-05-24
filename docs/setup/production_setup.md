@@ -40,14 +40,17 @@ your site will fail as well.
 
     `cd erpnext-docker-debian/production_setup`
 
-* Change Environment in production_setup/prd.yml file
+* Change Environment in production_setup/env/ file
 
     ```
-    - DEFAULT_HOST
-    - VIRTUAL_HOST
-    - LETSENCRYPT_HOST
-    - LETSENCRYPT_EMAIL
+    - frappe_app.env
+    - frappe_nginx.env
+    - nginx_proxy.env
     ```
+
+    note: Now you can't access website through localhost, 
+    you should've set domain point to machine ip address
+    and access through that domain.
 
 * Deploy stack using prd.yml as prd1 stack (In production folder where prd.yml is)
 
@@ -150,3 +153,28 @@ your site will fail as well.
 You can update any service image simply by run
 
     docker service update --image <image>:<tag> <stack_name>_<service>
+
+Or edit prd.yml file and run
+
+    docker stack deploy -c prd.yml <stack_name>
+    
+### Adding new site
+
+* Call bash in frappe container
+
+    `docker exec -it <frappe_container_id> bash`
+
+* Create new site
+
+    `bench new-site <site_domain>`
+    
+* Install app
+
+    `  bench --site <site_domain> install-app <app_name>`
+    
+* Add domain to production_setup/env
+
+    ```
+    - env/nginx_proxy.env
+    - env/frappe_nginx.env
+    ```
