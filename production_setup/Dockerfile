@@ -17,5 +17,11 @@ RUN mkdir logs-ori \
 # copy supervisor conf
 COPY ./conf/frappe-supervisor-conf/supervisor.conf /etc/supervisor/conf.d/docker_supervisor.conf
 
+RUN sudo apt-get install nginx -y
+
+EXPOSE 80
+
+COPY ./conf/frappe-docker-conf/start.sh /home/frappe/start.sh
+
 # run start.sh when container start
-CMD ["sudo", "/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/docker_supervisor.conf"]
+ENTRYPOINT ["/home/frappe/start.sh"]
