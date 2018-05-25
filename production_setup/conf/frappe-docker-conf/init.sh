@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 # turn on debug mode
 set -x
@@ -9,9 +9,9 @@ benchWD=/home/$systemUser/$benchFolderName
 echo "----------------------- [ move to bench directory ] ---------------------------------"
 cd $benchWD
 
-echo "----------------------- [ move sites folder ] ---------------------------------"
-mv ./sites-ori/* ./sites/
-mv ./logs-ori/* ./logs/
+echo "----------------------- [ change folder owner ] ---------------------------------"
+sudo chown -R $systemUser:$systemUser sites/*
+sudo chown -R $systemUser:$systemUser logs/*
 
 echo "----------------------- [ remove old site ] ---------------------------------"
 cd sites

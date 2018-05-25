@@ -25,19 +25,6 @@ services:
       - nginx-html-volumes:/usr/share/nginx/html
       - certs-volumes:/etc/nginx/certs:rw
 
-  nginx-frappe:
-    image: nginx:1.12.2
-    deploy:
-      replicas: 1
-    configs:
-      - source: nginx-conf
-        target: /etc/nginx/conf.d/nginx.temp
-    env_file: ./env/frappe_nginx.env
-    volumes:
-      - frappe-sites-volumes:/home/frappe/bench/sites
-      - frappe-apps-volumes:/home/frappe/bench/apps
-    command: /bin/bash -c "envsubst '$$NGINX_SERVER_NAME' < /etc/nginx/conf.d/nginx.temp > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
-
   mariadb:
     image: mariadb:10.2.12
     deploy:
@@ -90,20 +77,16 @@ services:
       - "8000:8000"   #webserver_port
       - "9000:9000"   #socketio_port
       - "6787:6787"   #file_watcher_port
-    configs:
-      - source: frappe-init-conf
-        target: /home/frappe/init.sh
     volumes:
       - frappe-sites-volumes:/home/frappe/bench/sites
-      - frappe-apps-volumes:/home/frappe/bench/apps
       - frappe-logs-volumes:/home/frappe/bench/logs
     stdin_open: true
     tty: true
-    env_file: ./env/frappe_app.env
+    env_file:
+      - ./env/frappe_app.env
 
 volumes:
   frappe-sites-volumes:
-  frappe-apps-volumes:
   frappe-logs-volumes:
   mariadb-data-volumes:
   nginx-conf-volumes:
@@ -116,13 +99,9 @@ configs:
     file: ./conf/mariadb-conf/mariadb.cnf
   mariadb-init-conf:
     file: ./conf/mariadb-conf/init.sql
-  nginx-conf:
-    file: ./conf/nginx-conf/nginx.temp
   redis-cache-conf:
     file: ./conf/redis-conf/redis_cache.conf
   redis-queue-conf:
     file: ./conf/redis-conf/redis_queue.conf
   redis-socketio-conf:
     file: ./conf/redis-conf/redis_socketio.conf
-  frappe-init-conf:
-    file: ./conf/frappe-docker-conf/init.sh
