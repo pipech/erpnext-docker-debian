@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 # turn on debug mode
 set -x
@@ -12,6 +12,8 @@ cd $benchWD
 echo "----------------------- [ move sites folder ] ---------------------------------"
 mv ./sites-ori/* ./sites/
 mv ./logs-ori/* ./logs/
+rm -rf ./sites-ori
+rm -rf ./logs-ori
 
 echo "----------------------- [ remove old site ] ---------------------------------"
 cd sites

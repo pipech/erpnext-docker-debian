@@ -70,30 +70,23 @@ services:
     command: ["redis-server","/etc/conf.d/redis.conf"]
 
   frappe:
-    image: pipech/test:7
+    image: pipech/erpnext-docker-debian-production:stable
     deploy:
       replicas: 1
     ports:
       - "8000:8000"   #webserver_port
       - "9000:9000"   #socketio_port
       - "6787:6787"   #file_watcher_port
-    configs:
-      - source: frappe-init-conf
-        target: /home/frappe/init.sh
-      - source: nginx-conf
-        target: /etc/nginx/conf.d/nginx.conf
     volumes:
       - frappe-sites-volumes:/home/frappe/bench/sites
       - frappe-logs-volumes:/home/frappe/bench/logs
     stdin_open: true
     tty: true
     env_file:
-      - ./env/frappe_app.env\
-      - ./env/frappe_nginx.env
+      - ./env/frappe_app.env
 
 volumes:
   frappe-sites-volumes:
-  frappe-apps-volumes:
   frappe-logs-volumes:
   mariadb-data-volumes:
   nginx-conf-volumes:
@@ -106,13 +99,9 @@ configs:
     file: ./conf/mariadb-conf/mariadb.cnf
   mariadb-init-conf:
     file: ./conf/mariadb-conf/init.sql
-  nginx-conf:
-    file: ./conf/nginx-conf/nginx.conf
   redis-cache-conf:
     file: ./conf/redis-conf/redis_cache.conf
   redis-queue-conf:
     file: ./conf/redis-conf/redis_queue.conf
   redis-socketio-conf:
     file: ./conf/redis-conf/redis_socketio.conf
-  frappe-init-conf:
-    file: ./conf/frappe-docker-conf/init.sh

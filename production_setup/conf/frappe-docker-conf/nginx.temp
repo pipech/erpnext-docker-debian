@@ -1,9 +1,9 @@
 upstream bench-frappe {
-    server frappe:8000 fail_timeout=0;
+    server 127.0.0.1:8000 fail_timeout=0;
 }
 
 upstream bench-socketio-server {
-    server frappe:9000 fail_timeout=0;
+    server 127.0.0.1:9000 fail_timeout=0;
 }
 
 server {
