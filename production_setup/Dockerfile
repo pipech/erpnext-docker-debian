@@ -38,15 +38,6 @@ WORKDIR /home/$systemUser/$benchFolderName
 # copy config
 ADD conf/frappe-docker-conf/common_site_config_docker.json ./sites/common_site_config.json
 
-# move site folder to site-ori folder
-# we need to do this because when we first start sites and logs will be blank then we will populate data from
-# sites-ori and logs-ori
-RUN mkdir sites-ori \
-    && mv ./sites/* ./sites-ori/
-
-RUN mkdir logs-ori \
-    && mv ./logs/* ./logs-ori/
-
 # install
 RUN sudo apt-get -y update \
     && sudo apt-get -y install \

@@ -9,11 +9,9 @@ benchWD=/home/$systemUser/$benchFolderName
 echo "----------------------- [ move to bench directory ] ---------------------------------"
 cd $benchWD
 
-echo "----------------------- [ move sites folder ] ---------------------------------"
-mv ./sites-ori/* ./sites/
-mv ./logs-ori/* ./logs/
-rm -rf ./sites-ori
-rm -rf ./logs-ori
+echo "----------------------- [ change folder owner ] ---------------------------------"
+sudo chown -R $systemUser:$systemUser sites/*
+sudo chown -R $systemUser:$systemUser logs/*
 
 echo "----------------------- [ remove old site ] ---------------------------------"
 cd sites
