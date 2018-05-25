@@ -40,11 +40,21 @@ your site will fail as well.
 
     `cd erpnext-docker-debian/production_setup`
 
+* If you want to install custom app
+
+    * [Create custom app image](/erpnext-docker-debian/create_custom_app_image)
+
+    * Change image of frappe service in production_setup/prd.yml
+    
+        ```
+        frappe:
+            image: <docker_hub_username>/<docker_hub_repo_name>:<tag>
+        ```
+
 * Change Environment in production_setup/env/ file
 
     ```
     - frappe_app.env
-    - frappe_nginx.env
     - nginx_proxy.env
     ```
 
@@ -116,18 +126,17 @@ your site will fail as well.
 
     `docker service ls`
     ```
-        ID                  NAME                    MODE                REPLICAS            IMAGE                                            PORTS
-    ywe1xryvsfun        p06_frappe              replicated          1/1                 pipech/erpnext-docker-debian-production:stable   *:6787->6787/tcp,*:8000->8000/tcp,*:9000->9000/tcp
-    v93gdseu5agy        p06_mariadb             replicated          1/1                 mariadb:10.2.12                                  *:3307->3306/tcp
-    8wnwrnijgash        p06_nginx-frappe        replicated          1/1                 nginx:1.12.2                                     *:8080->80/tcp
-    4dzi4g0x4d9x        p06_nginx-letsencrypt   replicated          1/1                 jrcs/letsencrypt-nginx-proxy-companion:latest
-    ops1qx3f3cxs        p06_nginx-proxy         replicated          1/1                 jwilder/nginx-proxy:latest                       *:80->80/tcp,*:443->443/tcp
-    x6er9y432gjt        p06_redis-cache         replicated          1/1                 redis:alpine
-    2r1zu913egm7        p06_redis-queue         replicated          1/1                 redis:alpine
-    zjfdf8i64j42        p06_redis-socketio      replicated          1/1                 redis:alpine
+    ID                  NAME                    MODE                REPLICAS            IMAGE                                           PORTS
+    g9riueugg7np        a32_frappe              replicated          1/1                 pipech/erpnext-docker-debian-production:stable                                  *:6787->6787/tcp, *:8000->8000/tcp, *:9000->9000/tcp
+    jpqcvdcosvh4        a32_mariadb             replicated          1/1                 mariadb:10.2.12                                 *:3307->3306/tcp
+    pl02kr5aq48h        a32_nginx-letsencrypt   replicated          1/1                 jrcs/letsencrypt-nginx-proxy-companion:latest
+    u8rduyywhhyg        a32_nginx-proxy         replicated          1/1                 jwilder/nginx-proxy:latest                      *:80->80/tcp, *:443->443/tcp
+    m3ow7zttd4ib        a32_redis-cache         replicated          1/1                 redis:alpine
+    it6a2nijx7a3        a32_redis-queue         replicated          1/1                 redis:alpine
+    tc4qg72dhov1        a32_redis-socketio      replicated          1/1                 redis:alpine
     ```
 
-* Check service in frappe container, all 6 services should run with success
+* Check service in frappe container, all 7 services should run with success
 
     `docker logs <frappe_container_id>`
 
@@ -150,11 +159,9 @@ your site will fail as well.
 
 ### Update image
 
-You can update any service image simply by run
+* To update custom app frappe image please go to [Update custom image](/erpnext-docker-debian/update_custom_app_image)
 
-    docker service update --image <image>:<tag> <stack_name>_<service>
-
-Or edit prd.yml file and run
+* Edit prd.yml file and run
 
     docker stack deploy -c prd.yml <stack_name>
     
@@ -176,5 +183,5 @@ Or edit prd.yml file and run
 
     ```
     - env/nginx_proxy.env
-    - env/frappe_nginx.env
+    - env/frappe_app.env
     ```

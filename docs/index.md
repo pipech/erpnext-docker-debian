@@ -41,7 +41,7 @@ To this > `docker run -it -p 8000:8000 -p 9000:9000 --name anything pipech/erpne
 
 # Installing custom app
 
-### Trial and Production setup
+### Trial setup
 
     bench get-app https://github.com/frappe/erpnext_shopify
     bench install-app erpnext_shopify
@@ -60,3 +60,6 @@ we will get `OSError: [Errno 13] Permission denied` error. This is a work around
     bench install-app erpnext_shopify
     bench update --build
     
+### Production setup
+
+* [Install custom app](/erpnext-docker-debian/create_custom_app_image)
