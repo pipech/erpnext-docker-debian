@@ -38,12 +38,6 @@ WORKDIR /home/$systemUser/$benchFolderName
 # copy config
 ADD conf/frappe-docker-conf/common_site_config_docker.json ./sites/common_site_config.json
 
-# install
-RUN sudo apt-get -y update \
-    && sudo apt-get -y install \
-    nginx \
-    gettext-base
-
 # copy conf
 ADD conf/frappe-docker-conf/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 ADD conf/frappe-docker-conf/nginx.temp /etc/nginx/conf.d/nginx.temp
