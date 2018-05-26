@@ -1,24 +1,15 @@
 #!/bin/bash
 
-# turn on debug mode
-set -x
+# turn on debug mode > https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -euxo pipefail
 
-echo "----------------------- [ change sites and apps folder to it's original folder ] ---------------------------------"
-
+# change sites and apps folder to it's original folder
 sudo mv ./sites-dev/* ./sites/
 sudo mv ./apps-dev/* ./apps/
 
-sudo chown frappe sites
-sudo chown frappe apps
+# change sites and apps folder to it's original folder
+sudo chown frappe:frappe sites
+sudo chown frappe:frappe apps
 
+# patch sites data
 bench update --patch
-
-# turn off debug mode
-set +x
-
-echo "-"
-echo "-"
-echo "-"
-echo "----------------------- [ DONE! ] ---------------------------------"
-
-

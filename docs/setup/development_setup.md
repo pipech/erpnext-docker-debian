@@ -49,7 +49,6 @@ so you could explore the code.
 
     `docker exec -it <frappe_container_id> bash`
 
-
 * Start development server
 
     `bench start`
