@@ -8,18 +8,19 @@ RUN apt-get -y update \
     curl \
     wget \
     nano \
+    cron \
+    gettext-base \
     sudo \
+    locales \
     supervisor \
-    cron
+    nginx
 
 # work around for  "cmd": "chsh frappe -s $(which bash)", "stderr": "Password: chsh: PAM: Authentication failure"
 # caused by > bench/playbooks/create_user.yml > shell: "chsh {{ frappe_user }} -s $(which bash)"
 RUN sed -i 's/auth       required   pam_shells.so/auth       sufficient   pam_shells.so/' /etc/pam.d/chsh
 
 # Set locales
-RUN apt-get -y update \
-    && apt-get -y install locales \
-    && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
+RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
     && locale-gen
 
 ENV LC_ALL=en_US.UTF-8 \
@@ -87,16 +88,13 @@ RUN wget $easyinstallRepo \
 # change back config for work around for  "cmd": "chsh frappe -s $(which bash)", "stderr": "Password: chsh: PAM: Authentication failure"
 RUN sudo sed -i 's/auth       sufficient   pam_shells.so/auth       required   pam_shells.so/' /etc/pam.d/chsh
 
-# work around for worker | Error: no such option: --quiet
-# caused by > bench/bench/config/templates/Procfile > worker_short: bench worker --queue short --quiet
-RUN sed -i 's/--quiet//' /home/frappe/bench/Procfile
-
 # set user and workdir
 USER $systemUser
 WORKDIR /home/$systemUser/$benchFolderName
 
 # run start mysql service when container start
-CMD ["sudo", "mysqld"]
+COPY entrypoint.sh /usr/local/bin/
+CMD ["/usr/local/bin/entrypoint.sh"]
 
 # expose port
 EXPOSE 8000-8005 9000-9005 3306-3307
