@@ -84,6 +84,7 @@ services:
     tty: true
     env_file:
       - ./env/frappe_app.env
+    command: ["/home/frappe/production_config/entrypoint.sh"]
 
 volumes:
   frappe-sites-volumes:
