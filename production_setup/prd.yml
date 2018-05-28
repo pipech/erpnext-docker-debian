@@ -2,19 +2,25 @@ version: '3.3'
 services:
 
 services:
-  reverse-proxy:
+  traefik:
     image: traefik
     command: --docker --api
     ports:
       - "80:80"
+      - "443:443"
       - "8080:8080" # traefik web ui (enabled by --api)
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - traefik-certificates-storage-volumes:/etc/traefik/acme
+      - traefik-domain-config-volumes:/config
     networks:
       - proxy
+    configs:
+      - source: traefik-conf:
+        target: /etc/traefik/traefik.toml
 
   frappe:
-    image: pipech/test:03
+    image: pipech/erpnext-docker-debian:stable
     deploy:
       replicas: 1
     ports:
@@ -24,6 +30,7 @@ services:
     volumes:
       - frappe-sites-volumes:/home/frappe/bench/sites
       - frappe-logs-volumes:/home/frappe/bench/logs
+      - traefik-domain-config-volumes:/home/frappe/traefik-config
     stdin_open: true
     tty: true
     env_file:
@@ -92,6 +99,8 @@ volumes:
   frappe-sites-volumes:
   frappe-logs-volumes:
   mariadb-data-volumes:
+  traefik-certificates-storage-volumes:
+  traefik-domain-config-volumes:
 
 configs:
   mariadb-conf:
@@ -104,6 +113,8 @@ configs:
     file: ./conf/redis-conf/redis_queue.conf
   redis-socketio-conf:
     file: ./conf/redis-conf/redis_socketio.conf
+  traefik-conf:
+    file: ./conf/traefik-conf/traefik.toml
 
 networks:
   proxy:

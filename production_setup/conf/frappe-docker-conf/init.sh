@@ -3,6 +3,9 @@
 # turn on debug mode > https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
 set -euxo pipefail
 
+# copy traefik config
+cp /home/$systemUser/production_config/acme.toml /home/frappe/traefik-config/acme.toml
+
 # env has been set from dockerfile
 benchWD=/home/$systemUser/$benchFolderName
 

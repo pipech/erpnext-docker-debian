@@ -1,0 +1,10 @@
+[entryPoints]
+    [entryPoints.http]
+    address = ":80"
+    [entryPoints.https]
+    address = ":443"
+        [entryPoints.https.tls]
+
+[file]
+    filename = "/config"
+    watch = true

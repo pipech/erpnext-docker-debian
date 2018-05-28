@@ -1,0 +1,11 @@
+[acme]
+email = "poranut@spacecode.co.th"
+storage = "/etc/traefik/acme/acme.json"
+entryPoint = "https"
+    [acme.httpChallenge]
+        entryPoint = "http"
+
+# https://docs.traefik.io/user-guide/docker-and-lets-encrypt/
+# https://docs.traefik.io/user-guide/examples/#lets-encrypt-support
+[[acme.domains]]
+    main = "t01.spacecode.co.th"
