@@ -4,56 +4,14 @@ services:
 services:
   reverse-proxy:
     image: traefik
-    command: --api --docker # Enables the web UI and tells Træfik to listen to docker
+    command: --docker --api
     ports:
-      - "80:80"     # The HTTP port
-      - "8080:8080" # The Web UI (enabled by --api)
+      - "80:80"
+      - "8080:8080" # traefik web ui (enabled by --api)
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-
-  mariadb:
-    image: mariadb:10.2.12
-    deploy:
-      replicas: 1
-    environment:
-      - MYSQL_USER=root
-      - MYSQL_ROOT_PASSWORD=123
-    configs:
-      - source: mariadb-conf
-        target: /etc/mysql/conf.d/mariadb.cnf
-      - source: mariadb-init-conf
-        target: /home/init.sql
-    volumes:
-      - mariadb-data-volumes:/var/lib/mysql
-    ports:
-      - "3307:3306"
-
-  redis-cache:
-    image: redis:alpine
-    deploy:
-      replicas: 1
-    configs:
-      - source: redis-cache-conf
-        target: /etc/conf.d/redis.conf
-    command: ["redis-server","/etc/conf.d/redis.conf"]
-
-  redis-queue:
-    image: redis:alpine
-    deploy:
-      replicas: 1
-    configs:
-      - source: redis-queue-conf
-        target: /etc/conf.d/redis.conf
-    command: ["redis-server","/etc/conf.d/redis.conf"]
-
-  redis-socketio:
-    image: redis:alpine
-    deploy:
-      replicas: 1
-    configs:
-      - source: redis-socketio-conf
-        target: /etc/conf.d/redis.conf
-    command: ["redis-server","/etc/conf.d/redis.conf"]
+    networks:
+      - proxy
 
   frappe:
     image: pipech/test:03
@@ -74,6 +32,61 @@ services:
     labels:
       - "traefik.frontend.rule=Host:t01.spacecode.co.th, t02.spacecode.co.th"
       - "traefik.port=80"
+    networks:
+      - proxy
+      - default
+
+  mariadb:
+    image: mariadb:10.2.12
+    deploy:
+      replicas: 1
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=123
+    configs:
+      - source: mariadb-conf
+        target: /etc/mysql/conf.d/mariadb.cnf
+      - source: mariadb-init-conf
+        target: /home/init.sql
+    volumes:
+      - mariadb-data-volumes:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - default
+
+  redis-cache:
+    image: redis:alpine
+    deploy:
+      replicas: 1
+    configs:
+      - source: redis-cache-conf
+        target: /etc/conf.d/redis.conf
+    command: ["redis-server","/etc/conf.d/redis.conf"]
+    networks:
+      - default
+
+  redis-queue:
+    image: redis:alpine
+    deploy:
+      replicas: 1
+    configs:
+      - source: redis-queue-conf
+        target: /etc/conf.d/redis.conf
+    command: ["redis-server","/etc/conf.d/redis.conf"]
+    networks:
+      - default
+
+  redis-socketio:
+    image: redis:alpine
+    deploy:
+      replicas: 1
+    configs:
+      - source: redis-socketio-conf
+        target: /etc/conf.d/redis.conf
+    command: ["redis-server","/etc/conf.d/redis.conf"]
+    networks:
+      - default
 
 volumes:
   frappe-sites-volumes:
@@ -91,3 +104,6 @@ configs:
     file: ./conf/redis-conf/redis_queue.conf
   redis-socketio-conf:
     file: ./conf/redis-conf/redis_socketio.conf
+
+networks:
+  proxy:
