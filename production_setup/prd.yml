@@ -1,29 +1,15 @@
 version: '3.3'
 services:
 
-  nginx-proxy:
-    image: jwilder/nginx-proxy
-    labels:
-      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
+services:
+  reverse-proxy:
+    image: traefik
+    command: --api --docker # Enables the web UI and tells Træfik to listen to docker
     ports:
-      - "80:80"
-      - "443:443"
+      - "80:80"     # The HTTP port
+      - "8080:8080" # The Web UI (enabled by --api)
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - nginx-conf-volumes:/etc/nginx/conf.d
-      - nginx-vhost-volumes:/etc/nginx/vhost.d
-      - nginx-html-volumes:/usr/share/nginx/html
-      - certs-volumes:/etc/nginx/certs:ro
-    env_file: ./env/nginx_proxy.env
-
-  nginx-letsencrypt:
-    image: jrcs/letsencrypt-nginx-proxy-companion
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - nginx-conf-volumes:/etc/nginx/conf.d
-      - nginx-vhost-volumes:/etc/nginx/vhost.d
-      - nginx-html-volumes:/usr/share/nginx/html
-      - certs-volumes:/etc/nginx/certs:rw
+      - /var/run/docker.sock:/var/run/docker.sock
 
   mariadb:
     image: mariadb:10.2.12
@@ -70,7 +56,7 @@ services:
     command: ["redis-server","/etc/conf.d/redis.conf"]
 
   frappe:
-    image: pipech/erpnext-docker-debian-production:stable
+    image: pipech/test:03
     deploy:
       replicas: 1
     ports:
@@ -85,15 +71,14 @@ services:
     env_file:
       - ./env/frappe_app.env
     command: ["/home/frappe/production_config/entrypoint.sh"]
+    labels:
+      - "traefik.frontend.rule=Host:t01.spacecode.co.th, t02.spacecode.co.th"
+      - "traefik.port=80"
 
 volumes:
   frappe-sites-volumes:
   frappe-logs-volumes:
   mariadb-data-volumes:
-  nginx-conf-volumes:
-  nginx-vhost-volumes:
-  nginx-html-volumes:
-  certs-volumes:
 
 configs:
   mariadb-conf:
