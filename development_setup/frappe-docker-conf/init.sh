@@ -13,7 +13,3 @@ sudo chown frappe:frappe apps
 
 # patch sites data
 bench update --patch
-
-#
-#
-# done
