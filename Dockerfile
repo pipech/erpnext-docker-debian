@@ -92,6 +92,9 @@ RUN sudo sed -i 's/auth       sufficient   pam_shells.so/auth       required   p
 USER $systemUser
 WORKDIR /home/$systemUser/$benchFolderName
 
+# copy production config
+COPY production_setup/conf/frappe-docker-conf /home/$systemUser/production_config
+
 # run start mysql service when container start
 COPY entrypoint.sh /usr/local/bin/
 CMD ["/usr/local/bin/entrypoint.sh"]

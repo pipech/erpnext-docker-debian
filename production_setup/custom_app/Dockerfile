@@ -4,8 +4,6 @@ FROM pipech/erpnext-docker-debian:stable
 USER $systemUser
 WORKDIR /home/$systemUser/$benchFolderName
 
-########## install custom app > Start ##########
-
 ### For private repository > Start ###
 #
 #### install expect, this will use to run install script
@@ -27,26 +25,9 @@ WORKDIR /home/$systemUser/$benchFolderName
 ### For private repository > End ###
 
 
+
 ### For public repository > Start ###
 #
 #RUN bench get-app erpnext_shopify https://github.com/frappe/erpnext_shopify
 #
 ### For public repository > End ###
-
-########## install custom app > End ##########
-
-# copy config
-ADD conf/frappe-docker-conf/common_site_config_docker.json ./sites/common_site_config.json
-
-# copy conf
-ADD conf/frappe-docker-conf/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
-ADD conf/frappe-docker-conf/nginx.temp /etc/nginx/conf.d/nginx.temp
-
-ADD conf/frappe-docker-conf/start.sh /home/frappe/start.sh
-ADD conf/frappe-docker-conf/init.sh /home/frappe/init.sh
-
-# expose port for nginx
-EXPOSE 80
-
-# run start.sh when container start
-ENTRYPOINT ["/home/frappe/start.sh"]

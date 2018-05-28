@@ -1,29 +1,40 @@
 version: '3.3'
 services:
 
-  nginx-proxy:
-    image: jwilder/nginx-proxy
-    labels:
-      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
+services:
+  reverse-proxy:
+    image: traefik
+    command: --docker --api
     ports:
       - "80:80"
-      - "443:443"
+      - "8080:8080" # traefik web ui (enabled by --api)
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - nginx-conf-volumes:/etc/nginx/conf.d
-      - nginx-vhost-volumes:/etc/nginx/vhost.d
-      - nginx-html-volumes:/usr/share/nginx/html
-      - certs-volumes:/etc/nginx/certs:ro
-    env_file: ./env/nginx_proxy.env
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - proxy
 
-  nginx-letsencrypt:
-    image: jrcs/letsencrypt-nginx-proxy-companion
+  frappe:
+    image: pipech/test:03
+    deploy:
+      replicas: 1
+    ports:
+      - "8000:8000"   #webserver_port
+      - "9000:9000"   #socketio_port
+      - "6787:6787"   #file_watcher_port
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - nginx-conf-volumes:/etc/nginx/conf.d
-      - nginx-vhost-volumes:/etc/nginx/vhost.d
-      - nginx-html-volumes:/usr/share/nginx/html
-      - certs-volumes:/etc/nginx/certs:rw
+      - frappe-sites-volumes:/home/frappe/bench/sites
+      - frappe-logs-volumes:/home/frappe/bench/logs
+    stdin_open: true
+    tty: true
+    env_file:
+      - ./env/frappe_app.env
+    command: ["/home/frappe/production_config/entrypoint.sh"]
+    labels:
+      - "traefik.frontend.rule=Host:t01.spacecode.co.th, t02.spacecode.co.th"
+      - "traefik.port=80"
+    networks:
+      - proxy
+      - default
 
   mariadb:
     image: mariadb:10.2.12
@@ -41,6 +52,8 @@ services:
       - mariadb-data-volumes:/var/lib/mysql
     ports:
       - "3307:3306"
+    networks:
+      - default
 
   redis-cache:
     image: redis:alpine
@@ -50,6 +63,8 @@ services:
       - source: redis-cache-conf
         target: /etc/conf.d/redis.conf
     command: ["redis-server","/etc/conf.d/redis.conf"]
+    networks:
+      - default
 
   redis-queue:
     image: redis:alpine
@@ -59,6 +74,8 @@ services:
       - source: redis-queue-conf
         target: /etc/conf.d/redis.conf
     command: ["redis-server","/etc/conf.d/redis.conf"]
+    networks:
+      - default
 
   redis-socketio:
     image: redis:alpine
@@ -68,31 +85,13 @@ services:
       - source: redis-socketio-conf
         target: /etc/conf.d/redis.conf
     command: ["redis-server","/etc/conf.d/redis.conf"]
-
-  frappe:
-    image: pipech/erpnext-docker-debian-production:stable
-    deploy:
-      replicas: 1
-    ports:
-      - "8000:8000"   #webserver_port
-      - "9000:9000"   #socketio_port
-      - "6787:6787"   #file_watcher_port
-    volumes:
-      - frappe-sites-volumes:/home/frappe/bench/sites
-      - frappe-logs-volumes:/home/frappe/bench/logs
-    stdin_open: true
-    tty: true
-    env_file:
-      - ./env/frappe_app.env
+    networks:
+      - default
 
 volumes:
   frappe-sites-volumes:
   frappe-logs-volumes:
   mariadb-data-volumes:
-  nginx-conf-volumes:
-  nginx-vhost-volumes:
-  nginx-html-volumes:
-  certs-volumes:
 
 configs:
   mariadb-conf:
@@ -105,3 +104,6 @@ configs:
     file: ./conf/redis-conf/redis_queue.conf
   redis-socketio-conf:
     file: ./conf/redis-conf/redis_socketio.conf
+
+networks:
+  proxy:
