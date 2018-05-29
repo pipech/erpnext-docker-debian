@@ -16,11 +16,11 @@ services:
     networks:
       - proxy
     configs:
-      - source: traefik-conf:
+      - source: traefik-conf
         target: /etc/traefik/traefik.toml
 
   frappe:
-    image: pipech/erpnext-docker-debian:stable
+    image: pipech/erpnext-docker-debian:test
     deploy:
       replicas: 1
     ports:
@@ -35,7 +35,7 @@ services:
     tty: true
     env_file:
       - ./env/frappe_app.env
-    command: ["/home/frappe/production_config/entrypoint.sh"]
+    command: ["/home/frappe/production_config/entrypoint_prd.sh"]
     labels:
       - "traefik.frontend.rule=Host:t01.spacecode.co.th, t02.spacecode.co.th"
       - "traefik.port=80"
