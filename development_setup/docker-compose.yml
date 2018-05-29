@@ -11,6 +11,5 @@ services:
     volumes:
       - ./data/bench/apps:/home/frappe/bench/apps
       - ./data/bench/sites:/home/frappe/bench/sites
-      - ./data/mysql:/var/lib/mysql
     stdin_open: true
     tty: true

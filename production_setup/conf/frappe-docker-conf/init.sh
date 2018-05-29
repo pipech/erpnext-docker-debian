@@ -33,3 +33,5 @@ bench install-app erpnext
 
 # fixed JS error
 bench update --build
+
+set +euxo pipefail
