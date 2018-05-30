@@ -1,20 +1,17 @@
 version: '3.3'
-services:
 
 services:
   traefik:
     image: traefik
-    command: --docker --api
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080" # traefik web ui (enabled by --api)
+      - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - traefik-certificates-storage-volumes:/etc/traefik/acme
-      - traefik-domain-config-volumes:/config
     networks:
-      - proxy
+      - traefik_proxy
     configs:
       - source: traefik-conf
         target: /etc/traefik/traefik.toml
@@ -37,10 +34,12 @@ services:
       - ./env/frappe_app.env
     command: ["/home/frappe/production_config/entrypoint_prd.sh"]
     labels:
-      - "traefik.frontend.rule=Host:t01.spacecode.co.th, t02.spacecode.co.th"
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:t01.spacecode.co.th"
       - "traefik.port=80"
+      - "traefik.docker.network=traefik_proxy"
     networks:
-      - proxy
+      - traefik_proxy
       - default
 
   mariadb:
@@ -117,4 +116,5 @@ configs:
     file: ./conf/traefik-conf/traefik.toml
 
 networks:
-  proxy:
+  traefik_proxy:
+    external: true
