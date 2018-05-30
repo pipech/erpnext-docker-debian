@@ -6,7 +6,7 @@ services:
     ports:
       - "8000-8005:8000-8005"   #webserver_port
       - "9000-9005:9000-9005"   #socketio_port
-      - "6787:6787"                     #file_watcher_port
+      - "6787:6787"             #file_watcher_port
       - "3306-3307:3306-3307"   #mysql _port
     volumes:
       - ./data/bench/apps:/home/frappe/bench/apps

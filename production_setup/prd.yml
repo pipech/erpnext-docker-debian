@@ -1,20 +1,23 @@
 version: '3.3'
-services:
 
 services:
-  reverse-proxy:
+  traefik:
     image: traefik
-    command: --docker --api
     ports:
       - "80:80"
-      - "8080:8080" # traefik web ui (enabled by --api)
+      - "443:443"
+      - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - traefik-certificates-storage-volumes:/etc/traefik/acme
     networks:
-      - proxy
+      - traefik_proxy
+    configs:
+      - source: traefik-conf
+        target: /etc/traefik/traefik.toml
 
   frappe:
-    image: pipech/test:03
+    image: pipech/erpnext-docker-debian:test
     deploy:
       replicas: 1
     ports:
@@ -24,16 +27,19 @@ services:
     volumes:
       - frappe-sites-volumes:/home/frappe/bench/sites
       - frappe-logs-volumes:/home/frappe/bench/logs
+      - traefik-domain-config-volumes:/home/frappe/traefik-config
     stdin_open: true
     tty: true
     env_file:
       - ./env/frappe_app.env
-    command: ["/home/frappe/production_config/entrypoint.sh"]
+    command: ["/home/frappe/production_config/entrypoint_prd.sh"]
     labels:
-      - "traefik.frontend.rule=Host:t01.spacecode.co.th, t02.spacecode.co.th"
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:t01.spacecode.co.th"
       - "traefik.port=80"
+      - "traefik.docker.network=traefik_proxy"
     networks:
-      - proxy
+      - traefik_proxy
       - default
 
   mariadb:
@@ -92,6 +98,8 @@ volumes:
   frappe-sites-volumes:
   frappe-logs-volumes:
   mariadb-data-volumes:
+  traefik-certificates-storage-volumes:
+  traefik-domain-config-volumes:
 
 configs:
   mariadb-conf:
@@ -104,6 +112,9 @@ configs:
     file: ./conf/redis-conf/redis_queue.conf
   redis-socketio-conf:
     file: ./conf/redis-conf/redis_socketio.conf
+  traefik-conf:
+    file: ./conf/traefik-conf/traefik.toml
 
 networks:
-  proxy:
+  traefik_proxy:
+    external: true

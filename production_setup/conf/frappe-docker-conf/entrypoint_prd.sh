@@ -10,7 +10,7 @@ benchWD=/home/$systemUser
 cd $benchWD/production_config
 
 # set bench config
-cp common_site_config_docker.json $benchWD/$benchFolderName/sites/common_site_config.json
+sudo cp common_site_config_docker.json $benchWD/$benchFolderName/sites/common_site_config.json
 
 # set supervisor config
 sudo cp supervisor.conf /etc/supervisor/conf.d/supervisor.conf
