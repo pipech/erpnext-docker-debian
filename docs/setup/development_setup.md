@@ -2,6 +2,7 @@
 layout: page
 title: Development Setup
 permalink: /development_setup/
+userpass: user_pass.md
 ---
 
 This setup will share apps and sites folder to host machine
@@ -59,12 +60,9 @@ so you could explore the code.
 
 * Access mysql using [MySQL Workbench](https://www.mysql.com/products/workbench)
 
-    ```
-    Hostname : localhost
-    Port : 3306
-    User : remote
-    Pass : 12345
-    ```
+### User & Password
+
+{% include {{ page.userpass }} %}
 
 ### Clean-up
 

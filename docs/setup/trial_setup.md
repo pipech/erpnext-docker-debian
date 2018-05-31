@@ -2,6 +2,7 @@
 layout: page
 title: Trial Setup
 permalink: /trial_setup/
+userpass: user_pass.md
 ---
 
 This setup is the most easy and straightforward way to run ERPNext on Docker,
@@ -17,9 +18,16 @@ it will run pre-build docker image from Docker hub.
 
     `docker run -d -p 8000-8005:8000-8005 -p 9000-9005:9000-9005 -p 3306-3307:3306-3307 pipech/erpnext-docker-debian:stable`
 
+* Wait 30sec - 1min
+
 * Go to web browser and access ERPNext
 
     `http://localhost:8000`
+
+### User & Password
+
+{% include {{ page.userpass }} %}
+
 
 ### Start, Stop Container
 
