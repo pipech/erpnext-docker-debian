@@ -1,9 +1,3 @@
----
-layout: home
-title: User & Password
-permalink: /user_pass/
----
-
 * Website
 
     ```
