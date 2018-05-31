@@ -6,25 +6,26 @@ permalink: /production_setup/
 
 In this setup we use the same ERPNext image as we use in trial setup
 and config it to run production
-and instead of running all service in single container we separate some and put it into 8 container,
+and instead of running all service in single container we separate some and put it into 6 container,
 and most important thing is it separate data volumes from container to docker volumes.
 
 1. frappe
 2. mariadb
-3. nginx-frappe
-4. redis cache
-5. redis queue
-6. redis socketio
-7. nginx-proxy
-8. nginx-letsencrypt
+3. redis cache
+4. redis queue
+5. redis socketio
+6. traefik
 
-Note that every time you want to update app or install new app on frappe image
-you have to create new frappe image and that image must have blank bench/logs and bench/sites folder.
+**Note: Every time you want to update app or install new app on frappe image
+you have to create new frappe image.**
 
-Because if unfortunate unknown event that might cause frappe service to go down
+Because if some unfortunate unknown event that might cause container to go down
 docker swarm will try to maintain that service by create new container using image that define in compose file.
-If you update app or install new app and don't create new image as soon as service fail
-your site will fail as well.
+
+If you update or your app wasn't in those image your site will fail.
+
+**Note: This setup is meant to run on server with public IP address
+and domain pointing to those IP address, otherwise it won't works.**
 
 ### Usage
 
@@ -51,16 +52,32 @@ your site will fail as well.
             image: <docker_hub_username>/<docker_hub_repo_name>:<tag>
         ```
 
-* Change Environment in production_setup/env/ file
+* Config domain details
 
-    ```
-    - frappe_app.env
-    - nginx_proxy.env
-    ```
+    * In production_setup/conf/traefik-conf/traefik.toml
 
-    note: Now you can't access website through localhost, 
-    you should've set domain point to machine ip address
-    and access through that domain.
+        ```
+        [acme]
+        email = "user@example.com"
+        ```
+
+    * In production_setup/env/frappe_app.env
+
+        ```
+        - benchNewSiteName=t01.spacecode.co.th
+        - NGINX_SERVER_NAME=t01.spacecode.co.th
+        ```
+
+    * In production_setup/prd.yml
+
+        ```
+        labels:
+          - "traefik.frontend.rule=Host:t01.spacecode.co.th"
+        ```
+
+* Create network
+
+    `docker network create --driver overlay --scope swarm traefik_proxy`
 
 * Deploy stack using prd.yml as prd1 stack (In production folder where prd.yml is)
 
@@ -76,7 +93,7 @@ your site will fail as well.
 
 * Run init.sh
 
-    `cd .. && . init.sh`
+    `cd .. && cd production_setup && . init.sh`
 
 * Exit from container
 
@@ -122,21 +139,20 @@ your site will fail as well.
 
 ### Health-check
 
-* All 8 services should running.
+* All 6 services should running.
 
     `docker service ls`
     ```
-    ID                  NAME                    MODE                REPLICAS            IMAGE                                           PORTS
-    g9riueugg7np        a32_frappe              replicated          1/1                 pipech/erpnext-docker-debian-production:stable                                  *:6787->6787/tcp, *:8000->8000/tcp, *:9000->9000/tcp
-    jpqcvdcosvh4        a32_mariadb             replicated          1/1                 mariadb:10.2.12                                 *:3307->3306/tcp
-    pl02kr5aq48h        a32_nginx-letsencrypt   replicated          1/1                 jrcs/letsencrypt-nginx-proxy-companion:latest
-    u8rduyywhhyg        a32_nginx-proxy         replicated          1/1                 jwilder/nginx-proxy:latest                      *:80->80/tcp, *:443->443/tcp
-    m3ow7zttd4ib        a32_redis-cache         replicated          1/1                 redis:alpine
-    it6a2nijx7a3        a32_redis-queue         replicated          1/1                 redis:alpine
-    tc4qg72dhov1        a32_redis-socketio      replicated          1/1                 redis:alpine
+    ID                  NAME                MODE                REPLICAS            IMAGE                                 PORTS
+    oksm61lfw5xx        sc_frappe           replicated          1/1                 pipech/erpnext-docker-debian:stable   *:6787->6787/tcp,*:8000->8000/tcp,*:9000->9000/tcp
+    en4yhx1ms6xx        sc_mariadb          replicated          1/1                 mariadb:10.2.12                       *:3307->3306/tcp
+    dvp5f01wpexx        sc_redis-cache      replicated          1/1                 redis:alpine
+    xnx36yv9onxx        sc_redis-queue      replicated          1/1                 redis:alpine
+    tv9auh2wa1xx        sc_redis-socketio   replicated          1/1                 redis:alpine
+    8pwhmmmga7xx        sc_traefik          replicated          1/1                 traefik:latest                        *:80->80/tcp,*:443->443/tcp,*:8080->8080/tcp
     ```
 
-* Check service in frappe container, all 7 services should run with success
+* Check service in frappe container, all 6 services should run with success
 
     `docker logs <frappe_container_id>`
 
@@ -179,9 +195,23 @@ your site will fail as well.
 
     `  bench --site <site_domain> install-app <app_name>`
     
-* Add domain to production_setup/env
+* Add domain
 
-    ```
-    - env/nginx_proxy.env
-    - env/frappe_app.env
-    ```
+    * In production_setup/env/frappe_app.env
+
+        ```
+        - NGINX_SERVER_NAME=t01.spacecode.co.th
+        ```
+
+    * In production_setup/prd.yml
+
+        ```
+        labels:
+          - "traefik.frontend.rule=Host:t01.spacecode.co.th"
+        ```
+
+* Config mysql
+
+    `docker exec -it <mysql_container_id> bash`
+
+    `mysql -u "root" "-p<your_password>" < "/home/init.sql"`

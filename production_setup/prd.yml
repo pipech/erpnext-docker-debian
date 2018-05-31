@@ -17,7 +17,7 @@ services:
         target: /etc/traefik/traefik.toml
 
   frappe:
-    image: pipech/erpnext-docker-debian:test
+    image: pipech/erpnext-docker-debian:stable
     deploy:
       replicas: 1
     ports:
@@ -35,6 +35,7 @@ services:
     command: ["/home/frappe/production_config/entrypoint_prd.sh"]
     labels:
       - "traefik.enable=true"
+      # - "traefik.frontend.rule=Host:t01.spacecode.co.th, t02.spacecode.co.th" [Separate with comma]
       - "traefik.frontend.rule=Host:t01.spacecode.co.th"
       - "traefik.port=80"
       - "traefik.docker.network=traefik_proxy"
