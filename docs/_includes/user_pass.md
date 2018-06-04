@@ -8,6 +8,11 @@
 * MySQL
 
     ```
+    User : root
+    Pass : travis
+    ```
+
+    ```
     Hostname : localhost
     Port : 3306
     User : remote
