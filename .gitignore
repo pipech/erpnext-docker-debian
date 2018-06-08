@@ -1,0 +1,4 @@
+.*
+!/.gitignore
+/development_setup/data/
+/docs/_site/
