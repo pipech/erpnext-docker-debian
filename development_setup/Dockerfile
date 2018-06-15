@@ -10,8 +10,3 @@ RUN mkdir sites-dev \
 
 RUN mkdir apps-dev \
     && mv ./apps/* ./apps-dev/
-
-COPY ./frappe-docker-conf /home/$systemUser/$benchFolderName
-
-# run start mysql service when container start
-CMD ["sudo", "mysqld"]

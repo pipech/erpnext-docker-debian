@@ -1,15 +1,35 @@
 version: '2'
-services:
 
+services:
   frappe:
     build: .
     ports:
-      - "8000-8005:8000-8005"   #webserver_port
-      - "9000-9005:9000-9005"   #socketio_port
-      - "6787:6787"             #file_watcher_port
-      - "3306-3307:3306-3307"   #mysql _port
+      - "8000-8005:8000-8005" #webserver_port
+      - "9000-9005:9000-9005" #socketio_port
+      - "6787:6787" #file_watcher_port
     volumes:
+      # persisting data
       - ./data/bench/apps:/home/frappe/bench/apps
       - ./data/bench/sites:/home/frappe/bench/sites
+      # config
+      - ./conf/frappe-docker-conf/init.sh:/home/frappe/bench/init.sh
+      - ./conf/frappe-docker-conf/init.sql:/home/frappe/bench/init.sql
     stdin_open: true
     tty: true
+    command: tail -f /dev/null
+
+  mariadb:
+    image: mariadb:10.2.12
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=mysql
+    volumes:
+      # persisting data
+      - mariadb-data-volumes:/var/lib/mysql
+      # config
+      - ./conf/mariadb-conf/mariadb.cnf:/etc/mysql/conf.d/mariadb.cnf
+    ports:
+      - "3307:3306"
+
+volumes:
+  mariadb-data-volumes:
