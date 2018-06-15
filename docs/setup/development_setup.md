@@ -38,18 +38,6 @@ so you could explore the code.
 
     `. init.sh`
 
-* Restart container
-
-    ```
-    exit
-    docker stop <frappe_container_id>
-    docker start <frappe_container_id>
-    ```
-
-* Call bash in frappe container
-
-    `docker exec -it <frappe_container_id> bash`
-
 * Start development server
 
     `bench start`
@@ -77,3 +65,9 @@ so you could explore the code.
 * Remove container using docker-compose
 
     `docker-compose down`
+
+### Create new site
+
+* Change user and db host from 172.x.x.x to %, it'll make frappe able to connect to mariadb when frappe change ip
+
+    `mysql -h mariadb -uroot -pmysql < "./init.sql"`
