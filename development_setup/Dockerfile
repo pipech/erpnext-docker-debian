@@ -1,4 +1,4 @@
-FROM pipech/erpnext-docker-debian:v10.1.23
+FROM pipech/erpnext-docker-debian:v10.1.35
 
 # set workdir
 USER $systemUser

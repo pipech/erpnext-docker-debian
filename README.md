@@ -25,31 +25,3 @@ Pull requests for new features, bug fixes, and suggestions are welcome!
 ## License
 
 MIT
-
-## Know-Bug
-
-### v10.1.37
-
-* /home/frappe/bench/env/local/lib/python2.7/site-packages/requests/__init__.py:80: 
-
-  RequestsDependencyWarning: urllib3 (1.23) or chardet (3.0.4) doesn't match a supported version!
-
-* bench new-app [app_name]
-
-  bench.utils.CommandFailedError: ./env/bin/pip install -q  -e ./apps/[app_name] --no-cache-dir
-
-### v10.1.35
-
-* bench new-app [app_name]
-
-  bench.utils.CommandFailedError: ./env/bin/pip install -q  -e ./apps/[app_name] --no-cache-dir
-
-### v10.1.30
-
-* bench new-app [app_name]
-
-  bench.utils.CommandFailedError: ./env/bin/pip install -q  -e ./apps/[app_name] --no-cache-dir
-
-### v10.1.23
-
-* none
