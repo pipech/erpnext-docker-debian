@@ -26,6 +26,7 @@ rm -rf ./sites/site1.local
 # create new site
 bench new-site dev1.loc
 bench use dev1.loc
+bench set-config developer_mode 1
 
 # set mysql host config
 mysql -h mariadb -uroot -pmysql < "./init.sql"
