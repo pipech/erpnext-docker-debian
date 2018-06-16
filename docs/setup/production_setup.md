@@ -180,7 +180,7 @@ and domain pointing to those IP address, otherwise it won't works.**
 * Edit prd.yml file and run
 
     docker stack deploy -c prd.yml <stack_name>
-    
+
 ### Adding new site
 
 * Call bash in frappe container
@@ -190,11 +190,11 @@ and domain pointing to those IP address, otherwise it won't works.**
 * Create new site
 
     `bench new-site <site_domain>`
-    
+
 * Install app
 
-    `  bench --site <site_domain> install-app <app_name>`
-    
+    `bench --site <site_domain> install-app <app_name>`
+
 * Add domain
 
     * In production_setup/env/frappe_app.env
@@ -215,3 +215,7 @@ and domain pointing to those IP address, otherwise it won't works.**
     `docker exec -it <mysql_container_id> bash`
 
     `mysql -u "root" "-p<your_password>" < "/home/init.sql"`
+
+### Install Custom-app
+
+* [Install custom app](/erpnext-docker-debian/create_custom_app_image)
