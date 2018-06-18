@@ -90,10 +90,12 @@ we will get `OSError: [Errno 13] Permission denied` error. This is a work around
 I don't know why but somehow installation process mess up version control of frappe & erpnext.
 
     cd apps
-    rm -rf erpnext
-    git clone https://github.com/frappe/erpnext.git --branch master --depth 1 --origin upstream
     rm -rf frappe
     git clone https://github.com/frappe/frappe.git --branch master --depth 1 --origin upstream
+    rm -rf erpnext
+    git clone https://github.com/frappe/erpnext.git --branch master --depth 1 --origin upstream
     cd ..
+    ./env/bin/pip install -v -e ./apps/frappe --no-cache-dir
+    ./env/bin/pip install -v -e ./apps/erpnext --no-cache-dir
     bench update --patch
     bench update --build
