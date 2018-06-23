@@ -2,7 +2,7 @@
 layout: page
 title: Development Setup
 permalink: /development_setup/
-userpass: user_pass.md
+userpass: dev_user_pass.md
 ---
 
 This setup will share apps and sites folder to host machine

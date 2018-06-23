@@ -29,7 +29,7 @@ services:
       # config
       - ./conf/mariadb-conf/mariadb.cnf:/etc/mysql/conf.d/mariadb.cnf
     ports:
-      - "3307:3306"
+      - "3306:3306"
 
 volumes:
   mariadb-data-volumes:
