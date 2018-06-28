@@ -13,7 +13,9 @@ RUN apt-get -y update \
     sudo \
     locales \
     supervisor \
-    nginx
+    nginx \
+    && apt-get autoremove --purge \
+    && apt-get clean
 
 # work around for  "cmd": "chsh frappe -s $(which bash)", "stderr": "Password: chsh: PAM: Authentication failure"
 # caused by > bench/playbooks/create_user.yml > shell: "chsh {{ frappe_user }} -s $(which bash)"
@@ -65,7 +67,7 @@ RUN wget $easyinstallRepo \
     --without-bench-setup \
     # install bench & init bench folder
     && rm -rf bench \
-    && git clone -b $benchBranch $benchRepo $benchPath  \
+    && git clone --branch $benchBranch --depth 1 --origin upstream $benchRepo $benchPath  \
     && sudo pip install -e $benchPath \
     && bench init $benchFolderName --frappe-path $frappeRepo --frappe-branch $frappeBranch --python $pythonVersion \
     # cd to bench folder and start mysql service
@@ -78,8 +80,7 @@ RUN wget $easyinstallRepo \
     # install erpnext
     && bench get-app erpnext $erpnextRepo --branch $erpnextBranch \
     && bench --site $siteName install-app erpnext \
-    # switch to master branch
-    && bench switch-to-branch $branch \
+    # fix for Setup failed >> Could not start up: Error in setup
     && bench update --patch \
     # add mysql remote user, so we can connect to mysql inside container from host
     && mysql -u "root" "-p$mysqlPass" -e "CREATE USER '$remoteUser'@'%' IDENTIFIED BY '$remotePass';" \
