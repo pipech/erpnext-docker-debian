@@ -27,7 +27,6 @@ services:
     volumes:
       - frappe-sites-volumes:/home/frappe/bench/sites
       - frappe-logs-volumes:/home/frappe/bench/logs
-      - traefik-domain-config-volumes:/home/frappe/traefik-config
     stdin_open: true
     tty: true
     env_file:
@@ -100,7 +99,6 @@ volumes:
   frappe-logs-volumes:
   mariadb-data-volumes:
   traefik-certificates-storage-volumes:
-  traefik-domain-config-volumes:
 
 configs:
   mariadb-conf:
