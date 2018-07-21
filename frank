@@ -1,0 +1,102 @@
+#!/bin/bash
+
+# variable
+STACK_NAME="s1"
+BASE_BACKUP_DIR="/backup"
+
+_backup() {
+	BACKUP_DATE=`date '+%Y-%m-%d-%H%M%S'`
+	BACKUP_DIR="${BASE_BACKUP_DIR}/${BACKUP_DATE}"
+
+	# put out of docker volume into name_volumes array
+	# -q quiet will show only name
+	# -f filter will filter name with STACK_NAME
+	mapfile -t NAME_VOLUMES < <(docker volume ls -q -f "name=${STACK_NAME}_")
+	if [[ ${#NAME_VOLUMES[@]} -eq 0 ]]; then
+		echo "Error: Not found volume"
+		return 0
+	fi
+
+	# make folder
+	mkdir -p ${BACKUP_DIR}
+	if [[ ! -d ${BACKUP_DIR} ]]; then
+		echo "Error: Cannot create folder"
+		return 0
+	fi
+	
+	# backup
+	echo 'Starting backup'
+	# loop through array
+	for NAME_VOLUME in "${NAME_VOLUMES[@]}"
+	do
+		echo "Backing up ${NAME_VOLUME}"
+		# backup docker volume using loomchild/volume-backup docker image
+		docker run --rm \
+		-v ${NAME_VOLUME}:/volume \
+		-v ${BACKUP_DIR}:/backup \
+		loomchild/volume-backup \
+		backup \
+		${NAME_VOLUME}
+	done
+	return 1
+}
+
+_restore() {
+	BACKUP_DIR="${BASE_BACKUP_DIR}/${BACKUP_FOLDER}"
+
+	# check folder
+	if [[ ! -d ${BACKUP_DIR} ]]; then
+		echo "Error: Folder not found"
+		return 0
+	fi
+
+	# get file in backup into array
+	shopt -s extglob nullglob
+	TAR_VOLUMES=(${BACKUP_DIR}/*.tar.bz2)
+	shopt -u extglob nullglob
+	if [[ ${#TAR_VOLUMES[@]} -eq 0 ]]; then
+		echo "Error: TAR file not found"
+		return 0
+	fi
+
+	# restore
+	echo 'Starting restore'
+	# loop through array
+	for TAR_VOLUME in "${TAR_VOLUMES[@]}"
+	do
+		echo "Restoring ${TAR_VOLUME}"
+		FILE=$(basename -- "$TAR_VOLUME")
+		FILE_NAME="${FILE%%.*}"
+		# restore docker volume using loomchild/volume-backup docker image
+		cat ${TAR_VOLUME} | docker run -i --rm \
+		-v ${FILE_NAME}:/volume \
+		loomchild/volume-backup \
+		restore \
+		-
+	done
+	return 1
+}
+
+# command
+usage() {
+    echo "Named volume backup & restore utility"
+    echo "Usage: . frank <backup|restore>"
+}
+
+case $1 in
+	"backup")
+		_backup
+		;;
+	"restore")
+		if [[ -z $2 ]]; then
+			echo "Error: Specify folder name"
+			echo "Usage: . frank restore 2018-07-20-161800"
+		else
+			BACKUP_FOLDER=$2
+			_restore
+		fi
+		;;
+	*)
+		usage
+		;;
+esac
