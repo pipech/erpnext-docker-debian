@@ -3,8 +3,9 @@
 # variable
 STACK_NAME="s1"
 BASE_BACKUP_DIR="/backup"
+FOLDER_RETAIN_DAYS="7"
 
-_backup() {
+backup() {
 	BACKUP_DATE=`date '+%Y-%m-%d-%H%M%S'`
 	BACKUP_DIR="${BASE_BACKUP_DIR}/${BACKUP_DATE}"
 
@@ -41,7 +42,7 @@ _backup() {
 	return 1
 }
 
-_restore() {
+restore() {
 	BACKUP_DIR="${BASE_BACKUP_DIR}/${BACKUP_FOLDER}"
 
 	# check folder
@@ -65,7 +66,7 @@ _restore() {
 	for TAR_VOLUME in "${TAR_VOLUMES[@]}"
 	do
 		echo "Restoring ${TAR_VOLUME}"
-		FILE=$(basename -- "$TAR_VOLUME")
+		FILE=$(basename -- "${TAR_VOLUME}")
 		FILE_NAME="${FILE%%.*}"
 		# restore docker volume using loomchild/volume-backup docker image
 		cat ${TAR_VOLUME} | docker run -i --rm \
@@ -77,15 +78,46 @@ _restore() {
 	return 1
 }
 
+delete() {
+	# get folder name in base_backup_dir
+	shopt -s extglob nullglob
+	BACKUP_FOLDER_NAMES=(${BASE_BACKUP_DIR}/*/)
+	shopt -u extglob nullglob
+
+	# loop through folder
+	for FOLDER_PATH in "${BACKUP_FOLDER_NAMES[@]}"
+	do 
+		FOLDER_NAME=$(basename -- "${FOLDER_PATH}")
+		FOLDER_DATE=${FOLDER_NAME:0:10}
+		FOLDER_AGE=$(datediff ${FOLDER_DATE})
+		if [[ "${FOLDER_AGE}" -gt "${FOLDER_RETAIN_DAYS}" ]]; then
+			echo "Delete folder ${FOLDER_PATH}"
+			sudo rm -rf "${FOLDER_PATH}"
+		fi
+	done
+	return 1
+}
+
 # command
 usage() {
     echo "Named volume backup & restore utility"
-    echo "Usage: . frank <backup|restore>"
+    echo "Usage: . frank <backup|restore|delete>"
+}
+
+datediff() {
+	D1=$(date -d "$1" +%s)
+	if [[ -z $2 ]]; then
+		D2=$(date +%s)
+	else
+		D2=$(date -d "$2" +%s)
+	fi
+    
+	echo $(( ((D1-D2) > 0 ? (D1-D2) : (D2-D1)) / 86400 ))
 }
 
 case $1 in
 	"backup")
-		_backup
+		backup
 		;;
 	"restore")
 		if [[ -z $2 ]]; then
@@ -93,8 +125,11 @@ case $1 in
 			echo "Usage: . frank restore 2018-07-20-161800"
 		else
 			BACKUP_FOLDER=$2
-			_restore
+			restore
 		fi
+		;;
+	"delete")
+		delete
 		;;
 	*)
 		usage
