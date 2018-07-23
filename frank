@@ -9,7 +9,7 @@ backup() {
 	BACKUP_DATE=`date '+%Y-%m-%d-%H%M%S'`
 	BACKUP_DIR="${BASE_BACKUP_DIR}/${BACKUP_DATE}"
 
-	# put out of docker volume into name_volumes array
+	# put output of docker volume into name_volumes array
 	# -q quiet will show only name
 	# -f filter will filter name with STACK_NAME
 	mapfile -t NAME_VOLUMES < <(docker volume ls -q -f "name=${STACK_NAME}_")
@@ -91,28 +91,36 @@ delete() {
 		FOLDER_DATE=${FOLDER_NAME:0:10}
 		FOLDER_AGE=$(datediff ${FOLDER_DATE})
 		if [[ "${FOLDER_AGE}" -gt "${FOLDER_RETAIN_DAYS}" ]]; then
-			echo "Delete folder ${FOLDER_PATH}"
-			sudo rm -rf "${FOLDER_PATH}"
+			# never delete folder younger that 3 days
+			if [[ "${FOLDER_AGE}" -gt "3" ]]; then
+				echo "Delete folder ${FOLDER_PATH}"
+				sudo rm -rf "${FOLDER_PATH}"
+			fi
 		fi
 	done
 	return 1
 }
 
-# command
-usage() {
-    echo "Named volume backup & restore utility"
-    echo "Usage: . frank <backup|restore|delete>"
-}
-
 datediff() {
+	# calculate date diff
+	# Usage: datediff "2018-07-15" "2018-07-01"
+
 	D1=$(date -d "$1" +%s)
+	# if there're only one arguments it will calculate datediff from today
 	if [[ -z $2 ]]; then
 		D2=$(date +%s)
 	else
 		D2=$(date -d "$2" +%s)
 	fi
     
+	# return value in days
 	echo $(( ((D1-D2) > 0 ? (D1-D2) : (D2-D1)) / 86400 ))
+}
+
+# command
+usage() {
+    echo "Named volume backup & restore utility"
+    echo "Usage: . frank <backup|restore|delete>"
 }
 
 case $1 in
