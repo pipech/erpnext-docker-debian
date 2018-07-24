@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# usage infomation
+usage() {
+    echo "Named volume backup & restore utility"
+    echo "Usage: . frank <backup|restore|delete>"
+}
+
 # variable
 STACK_NAME="s1"
 BASE_BACKUP_DIR="/backup"
@@ -118,11 +124,6 @@ datediff() {
 }
 
 # command
-usage() {
-    echo "Named volume backup & restore utility"
-    echo "Usage: . frank <backup|restore|delete>"
-}
-
 case $1 in
 	"backup")
 		backup
