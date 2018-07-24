@@ -13,8 +13,8 @@ permalink: /backup/
 * Make backup.sh
 
     ```
-    . /home/ec2-user/erpnext-docker-debain/frank backup
-    . /home/ec2-user/erpnext-docker-debain/frank delete
+    . /home/<username>/erpnext-docker-debian/frank backup
+    . /home/<username>/erpnext-docker-debian/frank delete
     ```
 
     copy backup command above and place it in backup.sh
