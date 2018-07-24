@@ -3,7 +3,7 @@
 # usage infomation
 usage() {
     echo "Named volume backup & restore utility"
-    echo "Usage: . frank <backup|restore|delete>"
+    echo "Usage: . frank <backup|restore|delete> <options>"
 }
 
 # variable
@@ -32,7 +32,7 @@ backup() {
 	fi
 	
 	# backup
-	echo 'Starting backup'
+	echo "Starting backup ${BACKUP_DATE}"
 	# loop through array
 	for NAME_VOLUME in "${NAME_VOLUMES[@]}"
 	do
@@ -45,6 +45,7 @@ backup() {
 		backup \
 		${NAME_VOLUME}
 	done
+	cp "/backup/backup_logs.txt" "${BACKUP_DIR}/logs.txt"
 	return 1
 }
 
@@ -67,7 +68,7 @@ restore() {
 	fi
 
 	# restore
-	echo 'Starting restore'
+	echo "Starting restore"
 	# loop through array
 	for TAR_VOLUME in "${TAR_VOLUMES[@]}"
 	do
@@ -126,7 +127,7 @@ datediff() {
 # command
 case $1 in
 	"backup")
-		backup
+		backup > /backup/backup_logs.txt
 		;;
 	"restore")
 		if [[ -z $2 ]]; then
@@ -138,7 +139,7 @@ case $1 in
 		fi
 		;;
 	"delete")
-		delete
+		delete > /backup/delete_logs.txt
 		;;
 	*)
 		usage
