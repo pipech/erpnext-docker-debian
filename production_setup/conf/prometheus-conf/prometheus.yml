@@ -1,0 +1,27 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'cadvisor'
+    scrape_interval: 5s
+    static_configs:
+         - targets: ['cadvisor:8484']
+
+  - job_name: 'traefik'
+    scrape_interval: 5s
+    static_configs:
+         - targets: ['traefik:8080']
+
+  - job_name: 'node-exporter'
+    scrape_interval: 5s
+    ec2_sd_configs:
+      # acccess_key and secret_key contain the keys for a user created in IAM with AWS managed AmazonEC2ReadOnlyAccess policy.
+      - region: aws_region
+        access_key: aws_key
+        secret_key: secret_key
+        port: 9100
