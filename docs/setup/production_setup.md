@@ -58,21 +58,21 @@ and domain pointing to those IP address, otherwise it won't works.**
 
         ```
         [acme]
-        email = "user@example.com"
+        email = "user@example1.com"
         ```
 
     * In production_setup/env/frappe_app.env
 
         ```
-        - benchNewSiteName=t01.spacecode.co.th
-        - NGINX_SERVER_NAME=t01.spacecode.co.th
+        - benchNewSiteName=example1.com
+        - NGINX_SERVER_NAME=example1.com
         ```
 
     * In production_setup/prd.yml
 
         ```
         labels:
-          - "traefik.frontend.rule=Host:t01.spacecode.co.th"
+          - "traefik.frontend.rule=Host:example1.com"
         ```
 
 * Create network
