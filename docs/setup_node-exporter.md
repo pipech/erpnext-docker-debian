@@ -5,14 +5,23 @@
     # https://github.com/prometheus/node_exporter/issues/679
     sudo yum install -y glibc-static
 
-    # sudo yum install will install go version 1.9.4 (as 2018/07/25)
+    # install go and dependencies
+    # unfortunately we need go version > 1.9.4
     # https://github.com/prometheus/node_exporter/issues/880
-    # needed go version > 1.9.4
-    # install latest version of go
-    git clone https://github.com/udhos/update-golang
-    cd update-golang
-    sudo ./update-golang.sh
-    export PATH=$PATH:/usr/local/go/bin
+    sudo amazon-linux-extras install golang1.9
+    # check where go is
+    whereis go
+    # remove go
+    sudo rm -rf /usr/bin/go
+    # get go https://golang.org/dl/
+    wget -c https://dl.google.com/go/go1.10.3.linux-amd64.tar.gz
+    # extract go
+    sudo tar -C /usr/bin -xvzf go1.10.3.linux-amd64.tar.gz
+    # set go path
+    export PATH=$PATH:/usr/bin/go/bin
+    # add go path to bash profile
+    nano .bash_profile
+    export PATH=$PATH:/usr/bin/go/bin
 
     # install node_exporter
     go get github.com/prometheus/node_exporter
@@ -20,4 +29,19 @@
     make
 
     # create systemd service file for Node Exporter
+    sudo nano /etc/systemd/system/node_exporter.service
+
+    [Unit]
+    Description=Node Exporter
+
+    [Service]
+    User=ec2-user
+    ExecStart=/home/ec2-user/go/src/github.com/prometheus/node_exporter/node_exporter
+
+    [Install]
+    WantedBy=multi-user.target
+
+    sudo systemctl daemon-reload
+    sudo systemctl start node_exporter
+    sudo systemctl enable node_exporter
     ```
