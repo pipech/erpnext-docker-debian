@@ -6,7 +6,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - traefik-certificates-storage-volumes:/etc/traefik/acme
@@ -34,8 +33,8 @@ services:
     command: ["/home/frappe/production_config/entrypoint_prd.sh"]
     labels:
       - "traefik.enable=true"
-      # - "traefik.frontend.rule=Host:t01.spacecode.co.th, t02.spacecode.co.th" [Separate with comma]
-      - "traefik.frontend.rule=Host:t01.spacecode.co.th"
+      # - "traefik.frontend.rule=Host:example1.com, example2.com" [Separate with comma]
+      - "traefik.frontend.rule=Host:example1.com"
       - "traefik.port=80"
       - "traefik.docker.network=traefik_proxy"
     networks:

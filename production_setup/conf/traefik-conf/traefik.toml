@@ -6,9 +6,8 @@ defaultEntryPoints = ["https","http"]
 endpoint = "unix:///var/run/docker.sock"
 exposedByDefault = false
 
-[api]
-dashboard = true
-debug = true
+[metrics]
+    [metrics.prometheus]
 
 [entryPoints]
     [entryPoints.http]

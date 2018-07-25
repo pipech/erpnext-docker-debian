@@ -200,14 +200,14 @@ and domain pointing to those IP address, otherwise it won't works.**
     * In production_setup/env/frappe_app.env
 
         ```
-        - NGINX_SERVER_NAME=t01.spacecode.co.th
+        - NGINX_SERVER_NAME=example1.com
         ```
 
     * In production_setup/prd.yml
 
         ```
         labels:
-          - "traefik.frontend.rule=Host:t01.spacecode.co.th"
+          - "traefik.frontend.rule=Host:example1.com"
         ```
 
 * Config mysql
