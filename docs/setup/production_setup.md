@@ -216,10 +216,10 @@ and domain pointing to those IP address, otherwise it won't works.**
 
     `mysql -u "root" "-p<your_password>" < "/home/init.sql"`
 
-### Install Custom-app
+### Misc
 
 * [Install custom app](/erpnext-docker-debian/create_custom_app_image)
 
-### Backing up
-
 * [Backing up docker volume](/erpnext-docker-debian/backup)
+
+* [Setup up monitoring tools](/erpnext-docker-debian/setup_monitoring)
