@@ -6,8 +6,9 @@ permalink: /setup_ec2/
 
 **Launch new instance**
 
-    AMI: Amazon Linux AMI 2017.09.1 (HVM), SSD Volume Type
-    Type: t2.small (2GB of Ram)
+    AMI: Amazon Linux 2 AMI (HVM)
+    Type: [Minimum] t2.small (2GB of Ram)
+    Storage: [Minimum] 16GB (8GB will bearly)
 
 **Update Security Group**
 
@@ -34,6 +35,10 @@ permalink: /setup_ec2/
 * Add permissions for ec2-user to use Docker
 
     `sudo usermod -a -G docker ec2-user`
+
+* Set auto start Docker after reboot
+
+    `sudo systemctl enable docker`
 
 * Log out and log back in again to pick up the new docker group permissions.
 
