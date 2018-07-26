@@ -24,7 +24,7 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
       # Fixed for "Failed to start container manager: inotify_add_watch /sys/fs/cgroup/cpuset: no such file or directory"
       # https://github.com/google/cadvisor/issues/1850
-      - /cgroup:/sys/fs/cgroup:ro
+      # - /cgroup:/sys/fs/cgroup:ro
     command:
       - '--port=8484'
     networks:
