@@ -45,7 +45,7 @@ backup() {
 		backup \
 		${NAME_VOLUME}
 	done
-	cp "/backup/backup_logs.txt" "${BACKUP_DIR}/logs.txt"
+	cp "${BASE_BACKUP_DIR}/backup_logs.txt" "${BACKUP_DIR}/logs.txt"
 	return 1
 }
 
@@ -127,7 +127,7 @@ datediff() {
 # command
 case $1 in
 	"backup")
-		backup > /backup/backup_logs.txt
+		backup > "${BASE_BACKUP_DIR}/backup_logs.txt"
 		;;
 	"restore")
 		if [[ -z $2 ]]; then
