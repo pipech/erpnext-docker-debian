@@ -1,0 +1,20 @@
+[mysqld]
+bind-address = 0.0.0.0
+
+innodb-file-format=barracuda
+innodb-file-per-table=1
+innodb-large-prefix=1
+character-set-client-handshake = FALSE
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+
+
+[mysqld_safe]
+skip_log_error
+syslog
+
+
+[mysqldump]
+quick
+quote-names
+max_allowed_packet	= 16M
