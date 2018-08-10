@@ -139,7 +139,7 @@ case $1 in
 		fi
 		;;
 	"delete")
-		delete > /backup/delete_logs.txt
+		delete > "${BASE_BACKUP_DIR}/delete_logs.txt"
 		;;
 	*)
 		usage
