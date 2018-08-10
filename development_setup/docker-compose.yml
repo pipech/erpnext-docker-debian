@@ -2,7 +2,7 @@ version: '2'
 
 services:
   frappe:
-    build: .
+    build: ./image/frappe/.
     ports:
       - "8000-8005:8000-8005" #webserver_port
       - "9000-9005:9000-9005" #socketio_port
@@ -19,15 +19,13 @@ services:
     command: tail -f /dev/null
 
   mariadb:
-    image: mariadb:10.2.12
+    build: ./image/mariadb/.
     environment:
       - MYSQL_USER=root
       - MYSQL_ROOT_PASSWORD=mysql
     volumes:
       # persisting data
       - mariadb-data-volumes:/var/lib/mysql
-      # config
-      - ./conf/mariadb-conf/mariadb.cnf:/etc/mysql/conf.d/mariadb.cnf
     ports:
       - "3306:3306"
 
