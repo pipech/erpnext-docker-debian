@@ -18,9 +18,6 @@ cd sites
 rm -rf $siteName
 cd ..
 
-# config bench
-bench set-mariadb-host mariadb
-
 # create new site
 bench new-site $benchNewSiteName
 bench use $benchNewSiteName
