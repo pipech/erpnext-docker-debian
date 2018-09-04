@@ -42,7 +42,7 @@ services:
       - default
 
   mariadb:
-    image: mariadb:10.2.12
+    image: mariadb:10.3.9
     deploy:
       replicas: 1
     environment:
