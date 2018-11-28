@@ -62,6 +62,9 @@ ENV easyinstallRepo='https://raw.githubusercontent.com/frappe/bench/master/playb
     remotePass=12345
 
 RUN wget $easyinstallRepo \
+    # add mariadb apt-key first to skip adding from ansible playbook
+    # which will cause error > "gpg: cannot open '/dev/tty': No such device or address" error
+    && sudo apt-key adv --no-tty --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 \
     # install bench prerequisite
     && python install.py \
     --without-bench-setup \
