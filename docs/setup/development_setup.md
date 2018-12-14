@@ -99,3 +99,58 @@ I don't know why but somehow installation process mess up version control of fra
     ./env/bin/pip install -v -e ./apps/erpnext --no-cache-dir
     bench update --patch
     bench update --build
+
+### Setup SocketIO for development mode
+
+Add sitename to hosts name
+
+ie. `127.0.0.1 site1.loc`
+
+Host name location for
+
+* Windows > C:\Windows\System32\Drivers\etc\hosts
+* Linux & Mac > /etc/hosts
+
+Then SocketIO will works if you access web site using sitename `http://site1.loc:8000`
+
+### Setup auto-reload for development environment
+
+adding `reloader_type='stat',` to `run_simple` command in `/apps/frappe/frappe/apps.py`
+
+``` python
+def serve(port=8000, profile=False, no_reload=False, no_threading=False, site=None, sites_path='.'):
+    global application, _site, _sites_path
+    _site = site
+    _sites_path = sites_path
+
+    from werkzeug.serving import run_simple
+
+    if profile:
+            application = ProfilerMiddleware(application, sort_by=('cumtime', 'calls'))
+
+    if not os.environ.get('NO_STATICS'):
+            application = SharedDataMiddleware(application, {
+                    '/assets': os.path.join(sites_path, 'assets'),
+            })
+
+            application = StaticDataMiddleware(application, {
+                    '/files': os.path.abspath(sites_path)
+            })
+
+    application.debug = True
+    application.config = {
+            'SERVER_NAME': 'localhost:8000'
+    }
+
+    in_test_env = os.environ.get('CI')
+    if in_test_env:
+            log = logging.getLogger('werkzeug')
+            log.setLevel(logging.ERROR)
+
+    run_simple('0.0.0.0', int(port), application,
+            reloader_type='stat',
+            use_reloader=False if in_test_env else not no_reload,
+            use_debugger=not in_test_env,
+            use_evalex=not in_test_env,
+            threaded=not no_threading)
+```
