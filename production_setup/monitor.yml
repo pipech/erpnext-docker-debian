@@ -1,0 +1,63 @@
+version: '3.3'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - prometheus-data-volumes:/prometheus
+    networks:
+      - monitor
+      - traefik_proxy
+    configs:
+      - source: prometheus-conf
+        target: /etc/prometheus/prometheus.yml
+
+  cadvisor:
+    # latest version is not the newest as 2018/07/25
+    # [0.29.1 and above] has error > "cAdvisor cannot reach containerd.sock" > https://github.com/google/cadvisor/issues/1910
+    image: google/cadvisor:v0.28.5
+    volumes:
+      - /dev/disk/:/dev/disk:ro
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      # Fixed for "Failed to start container manager: inotify_add_watch /sys/fs/cgroup/cpuset: no such file or directory"
+      # https://github.com/google/cadvisor/issues/1850
+      # - /cgroup:/sys/fs/cgroup:ro
+    command:
+      - '--port=8484'
+    networks:
+      - monitor
+
+  grafana:
+    image: grafana/grafana:latest
+    networks:
+      - traefik_proxy
+      - monitor
+    volumes:
+      - grafana-data-volumes:/var/lib/grafana
+    configs:
+      - source: grafana-datasource-conf
+        target: /etc/grafana/provisioning/datasources/datasource.yml
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:graf.example1.com"
+      - "traefik.port=3000"
+      - "traefik.docker.network=traefik_proxy"
+
+volumes:
+  prometheus-data-volumes:
+  grafana-data-volumes:
+
+configs:
+  prometheus-conf:
+    file: ./conf/prometheus-conf/prometheus.yml
+  grafana-datasource-conf:
+    file: ./conf/grafana-conf/datasource.yml
+
+networks:
+  traefik_proxy:
+    external: true
+  monitor:
+    driver: overlay

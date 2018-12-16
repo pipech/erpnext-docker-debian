@@ -1,0 +1,118 @@
+version: '3.3'
+
+services:
+  traefik:
+    image: traefik
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - traefik-certificates-storage-volumes:/etc/traefik/acme
+    networks:
+      - traefik_proxy
+    configs:
+      - source: traefik-conf
+        target: /etc/traefik/traefik.toml
+
+  frappe:
+    image: pipech/erpnext-docker-debian:stable
+    deploy:
+      replicas: 1
+    ports:
+      - "8000:8000"   #webserver_port
+      - "9000:9000"   #socketio_port
+      - "6787:6787"   #file_watcher_port
+    volumes:
+      - frappe-sites-volumes:/home/frappe/bench/sites
+      - frappe-logs-volumes:/home/frappe/bench/logs
+    stdin_open: true
+    tty: true
+    env_file:
+      - ./env/frappe_app.env
+    command: ["/home/frappe/production_config/entrypoint_prd.sh"]
+    labels:
+      - "traefik.enable=true"
+      # - "traefik.frontend.rule=Host:example1.com, example2.com" [Separate with comma]
+      - "traefik.frontend.rule=Host:example1.com"
+      - "traefik.port=80"
+      - "traefik.docker.network=traefik_proxy"
+    networks:
+      - traefik_proxy
+      - default
+
+  mariadb:
+    image: mariadb:10.3.9
+    deploy:
+      replicas: 1
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=123
+    configs:
+      - source: mariadb-conf
+        target: /etc/mysql/conf.d/mariadb.cnf
+      - source: mariadb-init-conf
+        target: /home/init.sql
+    volumes:
+      - mariadb-data-volumes:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - default
+
+  redis-cache:
+    image: redis:alpine
+    deploy:
+      replicas: 1
+    configs:
+      - source: redis-cache-conf
+        target: /etc/conf.d/redis.conf
+    command: ["redis-server","/etc/conf.d/redis.conf"]
+    networks:
+      - default
+
+  redis-queue:
+    image: redis:alpine
+    deploy:
+      replicas: 1
+    configs:
+      - source: redis-queue-conf
+        target: /etc/conf.d/redis.conf
+    command: ["redis-server","/etc/conf.d/redis.conf"]
+    networks:
+      - default
+
+  redis-socketio:
+    image: redis:alpine
+    deploy:
+      replicas: 1
+    configs:
+      - source: redis-socketio-conf
+        target: /etc/conf.d/redis.conf
+    command: ["redis-server","/etc/conf.d/redis.conf"]
+    networks:
+      - default
+
+volumes:
+  frappe-sites-volumes:
+  frappe-logs-volumes:
+  mariadb-data-volumes:
+  traefik-certificates-storage-volumes:
+
+configs:
+  mariadb-conf:
+    file: ./conf/mariadb-conf/mariadb.cnf
+  mariadb-init-conf:
+    file: ./conf/mariadb-conf/init.sql
+  redis-cache-conf:
+    file: ./conf/redis-conf/redis_cache.conf
+  redis-queue-conf:
+    file: ./conf/redis-conf/redis_queue.conf
+  redis-socketio-conf:
+    file: ./conf/redis-conf/redis_socketio.conf
+  traefik-conf:
+    file: ./conf/traefik-conf/traefik.toml
+
+networks:
+  traefik_proxy:
+    external: true
