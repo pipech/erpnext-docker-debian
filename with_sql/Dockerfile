@@ -22,4 +22,10 @@ FROM ${base_image_from}
 #     && bench --site $siteName install-app erpnext
 
 # run start mysql service and start benchwhen container start
-COPY ../entrypoint.sh /usr/local/bin/
+COPY entrypoint.sh /usr/local/bin/
+# fix for [docker Error response from daemon OCI runtime create failed starting container process caused "permission denied" unknown]
+RUN sudo chmod +x /usr/local/bin/entrypoint.sh
+CMD ["/usr/local/bin/entrypoint.sh"]
+
+# expose port
+EXPOSE 8000-8005 9000-9005 3306-3307
