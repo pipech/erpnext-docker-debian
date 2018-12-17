@@ -23,8 +23,8 @@ build-mas-py2:
     docker_img_wsql_tag: ${docker_img_tag}-w.sql
     docker_container_name: ${docker_img_tag}-con
   script:
-    - echo ${docker_img}:${docker_img_wsql_tag}
-    - echo ${docker_img}:${docker_img_tag}
-    - docker build
-      --build-arg base_image_from=${docker_img}:${docker_img_wsql_tag}
+    - docker build -t ${docker_img}:${docker_img_wsql_tag}
+      --no-cache
+      --build-arg base_image_from=${docker_img}:${docker_img_tag}
       with_sql/.
+    - docker push ${docker_img}:${docker_img_wsql_tag}
