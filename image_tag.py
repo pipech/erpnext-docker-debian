@@ -27,6 +27,12 @@ def check_status_code(container_name, image):
         ]).decode('utf-8')
     print(docker_info)
 
+    # try curl
+    docker_info = check_output([
+        'curl', 'http://127.0.0.1:8000'
+        ]).decode('utf-8')
+    print(docker_info)
+
     # get site status
     if sys.version_info[0] == 3:
         import urllib.request
