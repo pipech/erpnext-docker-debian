@@ -7,7 +7,6 @@ import time
 
 
 def check_status_code(container_name, image):
-    print(image)
     # start and waiting for mysql and frappe web client to start
     subprocess.call([
         'docker', 'run', '-d',
@@ -18,10 +17,11 @@ def check_status_code(container_name, image):
     ])
     time.sleep(55)
 
-    aaa = check_output([
+    # debug
+    docker_logs = check_output([
         'docker', 'logs', container_name
         ]).decode('utf-8')
-    print(aaa)
+    print(docker_logs)
 
     # get site status
     if sys.version_info[0] == 3:
@@ -100,7 +100,11 @@ def tag_image(app_version, img_name, img_tag):
 
 
 if __name__ == '__main__':
+
+    # debug
+    print('sys.argv')
     print(sys.argv)
+
     # get args
     container_name = sys.argv[1]
     img_name = sys.argv[2]
@@ -114,6 +118,6 @@ if __name__ == '__main__':
 
     # run process
     check_status_code(container_name, image)
-    # app_version = get_app_version(image)
-    # tag_image(app_version, img_name, img_tag)
-    # tag_image(app_version, img_name, img_wsql_tag)
+    app_version = get_app_version(image)
+    tag_image(app_version, img_name, img_tag)
+    tag_image(app_version, img_name, img_wsql_tag)
