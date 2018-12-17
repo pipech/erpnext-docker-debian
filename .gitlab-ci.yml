@@ -13,35 +13,21 @@ variables:
 
 stages:
   - build
-  - build-with-sql
-  - tag-img
 
 build-mas-py2:
   stage: build
   variables:
     docker_img_tag: "mas-py2-latest"
+    docker_img_wsql_tag: "mas-py2-w.sql-latest"
+    docker_container_name: ${docker_img_tag}-con
   script:
     - docker build -t ${docker_img}:${docker_img_tag}
       --build-arg pythonVersion=python
       --build-arg appBranch=master
       .
     - docker push ${docker_img}:${docker_img_tag}
-
-build-mas-py2-with-sql:
-  stage: build-with-sql
-  variables:
-    docker_img_tag: "mas-py2-w.sql-latest"
-  script:
-    - docker build -t ${docker_img}:${docker_img_tag}
+    - docker build -t ${docker_img}:${docker_img_wsql_tag}
       --build-arg base_img=${docker_img}:mas-py2-latest
       trial_setup/.
-    - docker push ${docker_img}:${docker_img_tag}
-
-tag-img-version:
-  stage: tag-img
-  variables:
-    docker_img_tag: "mas-py2-latest"
-    docker_img_wsql_tag: "mas-py2-w.sql-latest"
-    docker_container_name: ${docker_img_tag}-con
-  script:
+    - docker push ${docker_img}:${docker_img_wsql_tag}
     - python image-tag.py ${docker_container_name} ${docker_img} ${docker_img_tag} ${docker_img_wsql_tag}
