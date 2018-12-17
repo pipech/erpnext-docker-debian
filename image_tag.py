@@ -17,11 +17,11 @@ def check_status_code(container_name, image):
     # ])
     # time.sleep(120)
 
-    # debug
-    docker_logs = check_output([
-        'docker', 'logs', container_name
-        ]).decode('utf-8')
-    print(docker_logs)
+    # # debug
+    # docker_logs = check_output([
+    #     'docker', 'logs', container_name
+    #     ]).decode('utf-8')
+    # print(docker_logs)
 
     # get site status
     if sys.version_info[0] == 3:
