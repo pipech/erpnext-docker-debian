@@ -15,7 +15,7 @@ def check_status_code(container_name, image):
         '--name', container_name,
         image
     ])
-    time.sleep(55)
+    time.sleep(120)
 
     # debug
     docker_logs = check_output([
