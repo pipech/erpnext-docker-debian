@@ -24,7 +24,7 @@ build-mas-py2:
     docker_container_name: ${docker_img_tag}-con
   script:
     - apk update && apk add python3
-    - python image_tag.py
+    - python3 image_tag.py
       ${docker_container_name}
       ${docker_img}
       ${docker_img_tag}
