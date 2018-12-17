@@ -7,15 +7,15 @@ import time
 
 
 def check_status_code(container_name, image):
-    # start and waiting for mysql and frappe web client to start
-    subprocess.call([
-        'docker', 'run', '-d',
-        '-p', '8000:8000',
-        '-p', '9000:9000',
-        '--name', container_name,
-        image
-    ])
-    time.sleep(120)
+    # # start and waiting for mysql and frappe web client to start
+    # subprocess.call([
+    #     'docker', 'run', '-d',
+    #     '-p', '8000:8000',
+    #     '-p', '9000:9000',
+    #     '--name', container_name,
+    #     image
+    # ])
+    # time.sleep(120)
 
     # debug
     docker_logs = check_output([
