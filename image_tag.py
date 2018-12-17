@@ -4,8 +4,6 @@ import re
 import subprocess
 import sys
 import time
-import urllib
-import urllib.request
 
 
 def check_status_code(container_name, image):
@@ -21,8 +19,10 @@ def check_status_code(container_name, image):
 
     # get site status
     if sys.version_info[0] == 3:
+        import urllib.request
         url_status_code = urllib.request.urlopen('http://localhost:8000').getcode()
     else:
+        import urllib
         url_status_code = urllib.urlopen('http://localhost:8000').getcode()
 
     # remove container
