@@ -23,8 +23,8 @@ build-mas-py2:
     docker_img_wsql_tag: ${docker_img_tag}-w.sql
     docker_container_name: ${docker_img_tag}-con
   script:
-      # build base image
-      - docker build -t ${docker_img}:${docker_img_tag}
+    # build base image
+    - docker build -t ${docker_img}:${docker_img_tag}
       --no-cache
       --build-arg pythonVersion=${python_version}
       --build-arg appBranch=${app_branch}
