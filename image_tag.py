@@ -7,6 +7,7 @@ import time
 
 
 def check_status_code(container_name, image):
+    print(image)
     # start and waiting for mysql and frappe web client to start
     subprocess.call([
         'docker', 'run', '-d',
@@ -99,6 +100,7 @@ def tag_image(app_version, img_name, img_tag):
 
 
 if __name__ == '__main__':
+    print(sys.argv)
     # get args
     container_name = sys.argv[0]
     img_name = sys.argv[1]
