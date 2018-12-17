@@ -24,7 +24,6 @@ build-mas-py2:
     docker_container_name: ${docker_img_tag}-con
   script:
     - apk update && apk add \
-      python \
       python-dev \
       py-pip \
       build-base
