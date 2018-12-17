@@ -26,10 +26,10 @@ def check_status_code(container_name, image):
     # get site status
     if sys.version_info[0] == 3:
         import urllib.request
-        url_status_code = urllib.request.urlopen('http://localhost:8000').getcode()
+        url_status_code = urllib.request.urlopen('http://0.0.0.0:8000').getcode()
     else:
         import urllib
-        url_status_code = urllib.urlopen('http://localhost:8000').getcode()
+        url_status_code = urllib.urlopen('http://0.0.0.0:8000').getcode()
 
     # remove container
     subprocess.call(['docker', 'rm', '-rf', container_name])
