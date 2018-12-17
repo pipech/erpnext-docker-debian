@@ -7,29 +7,33 @@ import time
 
 
 def check_status_code(container_name, image):
-    # # start and waiting for mysql and frappe web client to start
-    # subprocess.call([
-    #     'docker', 'run', '-d',
-    #     '-p', '8000:8000',
-    #     '-p', '9000:9000',
-    #     '--name', container_name,
-    #     image
-    # ])
-    # time.sleep(120)
+    # start and waiting for mysql and frappe web client to start
+    subprocess.call([
+        'docker', 'run', '-d',
+        '-p', '8000:8000',
+        '-p', '9000:9000',
+        '--name', container_name,
+        image
+    ])
+    time.sleep(120)
 
-    # # debug
-    # docker_logs = check_output([
-    #     'docker', 'logs', container_name
-    #     ]).decode('utf-8')
-    # print(docker_logs)
+    # debug
+    docker_logs = check_output([
+        'docker', 'logs', container_name
+        ]).decode('utf-8')
+    print(docker_logs)
+    docker_info = check_output([
+        'docker', 'inspect', container_name
+        ]).decode('utf-8')
+    print(docker_info)
 
     # get site status
     if sys.version_info[0] == 3:
         import urllib.request
-        url_status_code = urllib.request.urlopen('http://0.0.0.0:8000').getcode()
+        url_status_code = urllib.request.urlopen('http://127.0.0.1:8000').getcode()
     else:
         import urllib
-        url_status_code = urllib.urlopen('http://0.0.0.0:8000').getcode()
+        url_status_code = urllib.urlopen('http://127.0.0.1:8000').getcode()
 
     # remove container
     subprocess.call(['docker', 'rm', '-rf', container_name])
