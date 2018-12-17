@@ -127,7 +127,7 @@ if __name__ == '__main__':
         )
 
     # run process
-    check_status_code(container_name, image)
+    # check_status_code(container_name, image)
     app_version = get_app_version(image)
     tag_image(app_version, img_name, img_tag)
     tag_image(app_version, img_name, img_wsql_tag)
