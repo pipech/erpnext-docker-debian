@@ -1,37 +1,47 @@
-# Official docker image.
-image: docker:latest
+# Official docker img.
+img: docker:latest
 
 services:
   # dind > Docker in Docker
   - docker:dind
 
 before_script:
-  - docker login -u $dh_user -p $dh_pass
+  - docker login -u ${dh_user} -p ${dh_pass}
 
 variables:
-  docker_image: "pipech/erpnext-docker-debian"
+  docker_img: "pipech/erpnext-docker-debian"
 
 stages:
   - build
   - build-with-sql
+  - tag-img
 
 build-mas-py2:
   stage: build
   variables:
-    docker_image_tag: "mas-py2-latest"
+    docker_img_tag: "mas-py2-latest"
   script:
-    - docker build -t $docker_image:$docker_image_tag
+    - docker build -t ${docker_img}:${docker_img_tag}
       --build-arg pythonVersion=python
       --build-arg appBranch=master
       .
-    - docker push $docker_image:$docker_image_tag
+    - docker push ${docker_img}:${docker_img_tag}
 
 build-mas-py2-with-sql:
   stage: build-with-sql
   variables:
-    docker_image_tag: "mas-py2-w.sql-latest"
+    docker_img_tag: "mas-py2-w.sql-latest"
   script:
-    - docker build -t $docker_image:$docker_image_tag
-      --build-arg base_image=$docker_image:mas-py2-latest
+    - docker build -t ${docker_img}:${docker_img_tag}
+      --build-arg base_img=${docker_img}:mas-py2-latest
       trial_setup/.
-    - docker push $docker_image:$docker_image_tag
+    - docker push ${docker_img}:${docker_img_tag}
+
+tag-img-version:
+  stage: tag-img
+  variables:
+    docker_img_tag: "mas-py2-latest"
+    docker_img_wsql_tag: "mas-py2-w.sql-latest"
+    docker_container_name: ${docker_img_tag}-con
+  script:
+    - python image-tag.py ${docker_container_name} ${docker_img} ${docker_img_tag} ${docker_img_wsql_tag}

@@ -20,3 +20,6 @@ RUN sudo bench install mariadb --mysql_root_password $mysqlPass \
     --mariadb-root-password $mysqlPass  \
     --admin-password $adminPass \
     && bench --site $siteName install-app erpnext
+
+# run start mysql service and start benchwhen container start
+COPY entrypoint.sh /usr/local/bin/
