@@ -1,5 +1,5 @@
 # Official docker img.
-img: docker:latest
+image: docker:latest
 
 services:
   # dind > Docker in Docker
