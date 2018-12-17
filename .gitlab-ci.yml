@@ -23,8 +23,7 @@ build-mas-py2:
     docker_img_wsql_tag: ${docker_img_tag}-w.sql
     docker_container_name: ${docker_img_tag}-con
   script:
-    - apk update && apk add \
-      python3
+    - apk update && apk add python
     - python image-tag.py
       ${docker_container_name}
       ${docker_img}
