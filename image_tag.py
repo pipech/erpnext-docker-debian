@@ -17,6 +17,11 @@ def check_status_code(container_name, image):
     ])
     time.sleep(55)
 
+    aaa = check_output([
+        'docker', 'logs', container_name
+        ]).decode('utf-8')
+    print(aaa)
+
     # get site status
     if sys.version_info[0] == 3:
         import urllib.request
