@@ -23,22 +23,17 @@ build-mas-py2:
     docker_img_wsql_tag: ${docker_img_tag}-w.sql
     docker_container_name: ${docker_img_tag}-con
   script:
-    - echo ${docker_img_tag}
-    - echo ${python_version}
-    - echo ${app_branch}
-    - echo ${docker_img_wsql_tag}
-    - echo ${docker_container_name}
-    # - docker build -t ${docker_img}:${docker_img_tag}
-    #   --build-arg pythonVersion=${python_version}
-    #   --build-arg appBranch=${app_branch}
-    #   .
-    # - docker push ${docker_img}:${docker_img_tag}
-    # - docker build -t ${docker_img}:${docker_img_wsql_tag}
-    #   --build-arg base_img=${docker_img}:${docker_img_tag}
-    #   with_sql/.
-    # - docker push ${docker_img}:${docker_img_wsql_tag}
-    # - python image-tag.py
-    #   ${docker_container_name}
-    #   ${docker_img}
-    #   ${docker_img_tag}
-    #   ${docker_img_wsql_tag}
+    - docker build -t ${docker_img}:${docker_img_tag}
+      --build-arg pythonVersion=${python_version}
+      --build-arg appBranch=${app_branch}
+      .
+    - docker push ${docker_img}:${docker_img_tag}
+    - docker build -t ${docker_img}:${docker_img_wsql_tag}
+      --build-arg base_img=${docker_img}:${docker_img_tag}
+      with_sql/.
+    - docker push ${docker_img}:${docker_img_wsql_tag}
+    - python image-tag.py
+      ${docker_container_name}
+      ${docker_img}
+      ${docker_img_tag}
+      ${docker_img_wsql_tag}
