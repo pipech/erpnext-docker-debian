@@ -1,4 +1,4 @@
-ARG base_image
-FROM ${base_image}
+ARG aaa
+FROM ${aaa}
 
 RUN bench version
