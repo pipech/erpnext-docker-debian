@@ -29,6 +29,8 @@ build-mas-py2:
       --build-arg appBranch=${app_branch}
       .
     - docker push ${docker_img}:${docker_img_tag}
+    - echo ${docker_img}:${docker_img_wsql_tag}
+    - echo ${docker_img}:${docker_img_tag}
     - docker build -t ${docker_img}:${docker_img_wsql_tag}
       --no-cache
       --build-arg base_img=${docker_img}:${docker_img_tag}
