@@ -22,6 +22,11 @@ RUN sudo bench install mariadb --mysql_root_password $mysqlPass \
     && bench --site $siteName install-app erpnext
 
 # run start mysql service and start benchwhen container start
+COPY test_server.py test_server.py
+# fix for [docker Error response from daemon OCI runtime create failed starting container process caused "permission denied" unknown]
+RUN sudo chmod +x test_server.py
+
+# run start mysql service and start benchwhen container start
 COPY entrypoint.sh /usr/local/bin/
 # fix for [docker Error response from daemon OCI runtime create failed starting container process caused "permission denied" unknown]
 RUN sudo chmod +x /usr/local/bin/entrypoint.sh

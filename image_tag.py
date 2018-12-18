@@ -27,26 +27,15 @@ def check_status_code(container_name, image):
         ]).decode('utf-8')
     print(docker_info)
 
-    # try curl
-    docker_info = check_output([
-        'curl', 'http://127.0.0.1:8000'
+    # check server status
+    server_status = check_output([
+        'docker', 'exec', container_name, 'python', 'test_server.py'
         ]).decode('utf-8')
-    print(docker_info)
-
-    # get site status
-    if sys.version_info[0] == 3:
-        import urllib.request
-        url_status_code = urllib.request.urlopen('http://127.0.0.1:8000').getcode()
-    else:
-        import urllib
-        url_status_code = urllib.urlopen('http://127.0.0.1:8000').getcode()
 
     # remove container
     subprocess.call(['docker', 'rm', '-rf', container_name])
 
-    # return error if status is not 200
-    if url_status_code != 200:
-        raise ValueError('Site status is not 200, something might be wrong.')
+    return server_status
 
 
 def get_app_version(image):
@@ -137,13 +126,17 @@ if __name__ == '__main__':
         )
 
     # run process
-    # check_status_code(container_name, image)
-    app_version = get_app_version(image)
-    print('tag_image > img_tag > {}'.format(
-        img_tag
-    ))
-    tag_image(app_version, img_name, img_tag)
-    print('tag_image > img_wsql_tag > {}'.format(
-        img_wsql_tag
-    ))
-    tag_image(app_version, img_name, img_wsql_tag)
+    server_status = check_status_code(container_name, image)
+    if server_status == '200':
+        app_version = get_app_version(image)
+        print('tag_image > img_tag > {}'.format(
+            img_tag
+        ))
+        tag_image(app_version, img_name, img_tag)
+        print('tag_image > img_wsql_tag > {}'.format(
+            img_wsql_tag
+        ))
+        tag_image(app_version, img_name, img_wsql_tag)
+    else:
+        print('Error: Server status is not 200!')
+        print(server_status)
