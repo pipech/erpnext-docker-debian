@@ -33,9 +33,9 @@ def check_status_code(container_name, image):
         ]).decode('utf-8')
 
     # remove container
-    subprocess.call(['docker', 'rm', '-rf', container_name])
+    subprocess.call(['docker', 'rm', '-f', container_name])
 
-    return server_status
+    return server_status.strip()
 
 
 def get_app_version(image):
@@ -140,3 +140,4 @@ if __name__ == '__main__':
     else:
         print('Error: Server status is not 200!')
         print(server_status)
+        print(type(server_status))
