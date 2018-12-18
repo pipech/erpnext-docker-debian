@@ -129,5 +129,11 @@ if __name__ == '__main__':
     # run process
     # check_status_code(container_name, image)
     app_version = get_app_version(image)
+    print('tag_image > img_tag > {}'.format(
+        img_tag
+    ))
     tag_image(app_version, img_name, img_tag)
+    print('tag_image > img_wsql_tag > {}'.format(
+        img_wsql_tag
+    ))
     tag_image(app_version, img_name, img_wsql_tag)
