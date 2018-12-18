@@ -91,10 +91,11 @@ def get_app_version(image):
 
 
 def tag_image(app_version, img_name, img_tag):
-    # remove first 3 character of tag
-    img_tag_trailing = img_tag[3:]
+    # remove first 3 character of tag (mas, dev, sta) &
+    # remove last 7 -latest
+    img_tag_trailing = img_tag[3:-7]
 
-    # prepare image name
+    # prepare image name 
     app_version_tag = '{img_name}:{app_version}{img_tag_trailing}'.format(
         img_name=img_name,
         app_version=app_version,
