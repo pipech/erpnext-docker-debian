@@ -91,19 +91,28 @@ def get_app_version(image):
 
 
 def tag_image(app_version, img_name, img_tag):
+    # remove first 3 character of tag
     img_tag_trailing = img_tag[3:]
 
+    # prepare image name
     app_version_tag = '{img_name}:{app_version}{img_tag_trailing}'.format(
         img_name=img_name,
         app_version=app_version,
         img_tag_trailing=img_tag_trailing
         )
+    app_image_name = '{img_name}:{img_tag}'.format(
+        img_name=img_name,
+        img_tag=img_tag
+        )
+
+    # pull tag push
+    subprocess.call([
+        'docker', 'pull',
+        app_image_name
+        ])
     subprocess.call([
         'docker', 'tag',
-        '{img_name}:{img_tag}'.format(
-            img_name=img_name,
-            img_tag=img_tag
-        ),
+        app_image_name,
         app_version_tag,
         ])
     subprocess.call(['docker', 'push', app_version_tag])
