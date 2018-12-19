@@ -45,3 +45,99 @@ build-mas-py2:
       ${docker_img}
       ${docker_img_tag}
       ${docker_img_wsql_tag}
+
+build-sta-py2:
+  stage: build
+  variables:
+    python_version: "python"
+    app_branch: "stage"
+    python_abbr: "py2"
+    branch_abbr: "sta"
+    docker_img_tag: ${branch_abbr}-${python_abbr}-latest
+    docker_img_wsql_tag: ${branch_abbr}-${python_abbr}-w.sql-latest
+    docker_container_name: ${branch_abbr}-${python_abbr}-con
+  script:
+    # build base image
+    - docker build -t ${docker_img}:${docker_img_tag}
+      --no-cache
+      --build-arg pythonVersion=${python_version}
+      --build-arg appBranch=${app_branch}
+      .
+    - docker push ${docker_img}:${docker_img_tag}
+    # build image with sql
+    - docker build -t ${docker_img}:${docker_img_wsql_tag}
+      --no-cache
+      --build-arg base_image_from=${docker_img}:${docker_img_tag}
+      with_sql/.
+    - docker push ${docker_img}:${docker_img_wsql_tag}
+    # tag image version
+    - apk update && apk add python3
+    - python3 image_tag.py
+      ${docker_container_name}
+      ${docker_img}
+      ${docker_img_tag}
+      ${docker_img_wsql_tag}
+
+build-sta-py3:
+  stage: build
+  variables:
+    python_version: "python3"
+    app_branch: "stage"
+    python_abbr: "py3"
+    branch_abbr: "sta"
+    docker_img_tag: ${branch_abbr}-${python_abbr}-latest
+    docker_img_wsql_tag: ${branch_abbr}-${python_abbr}-w.sql-latest
+    docker_container_name: ${branch_abbr}-${python_abbr}-con
+  script:
+    # build base image
+    - docker build -t ${docker_img}:${docker_img_tag}
+      --no-cache
+      --build-arg pythonVersion=${python_version}
+      --build-arg appBranch=${app_branch}
+      .
+    - docker push ${docker_img}:${docker_img_tag}
+    # build image with sql
+    - docker build -t ${docker_img}:${docker_img_wsql_tag}
+      --no-cache
+      --build-arg base_image_from=${docker_img}:${docker_img_tag}
+      with_sql/.
+    - docker push ${docker_img}:${docker_img_wsql_tag}
+    # tag image version
+    - apk update && apk add python3
+    - python3 image_tag.py
+      ${docker_container_name}
+      ${docker_img}
+      ${docker_img_tag}
+      ${docker_img_wsql_tag}
+
+build-dev-py3:
+  stage: build
+  variables:
+    python_version: "python3"
+    app_branch: "stage"
+    python_abbr: "py3"
+    branch_abbr: "sta"
+    docker_img_tag: ${branch_abbr}-${python_abbr}-latest
+    docker_img_wsql_tag: ${branch_abbr}-${python_abbr}-w.sql-latest
+    docker_container_name: ${branch_abbr}-${python_abbr}-con
+  script:
+    # build base image
+    - docker build -t ${docker_img}:${docker_img_tag}
+      --no-cache
+      --build-arg pythonVersion=${python_version}
+      --build-arg appBranch=${app_branch}
+      .
+    - docker push ${docker_img}:${docker_img_tag}
+    # build image with sql
+    - docker build -t ${docker_img}:${docker_img_wsql_tag}
+      --no-cache
+      --build-arg base_image_from=${docker_img}:${docker_img_tag}
+      with_sql/.
+    - docker push ${docker_img}:${docker_img_wsql_tag}
+    # tag image version
+    - apk update && apk add python3
+    - python3 image_tag.py
+      ${docker_container_name}
+      ${docker_img}
+      ${docker_img_tag}
+      ${docker_img_wsql_tag}

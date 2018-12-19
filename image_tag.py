@@ -141,6 +141,7 @@ if __name__ == '__main__':
     img_tag = sys.argv[3]
     img_wsql_tag = sys.argv[4]
 
+    # build args
     image = '{img_name}:{img_wsql_tag}'.format(
         img_name=img_name,
         img_wsql_tag=img_wsql_tag,
