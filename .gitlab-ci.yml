@@ -50,7 +50,7 @@ build-sta-py2:
   stage: build
   variables:
     python_version: "python"
-    app_branch: "stage"
+    app_branch: "staging"
     python_abbr: "py2"
     branch_abbr: "sta"
     docker_img_tag: ${branch_abbr}-${python_abbr}-latest
@@ -82,7 +82,7 @@ build-sta-py3:
   stage: build
   variables:
     python_version: "python3"
-    app_branch: "stage"
+    app_branch: "staging"
     python_abbr: "py3"
     branch_abbr: "sta"
     docker_img_tag: ${branch_abbr}-${python_abbr}-latest
