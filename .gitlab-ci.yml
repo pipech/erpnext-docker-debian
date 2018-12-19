@@ -114,9 +114,9 @@ build-dev-py3:
   stage: build
   variables:
     python_version: "python3"
-    app_branch: "stage"
+    app_branch: "develop"
     python_abbr: "py3"
-    branch_abbr: "sta"
+    branch_abbr: "dev"
     docker_img_tag: ${branch_abbr}-${python_abbr}-latest
     docker_img_wsql_tag: ${branch_abbr}-${python_abbr}-w.sql-latest
     docker_container_name: ${branch_abbr}-${python_abbr}-con
