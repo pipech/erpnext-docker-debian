@@ -1,3 +1,4 @@
+from datetime import datetime
 from subprocess import check_output
 
 import json
@@ -85,18 +86,27 @@ def tag_image(app_version, img_name, img_tag):
     # remove last 7 -latest
     img_tag_trailing = img_tag[3:-7]
 
-    # prepare image name 
-    app_version_tag = '{app_version}{img_tag_trailing}'.format(
-        app_version=app_version,
-        img_tag_trailing=img_tag_trailing
-    )
-    app_version_name = '{img_name}:{app_version_tag}'.format(
-        img_name=img_name,
-        app_version_tag=app_version_tag
+    # prepare image name
+    if img_tag[:3] == 'dev':
+        # remove last 7 develop
+        app_version = app_version[:-7]
+        app_version_tag = '{}{}{}'.format(
+            app_version,
+            datetime.now().strftime('%y%m%d'),
+            img_tag_trailing
         )
-    app_image_name = '{img_name}:{img_tag}'.format(
-        img_name=img_name,
-        img_tag=img_tag
+    else:
+        app_version_tag = '{}{}'.format(
+            app_version,
+            img_tag_trailing
+        )
+    app_version_name = '{}:{}'.format(
+        img_name,
+        app_version_tag
+        )
+    app_image_name = '{}:{}'.format(
+        img_name,
+        img_tag
         )
 
     # get all tags
@@ -116,6 +126,7 @@ def tag_image(app_version, img_name, img_tag):
     # tag & push if tag exist
     existing_tag = list(filter(lambda a: a['name'] == app_version_tag, tags))
     if not existing_tag:
+        print('Image tag "{}"is already exist.'.format(app_version_tag))
         # pull tag push
         subprocess.call([
             'docker', 'pull',
