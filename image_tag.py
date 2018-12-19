@@ -1,5 +1,6 @@
 from subprocess import check_output
 
+import json
 import re
 import subprocess
 import sys
@@ -85,27 +86,47 @@ def tag_image(app_version, img_name, img_tag):
     img_tag_trailing = img_tag[3:-7]
 
     # prepare image name 
-    app_version_tag = '{img_name}:{app_version}{img_tag_trailing}'.format(
-        img_name=img_name,
+    app_version_tag = '{app_version}{img_tag_trailing}'.format(
         app_version=app_version,
         img_tag_trailing=img_tag_trailing
+    )
+    app_version_name = '{img_name}:{app_version_tag}'.format(
+        img_name=img_name,
+        app_version_tag=app_version_tag
         )
     app_image_name = '{img_name}:{img_tag}'.format(
         img_name=img_name,
         img_tag=img_tag
         )
 
-    # pull tag push
-    subprocess.call([
-        'docker', 'pull',
-        app_image_name
-        ])
-    subprocess.call([
-        'docker', 'tag',
-        app_image_name,
-        app_version_tag,
-        ])
-    subprocess.call(['docker', 'push', app_version_tag])
+    # get all tags
+    api_url = 'https://registry.hub.docker.com/v1/repositories/{}/tags'.format(
+        img_name
+    )
+    if sys.version_info[0] == 3:
+        import urllib.request
+        tags = urllib.request.urlopen(api_url)
+    else:
+        import urllib
+        tags = urllib.urlopen(api_url)
+    tags = tags.read()
+    tags = tags.decode('utf-8')
+    tags = json.loads(tags)
+
+    # tag & push if tag exist
+    existing_tag = list(filter(lambda a: a['name'] == app_version_tag, tags))
+    if not existing_tag:
+        # pull tag push
+        subprocess.call([
+            'docker', 'pull',
+            app_image_name
+            ])
+        subprocess.call([
+            'docker', 'tag',
+            app_image_name,
+            app_version_name,
+            ])
+        subprocess.call(['docker', 'push', app_version_name])
 
 
 if __name__ == '__main__':
@@ -128,6 +149,7 @@ if __name__ == '__main__':
     # run process
     server_status = check_status_code(container_name, image)
     if server_status == '200':
+        print('Server status == 200')
         app_version = get_app_version(image)
         print('tag_image > img_tag > {}'.format(
             img_tag
