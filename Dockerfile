@@ -77,10 +77,6 @@ RUN git clone $benchRepo /tmp/.bench --depth 1 --branch $benchBranch \
     apps/frappe_io \
     apps/foundation \
     && sed -i '/foundation\|frappe_io/d' sites/apps.txt \
-    # delete unnecessary frappe apps git folder
-    && rm -rf \
-    apps/frappe/.git \
-    apps/erpnext/.git \
     # delete temp file
     && sudo rm -rf /tmp/* \
     # clean up installation

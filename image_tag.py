@@ -75,6 +75,9 @@ def get_app_version(image):
                     higher_app_version = f
                     break
 
+    print('Apps version')
+    print(apps)
+
     if higher_app_version == e:
         return apps['erpnext']['version_str']
     else:
