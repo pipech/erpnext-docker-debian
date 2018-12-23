@@ -5,9 +5,9 @@ permalink: /production_setup/
 ---
 
 In this setup we use the same ERPNext image as we use in trial setup
-and config it to run production
-and instead of running all service in single container we separate some and put it into 6 container,
-and most important thing is it separate data volumes from container to docker volumes.
+and configure it to run production. 
+Instead of running all service in single container we separate some and put it into 6 container
+and, most important, separate data volumes from container to docker volumes.
 
 1. frappe
 2. mariadb
@@ -25,7 +25,7 @@ docker swarm will try to maintain that service by create new container using ima
 If you update or your app wasn't in those image your site will fail.
 
 **Note: This setup is meant to run on server with public IP address
-and domain pointing to those IP address, otherwise it won't works.**
+and domain pointing to those IP address, otherwise it won't work.**
 
 ### Usage
 
