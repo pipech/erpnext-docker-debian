@@ -93,7 +93,7 @@ and domain pointing to those IP address, otherwise it won't work.**
 
 * Run init.sh
 
-    `cd .. && cd production_setup && . init.sh`
+    `cd .. && cd production_config && . init.sh`
 
 * Exit from container
 
