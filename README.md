@@ -1,5 +1,13 @@
 #  ERPNext on Docker
 
+## Our main repositories is at [gitlab.com/pipech/erpnext-docker](https://gitlab.com/pipech/erpnext-docker)
+
+For Issues and Merge request please post at [gitlab.com/pipech/erpnext-docker](https://gitlab.com/pipech/erpnext-docker)
+
+The main reason I move repositories to gitlab is to use Gitlab CI/CD to automatically create new image every weeks.
+
+------
+
 **The goal of this repo is stability.**
 
 ##### Problem
