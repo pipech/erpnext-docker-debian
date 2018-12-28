@@ -1,4 +1,5 @@
 .*
+!/.gitlab-ci.yml
 !/.gitignore
 /development_setup/data/
 /docs/_site/

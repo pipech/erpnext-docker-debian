@@ -19,10 +19,6 @@ services:
     image: pipech/erpnext-docker-debian:stable
     deploy:
       replicas: 1
-    ports:
-      - "8000:8000"   #webserver_port
-      - "9000:9000"   #socketio_port
-      - "6787:6787"   #file_watcher_port
     volumes:
       - frappe-sites-volumes:/home/frappe/bench/sites
       - frappe-logs-volumes:/home/frappe/bench/logs
