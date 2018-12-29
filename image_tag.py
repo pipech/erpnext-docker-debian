@@ -153,12 +153,11 @@ if __name__ == '__main__':
     container_name = sys.argv[1]
     img_name = sys.argv[2]
     img_tag = sys.argv[3]
-    img_wsql_tag = sys.argv[4]
 
     # build args
-    image = '{img_name}:{img_wsql_tag}'.format(
+    image = '{img_name}:{img_tag}'.format(
         img_name=img_name,
-        img_wsql_tag=img_wsql_tag,
+        img_tag=img_tag,
         )
 
     # run process
@@ -170,10 +169,6 @@ if __name__ == '__main__':
             img_tag
         ))
         tag_image(app_version, img_name, img_tag)
-        print('tag_image > img_wsql_tag > {}'.format(
-            img_wsql_tag
-        ))
-        tag_image(app_version, img_name, img_wsql_tag)
     else:
         print('Error: Server status is not 200!')
         print(server_status)
