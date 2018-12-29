@@ -46,16 +46,21 @@ ENV easyinstallRepo='https://raw.githubusercontent.com/frappe/bench/master/playb
     benchFolderName=bench \
     benchRepo='https://github.com/frappe/bench' \
     frappeRepo='https://github.com/frappe/frappe' \
-    erpnextRepo='https://github.com/frappe/erpnext'
+    erpnextRepo='https://github.com/frappe/erpnext' \
+    siteName=site1.local \
+    adminPass=12345 \
+    mysqlPass=travis
 
 # for python 2 use = python
 # for python 3 use = python3 or python3.6 for centos
 ARG pythonVersion=python
 ARG appBranch=master
 
+# [work around] add mariadb apt-key first to skip adding from ansible playbook
+# which will cause error > "gpg: cannot open '/dev/tty': No such device or address" error
+RUN sudo apt-key adv --no-tty --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
+
 RUN git clone $benchRepo /tmp/.bench --depth 1 --branch $benchBranch \
-    # remove mariadb from easy install which make image 1.2GB smaller
-    && sed -i '/mariadb/d' /tmp/.bench/playbooks/site.yml \
     # start easy install
     && wget $easyinstallRepo \
     && python install.py \
@@ -81,7 +86,13 @@ RUN git clone $benchRepo /tmp/.bench --depth 1 --branch $benchBranch \
     && sudo rm -rf /tmp/* \
     # clean up installation
     && sudo apt-get autoremove --purge -y \
-    && sudo apt-get clean
+    && sudo apt-get clean \
+    # install mariadb & init new site
+    && sudo service mysql start \
+    && bench new-site $siteName \
+    --mariadb-root-password $mysqlPass  \
+    --admin-password $adminPass \
+    && bench --site $siteName install-app erpnext
 
 # [work around] change back config for work around for  "cmd": "chsh frappe -s $(which bash)", "stderr": "Password: chsh: PAM: Authentication failure"
 RUN sudo sed -i 's/auth       sufficient   pam_shells.so/auth       required   pam_shells.so/' /etc/pam.d/chsh
@@ -90,10 +101,17 @@ RUN sudo sed -i 's/auth       sufficient   pam_shells.so/auth       required   p
 USER $systemUser
 WORKDIR /home/$systemUser/$benchFolderName
 
+# run start mysql service and start bench when container start
+COPY entrypoint.sh /usr/local/bin/
 # copy production config
 COPY production_setup/conf/frappe-docker-conf /home/$systemUser/production_config
+# python script for super basic test
+COPY img_test/test_server.py /home/$systemUser/$benchFolderName/test_server.py
+
 # fix for [docker Error response from daemon OCI runtime create failed starting container process caused "permission denied" unknown]
-RUN sudo chmod +x /home/$systemUser/production_config/entrypoint_prd.sh
+RUN sudo chmod +x /usr/local/bin/entrypoint.sh
+# image entrypoint script
+CMD ["/usr/local/bin/entrypoint.sh"]
 
 # expose port
 EXPOSE 8000-8005 9000-9005 3306-3307
