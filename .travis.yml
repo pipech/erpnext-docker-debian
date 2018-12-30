@@ -11,6 +11,8 @@ env:
 services:
 - docker
 script:
+- echo "${docker_img}"
+- echo [test_bye]
 - echo "${test_bye}"
 - echo "$[test_bye]"
 - echo "%[test_bye]"
