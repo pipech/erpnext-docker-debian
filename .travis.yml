@@ -12,9 +12,6 @@ env:
 services:
   - docker
 
-before_install:
-  - echo "${dh_pass}" | docker login -u "${dh_user}" --password-stdin
-
 install:
   - "./.travis/install.sh"
 
