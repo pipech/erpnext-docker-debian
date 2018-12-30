@@ -18,3 +18,5 @@ script:
 - echo "%[test_bye]"
 - echo "[test_bye]"
 - echo "hello"
+- echo "${python_version}"
+- echo "${app_branch}"
