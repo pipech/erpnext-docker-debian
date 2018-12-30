@@ -13,7 +13,7 @@ services:
   - docker
 
 install:
-  - chmod +x install.sh
+  - chmod +x ./.travis/install.sh
   - "./.travis/install.sh"
 
 script:
