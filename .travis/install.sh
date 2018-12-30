@@ -5,9 +5,9 @@ echo "## python"
 echo "python_version: ${python_version}"
 python_version_trailing="${python_version: -1}"
 echo "python_version_trailing: ${python_version_trailing}"
-if [ python_version_trailing == "n" ]; then
+if [ "$python_version_trailing" == "n" ]; then
     python_abbr="py2"
-elif [ python_version_trailing == "3" ]; then
+elif [ "$python_version_trailing" == "3" ]; then
     python_abbr="py3"
 else
     echo "ERROR! : Python version error"
@@ -25,8 +25,8 @@ docker_img_tag="${branch_abbr}-${python_abbr}-latest"
 docker_container_name="${branch_abbr}-${python_abbr}-latest"
 
 # build image
-docker build -t ${docker_img}:${docker_img_tag} \
+docker build -t "${docker_img}:${docker_img_tag}" \
     --no-cache \
-    --build-arg pythonVersion=${python_version} \
-    --build-arg appBranch=${app_branch} \
+    --build-arg pythonVersion="${python_version}" \
+    --build-arg appBranch="${app_branch}" \
     .
