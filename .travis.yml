@@ -12,5 +12,12 @@ services:
 before_install:
 - echo "${dh_pass}" | docker login -u "$dh_user" --password-stdin
 install:
-  - chmod +x ./.travis/install.sh
-  - "./.travis/install.sh"
+  - chmod +x \
+    ./.travis/define_variable.sh \
+    ./.travis/build_image.sh \
+    ./.travis/push_latest.sh \
+    ./.travis/push_version.sh
+  - "./.travis/define_variable.sh"
+  - "./.travis/build_image.sh"
+  - "./.travis/push_latest.sh"
+  - "./.travis/push_version.sh"

@@ -2,46 +2,9 @@ from datetime import datetime
 from subprocess import check_output
 
 import json
+import os
 import re
-import subprocess
 import sys
-import time
-
-
-def check_status_code(container_name, image):
-    # start and waiting for mysql and frappe web client to start
-    print('>> Start container')
-    subprocess.call([
-        'docker', 'run', '-d',
-        '-p', '8000:8000',
-        '-p', '9000:9000',
-        '--name', container_name,
-        image
-    ])
-    time.sleep(120)
-
-    # debug
-    print('>> Check container logs')
-    docker_logs = check_output([
-        'docker', 'logs', container_name
-        ]).decode('utf-8')
-    print(docker_logs)
-    docker_info = check_output([
-        'docker', 'inspect', container_name
-        ]).decode('utf-8')
-    print(docker_info)
-
-    # check server status
-    print('>> Testing server')
-    server_status = check_output([
-        'docker', 'exec', container_name, 'python', 'test_server.py'
-        ]).decode('utf-8')
-
-    # remove container
-    print('>> Remove container')
-    subprocess.call(['docker', 'rm', '-f', container_name])
-
-    return server_status.strip()
 
 
 def get_app_version(image):
@@ -89,7 +52,7 @@ def get_app_version(image):
         return apps['frappe']['version_str']
 
 
-def tag_image(app_version, img_name, img_tag):
+def prepare_tag_image(app_version, img_tag):
     # remove first 3 character of tag (mas, dev, sta) &
     # remove last 7 -latest
     img_tag_trailing = img_tag[3:-7]
@@ -108,15 +71,11 @@ def tag_image(app_version, img_name, img_tag):
             app_version,
             img_tag_trailing
         )
-    app_version_name = '{}:{}'.format(
-        img_name,
-        app_version_tag
-        )
-    app_image_name = '{}:{}'.format(
-        img_name,
-        img_tag
-        )
 
+    return app_version_tag
+
+
+def existing_tag(app_version_tag, img_name):
     # get all tags
     api_url = 'https://registry.hub.docker.com/v1/repositories/{}/tags'.format(
         img_name
@@ -132,34 +91,13 @@ def tag_image(app_version, img_name, img_tag):
     tags = json.loads(tags)
 
     # tag & push if tag exist
-    existing_tag = list(filter(lambda a: a['name'] == app_version_tag, tags))
-    if not existing_tag:
-        print('>> Tagging image')
-        # pull tag push
-        subprocess.call([
-            'docker', 'pull',
-            app_image_name
-            ])
-        subprocess.call([
-            'docker', 'tag',
-            app_image_name,
-            app_version_name,
-            ])
-        subprocess.call(['docker', 'push', app_version_name])
-    else:
-        print('Image tag "{}"is already exist.'.format(app_version_tag))
+    return list(filter(lambda a: a['name'] == app_version_tag, tags))
 
 
-if __name__ == '__main__':
-
-    # debug
-    print('sys.argv')
-    print(sys.argv)
-
+def main():
     # get args
-    container_name = sys.argv[1]
-    img_name = sys.argv[2]
-    img_tag = sys.argv[3]
+    img_name = os.environ['docker_img']
+    img_tag = os.environ['docker_img_tag']
 
     # build args
     image = '{img_name}:{img_tag}'.format(
@@ -167,16 +105,19 @@ if __name__ == '__main__':
         img_tag=img_tag,
         )
 
-    # run process
-    server_status = check_status_code(container_name, image)
-    if server_status == '200':
-        print('Server status == 200')
-        app_version = get_app_version(image)
-        print('tag_image > img_tag > {}'.format(
-            img_tag
-        ))
-        tag_image(app_version, img_name, img_tag)
+    # debug
+    print('img_name: {}'.format(img_name))
+    print('img_tag: {}'.format(img_tag))
+    print('image: {}'.format(image))
+
+    # execute
+    app_version = get_app_version(image)
+    app_version = prepare_tag_image(app_version, img_tag)
+    if not existing_tag(app_version, image):
+        return app_version
     else:
-        print('Error: Server status is not 200!')
-        print(server_status)
-        print(type(server_status))
+        sys.exit('Error: Duplicate tags')
+
+
+if __name__ == '__main__':
+    main()
