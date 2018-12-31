@@ -18,4 +18,4 @@ install:
   # - .travis/push_latest.sh
   # - .travis/push_version.sh
   - docker build -t mysql-fails sql_test/.
-  - docker run -it mysql-fails /bin/bash -c 'service mysql start'
+  - docker run -it mysql-fails /bin/bash -c 'find /var/lib/mysql/mysql -exec touch -c -a {} + && service mysql start'
