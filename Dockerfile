@@ -61,6 +61,8 @@ ARG appBranch=master
 RUN sudo apt-key adv --no-tty --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
 
 RUN git clone $benchRepo /tmp/.bench --depth 1 --branch $benchBranch \
+    # remove mariadb from easy install
+    && sed -i '/mariadb/d' /tmp/.bench/playbooks/site.yml \
     # start easy install
     && wget $easyinstallRepo \
     && python install.py \
@@ -88,6 +90,7 @@ RUN git clone $benchRepo /tmp/.bench --depth 1 --branch $benchBranch \
     && sudo apt-get autoremove --purge -y \
     && sudo apt-get clean \
     # install mariadb & init new site
+    && sudo bench install mariadb --mysql_root_password $mysqlPass \
     && sudo service mysql start \
     && bench new-site $siteName \
     --mariadb-root-password $mysqlPass  \
@@ -101,13 +104,13 @@ RUN sudo sed -i 's/auth       sufficient   pam_shells.so/auth       required   p
 USER $systemUser
 WORKDIR /home/$systemUser/$benchFolderName
 
-# run start mysql service and start bench when container start
-COPY entrypoint.sh /usr/local/bin/
 # copy production config
 COPY production_setup/conf/frappe-docker-conf /home/$systemUser/production_config
 # python script for super basic test
 COPY img_test/test_server.py /home/$systemUser/$benchFolderName/test_server.py
 
+# run start mysql service and start bench when container start
+COPY entrypoint.sh /usr/local/bin/
 # fix for [docker Error response from daemon OCI runtime create failed starting container process caused "permission denied" unknown]
 RUN sudo chmod +x /usr/local/bin/entrypoint.sh
 # image entrypoint script
