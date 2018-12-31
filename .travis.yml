@@ -15,5 +15,6 @@ install:
   - chmod -R +x ./.travis
   - . .travis/define_variable.sh
   - .travis/build_image.sh
+  - docker run -d -p 8000:8000 -p 9000:9000 --name "${docker_container_name}" "${docker_img}:${docker_img_tag}"
   - .travis/push_latest.sh
   - .travis/push_version.sh

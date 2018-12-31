@@ -61,8 +61,6 @@ ARG appBranch=master
 RUN sudo apt-key adv --no-tty --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
 
 RUN git clone $benchRepo /tmp/.bench --depth 1 --branch $benchBranch \
-    # remove mariadb from easy install
-    && sed -i '/mariadb/d' /tmp/.bench/playbooks/site.yml \
     # start easy install
     && wget $easyinstallRepo \
     && python install.py \
@@ -89,8 +87,7 @@ RUN git clone $benchRepo /tmp/.bench --depth 1 --branch $benchBranch \
     # clean up installation
     && sudo apt-get autoremove --purge -y \
     && sudo apt-get clean \
-    # install mariadb & init new site
-    && sudo bench install mariadb --mysql_root_password $mysqlPass \
+    # start mariadb & init new site
     && sudo service mysql start \
     && bench new-site $siteName \
     --mariadb-root-password $mysqlPass  \
