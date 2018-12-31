@@ -2,26 +2,15 @@ language: python
 env:
   global:
   - docker_img="pipech/erpnext-docker-debian"
-  - secure: EtMkmh7eAKQji50lV/CcLJ8M1kYLkE6E3ll8Tb60I5bgWGdcyqF/iF0W6BbVRYsDhXCvrbGxlgZWpYpU6tw8da8TeTgl21n4llHoVYnPJMGgFwzmx55kK1IioC19on0RIhszOiBD9CLt7LMspfri9yx8CkZJZTOethFYMQQ7LqT3mnB4djkkwSd6+3NA1SzHxqo2NkvGbwfnekbktR8rR4s/HoKfEaLgtahdhtS0gaqtJv4sk3oIfqfNWHl4M6gl5skHcBGOFIGQ4e3SxHrZuinpuNnJS8eXZAewLk81lfwngbSSuPggD3ybRw1NEZdYAfo3rBgPmnip7wrqCitFOCRTr8HGhbkZ0ulpA0fRLli1VFuv14fy7H0Zrwfn6woItztDkzC8y7grOIm/e9NGU4BPBRXrlCaiJ2ITwlqSk+9dgPY4aGTnvrtHEleZzeiCjn1vtW3lD0soa1Fl5W/HzsuWNq2Jmz8mIdfQawYqXWWm5snXSE1A6e2gawj6onB9FDiuf4vWGv/hnGWnHEz1zeVqd3LpNvZYg6xeC2EzZxrsjv1/uB/a8ISabTz2YK3xOfJDP7vLbi+8VuwHNcI+slebAQRxHg2RSeN2myJuv0nBn/fRCPDsgHp0EorLND6/fn2AFSo0eA9F3zJO8Lgw7kwdp2/uSyLUP8R4SeHYEig=
+  - dh_user="pipech"
   - secure: gxjANDRWXC9J0LVXkrHgKyDtNoKcnfnswTNY+ZTFOeuzeFrHkXEXqkOqdVakAVTR8efNLltqFa+FcWKOoRR3fS/5VWYL38lyi5rphG2ZmQ/wK6+LEge5lM8GLpr+9MUTTsqqo3C+DXa59Akcq8LxWEvXtCLTmLSy9uHJg/7sB4Mj1VRV3RIIeIuQRZ/pOzGtpBaDPdVW9gHasfe9YLSszxI//OmcHTMccatcqCiyOTLmFfavefyQqUJGb33JY4+S3u/7QshCE+9YFEus8Ym0ZmuZ6B61hZBs332GPx8+ruEEYAEp5+d1HeocKUSWZIBUEgOdjo4lWnx5V3xkG7skwUKBxYGddDL2aN8Xfam6tcBBP1Zbp2NGUau3GYl29LyT3L5tTOrKUui9ugOPt5iQ6suwyYCus5A0Nor3Q5WqpHaiM0zTKvW953AYWG+FApefFfp+XC7AHOhk3q2UddAd0w2biYQyr3OIpsd/lLnqFfChJYqqG6iwCRHHq8Qz7d4W36mDon2TcwTd1Cd8dBp3TzLCFMdVnkz1bmgJ3Yyyycxd6g39ITlellwIEYziK2SqF5ZOiDKR+SmB6tIgrzBUQDPxBSf3eQgq6AqmQF7pJ16RHI5X3a+L0RoG/U5PnePtfYjXvubP0NNupuHGaSubUGoOJjK9fjOXcnlQAlmE400=
   matrix:
-  - python_version=python app_branch=master
-  - python_version=python3 app_branch=staging
+  - python_version="python" app_branch="master"
+  - python_version="python3" app_branch="staging"
 services:
 - docker
 before_install:
 - echo "${dh_pass}" | docker login -u "$dh_user" --password-stdin
-script:
-- echo "${docker_img}"
-- echo [testtest]
-- echo "${testtest}"
-- echo "$[testtest]"
-- echo "%[testtest]"
-- echo "[testtest]"
-- echo ${testtest}
-- echo $[testtest]
-- echo %[testtest]
-- echo "[testtest]"
-- echo "hello"
-- echo "${python_version}"
-- echo "${app_branch}"
+install:
+  - chmod +x ./.travis/install.sh
+  - "./.travis/install.sh"
