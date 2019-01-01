@@ -1,5 +1,4 @@
-language: python
-dist: xenial
+os: windows
 env:
   global:
   - docker_img="pipech/erpnext-docker-debian"
