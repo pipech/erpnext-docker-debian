@@ -1,7 +1,8 @@
 #!/bin/bash
 
 echo "# starting container"
-docker run -d -p 8000:8000 -p 9000:9000 --name "${docker_container_name}" "${docker_img}:${docker_img_tag}"
+docker run -d -p 8000:8000 -p 9000:9000 --name "${docker_container_name}" "${docker_img}:${docker_img_tag}" mysqld start
+docker run -d -p 8000:8000 -p 9000:9000 --name "${docker_container_name}" "${docker_img}:${docker_img_tag}" bench start
 
 echo "# waiting for container to start"
 sleep 120s
