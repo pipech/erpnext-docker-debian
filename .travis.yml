@@ -1,4 +1,5 @@
 os: windows
+language: shell
 env:
   global:
   - docker_img="pipech/erpnext-docker-debian"
