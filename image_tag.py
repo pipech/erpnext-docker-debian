@@ -10,6 +10,7 @@ import time
 
 def check_status_code(container_name, image):
     # start and waiting for mysql and frappe web client to start
+    print('>> Start container')
     subprocess.call([
         'docker', 'run', '-d',
         '-p', '8000:8000',
@@ -20,6 +21,7 @@ def check_status_code(container_name, image):
     time.sleep(120)
 
     # debug
+    print('>> Check container logs')
     docker_logs = check_output([
         'docker', 'logs', container_name
         ]).decode('utf-8')
@@ -30,11 +32,13 @@ def check_status_code(container_name, image):
     print(docker_info)
 
     # check server status
+    print('>> Testing server')
     server_status = check_output([
         'docker', 'exec', container_name, 'python', 'test_server.py'
         ]).decode('utf-8')
 
     # remove container
+    print('>> Remove container')
     subprocess.call(['docker', 'rm', '-f', container_name])
 
     return server_status.strip()
@@ -42,6 +46,7 @@ def check_status_code(container_name, image):
 
 def get_app_version(image):
     # get app version
+    print('>> Getting app version')
     apps_version = check_output([
         'docker', 'run', '--rm', image, 'bench', 'version'
         ]).decode('utf-8')
@@ -129,7 +134,7 @@ def tag_image(app_version, img_name, img_tag):
     # tag & push if tag exist
     existing_tag = list(filter(lambda a: a['name'] == app_version_tag, tags))
     if not existing_tag:
-        print('Image tag "{}"is already exist.'.format(app_version_tag))
+        print('>> Tagging image')
         # pull tag push
         subprocess.call([
             'docker', 'pull',
@@ -141,6 +146,8 @@ def tag_image(app_version, img_name, img_tag):
             app_version_name,
             ])
         subprocess.call(['docker', 'push', app_version_name])
+    else:
+        print('Image tag "{}"is already exist.'.format(app_version_tag))
 
 
 if __name__ == '__main__':
@@ -153,12 +160,11 @@ if __name__ == '__main__':
     container_name = sys.argv[1]
     img_name = sys.argv[2]
     img_tag = sys.argv[3]
-    img_wsql_tag = sys.argv[4]
 
     # build args
-    image = '{img_name}:{img_wsql_tag}'.format(
+    image = '{img_name}:{img_tag}'.format(
         img_name=img_name,
-        img_wsql_tag=img_wsql_tag,
+        img_tag=img_tag,
         )
 
     # run process
@@ -170,10 +176,6 @@ if __name__ == '__main__':
             img_tag
         ))
         tag_image(app_version, img_name, img_tag)
-        print('tag_image > img_wsql_tag > {}'.format(
-            img_wsql_tag
-        ))
-        tag_image(app_version, img_name, img_wsql_tag)
     else:
         print('Error: Server status is not 200!')
         print(server_status)
