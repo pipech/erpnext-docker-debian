@@ -17,4 +17,5 @@ before_install:
 install:
   - chmod -R +x ./.travis
   - . .travis/define_variable.sh
+script:
   - python .travis/image_tag.py
