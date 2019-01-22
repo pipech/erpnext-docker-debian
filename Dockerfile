@@ -1,4 +1,4 @@
-FROM debian:9.6-slim
+FROM debian:9.6
 
 # install package
 RUN apt-get -y update \
