@@ -129,8 +129,6 @@ WORKDIR /home/$systemUser/$benchFolderName
 
 # copy production config
 COPY production_setup/conf/frappe-docker-conf /home/$systemUser/production_config
-# python script for super basic test
-COPY img_test/test_server.py /home/$systemUser/$benchFolderName/test_server.py
 
 # run start mysql service and start bench when container start
 COPY entrypoint.sh /usr/local/bin/
