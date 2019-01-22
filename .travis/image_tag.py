@@ -102,9 +102,16 @@ def existing_tag(app_version_tag, img_name):
     tags = tags.read()
     tags = tags.decode('utf-8')
     tags = json.loads(tags)
+    
+    print('> Image tag json')
+    print(tags)
+
+    tag_exist_bool = list(filter(lambda a: a['name'] == app_version_tag, tags))
+    print('Tag exist bool')
+    print(tag_exist_bool)
 
     # tag & push if tag exist
-    return list(filter(lambda a: a['name'] == app_version_tag, tags))
+    return tag_exist_bool
 
 
 def main():
@@ -131,10 +138,26 @@ def main():
             img_name=img_name,
             img_tag=app_version,
             )
-        check_output([
+        print('>>> Tag not exist')
+        print('> Target image')
+        print(target_image)
+
+        tag_image = check_output([
             'docker', 'tag', src_image, target_image
             ]).decode('utf-8')
+        print('> Tag image')
+        print(tag_image)
+
+        push_image = check_output([
+            'docker', 'push', target_image
+            ]).decode('utf-8')
+        print('> Push image')
+        print(push_image)
+
     else:
+        print('>>> Tag already exist')
+        print('> App version')
+        print(app_version)
         return 'Tags "{}" already exist'.format(app_version)
 
 
