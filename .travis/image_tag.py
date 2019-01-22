@@ -7,11 +7,11 @@ import re
 import sys
 
 
-def get_app_version(image):
+def get_app_version(src_image):
     # get app version
     print('>> Getting app version')
     apps_version = check_output([
-        'docker', 'run', '--rm', image, 'bench', 'version'
+        'docker', 'run', '--rm', src_image, 'bench', 'version'
         ]).decode('utf-8')
 
     # clean app version str & get version list
@@ -96,11 +96,13 @@ def existing_tag(app_version_tag, img_name):
 
 def main():
     # get args
-    img_name = os.environ['docker_img']
-    img_tag = os.environ['docker_img_tag']
+    # img_name = os.environ['docker_img']
+    # img_tag = os.environ['docker_img_tag']
+    img_name = 'pipech/erpnext-docker-debian'
+    img_tag = 'mas-py2-latest'
 
     # build args
-    image = '{img_name}:{img_tag}'.format(
+    src_image = '{img_name}:{img_tag}'.format(
         img_name=img_name,
         img_tag=img_tag,
         )
@@ -108,15 +110,21 @@ def main():
     # debug
     print('img_name: {}'.format(img_name))
     print('img_tag: {}'.format(img_tag))
-    print('image: {}'.format(image))
+    print('image: {}'.format(src_image))
 
     # execute
-    app_version = get_app_version(image)
+    app_version = get_app_version(src_image)
     app_version = prepare_tag_image(app_version, img_tag)
-    if not existing_tag(app_version, image):
-        return app_version
+    if not existing_tag(app_version, img_name):
+        target_image = '{img_name}:{img_tag}'.format(
+            img_name=img_name,
+            img_tag=app_version,
+            )
+        check_output([
+            'docker', 'tag', src_image, target_image
+            ]).decode('utf-8')
     else:
-        sys.exit('Error: Duplicate tags')
+        return 'Tags "{}" already exist'.format(app_version)
 
 
 if __name__ == '__main__':
