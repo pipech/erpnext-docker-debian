@@ -14,6 +14,9 @@ RUN apt-get -y update \
     # production
     supervisor \
     nginx \
+    # fixed for wkhtmltopdf SSL problems
+    # https://github.com/pipech/erpnext-docker-debian/issues/31
+    libssl1.0-dev \
     # clean up
     && apt-get autoremove --purge \
     && apt-get clean
