@@ -9,7 +9,7 @@ import sys
 
 def get_app_version(src_image):
     # get app version
-    print('>> Getting app version')
+    print('>>> Getting app version')
     apps_version = check_output([
         'docker', 'run', '--rm', src_image, 'bench', 'version'
         ]).decode('utf-8')
@@ -43,7 +43,7 @@ def get_app_version(src_image):
                     higher_app_version = f
                     break
 
-    print('Apps version')
+    print('> App version Dict')
     print(apps)
 
     if higher_app_version == e:
@@ -53,6 +53,11 @@ def get_app_version(src_image):
 
 
 def prepare_tag_image(app_version, img_tag):
+    print('>>> Prepare tag image')
+    print('> App version')
+    print(app_version)
+    print('> Image tag')
+    print(img_tag)
     # remove first 3 character of tag (mas, dev, sta) &
     # remove last 7 -latest
     img_tag_trailing = img_tag[3:-7]
@@ -72,11 +77,15 @@ def prepare_tag_image(app_version, img_tag):
             img_tag_trailing
         )
 
+    print('> App version tag')
+    print(app_version_tag)
+
     return app_version_tag
 
 
 def existing_tag(app_version_tag, img_name):
     # get all tags
+    print('>>> Get all image tag')
     api_url = 'https://registry.hub.docker.com/v1/repositories/{}/tags'.format(
         img_name
     )
@@ -86,6 +95,10 @@ def existing_tag(app_version_tag, img_name):
     else:
         import urllib
         tags = urllib.urlopen(api_url)
+
+    print('> Image tag')
+    print(tags)
+
     tags = tags.read()
     tags = tags.decode('utf-8')
     tags = json.loads(tags)
@@ -96,10 +109,8 @@ def existing_tag(app_version_tag, img_name):
 
 def main():
     # get args
-    # img_name = os.environ['docker_img']
-    # img_tag = os.environ['docker_img_tag']
-    img_name = 'pipech/erpnext-docker-debian'
-    img_tag = 'mas-py2-latest'
+    img_name = os.environ['docker_img']
+    img_tag = os.environ['docker_img_tag']
 
     # build args
     src_image = '{img_name}:{img_tag}'.format(
