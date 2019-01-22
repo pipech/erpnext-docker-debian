@@ -15,7 +15,7 @@ echo "## docker inspect"
 docker inspect "${docker_container_name}"
 
 echo "# test html response"
-html_response = $(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000)
+html_response=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000)
 echo "Html Response: ${html_response}"
 
 echo "# remove container"
