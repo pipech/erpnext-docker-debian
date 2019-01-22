@@ -32,6 +32,27 @@ ENV LC_ALL=en_US.UTF-8 \
     LC_CTYPE=en_US.UTF-8 \
     LANG=en_US.UTF-8
 
+# manually install mariadb
+RUN apt-get update \
+    # add repo from mariadb mirrors
+    # https://downloads.mariadb.org/mariadb/repositories
+    && apt-get install -y software-properties-common dirmngr \
+    && apt-key adv --no-tty --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 \
+    && add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://nyc2.mirrors.digitalocean.com/mariadb/repo/10.3/debian stretch main' \
+    # make frontend noninteractive to skip root password change
+    && export DEBIAN_FRONTEND=noninteractive \
+    # install mariadb
+    && apt-get update \
+    && apt-get install -y \
+    # package form bench playbook
+    # https://github.com/frappe/bench/blob/d1810e1dc1849daabace392c55b39057c09e98b9/playbooks/roles/mariadb/tasks/debian.yml#L23
+    mariadb-server \
+    mariadb-client \
+    mariadb-common \
+    libmariadbclient18 \
+    python-mysqldb \
+    python3-mysqldb
+
 # add users without sudo password
 ENV systemUser=frappe
 RUN adduser --disabled-password --gecos "" $systemUser \
@@ -41,6 +62,8 @@ RUN adduser --disabled-password --gecos "" $systemUser \
 # set user and workdir
 USER $systemUser
 WORKDIR /home/$systemUser
+
+COPY ./mariadb.cnf /etc/mysql/conf.d/mariadb.cnf
 
 # install prerequisite for bench with easy install script
 ENV easyinstallRepo='https://raw.githubusercontent.com/frappe/bench/master/playbooks/install.py' \
@@ -59,13 +82,13 @@ ENV easyinstallRepo='https://raw.githubusercontent.com/frappe/bench/master/playb
 ARG pythonVersion=python
 ARG appBranch=master
 
-# [work around] add mariadb apt-key first to skip adding from ansible playbook
-# which will cause error > "gpg: cannot open '/dev/tty': No such device or address" error
-RUN sudo apt-key adv --no-tty --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
-
-RUN git clone $benchRepo /tmp/.bench --depth 1 --branch $benchBranch \
+RUN sudo service mysql start \
+    && mysql --user="root" --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY 'travis';" \
+    && git clone $benchRepo /tmp/.bench --depth 1 --branch $benchBranch \
     # start easy install
     && wget $easyinstallRepo \
+    # remove mariadb from bench playbook
+    && sed -i '/mariadb/d' /tmp/.bench/playbooks/site.yml \
     && python install.py \
     --without-bench-setup \
     # install bench
