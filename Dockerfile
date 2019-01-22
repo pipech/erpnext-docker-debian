@@ -1,4 +1,4 @@
-FROM debian:9.6-slim
+FROM debian:9.6
 
 # install package
 RUN apt-get -y update \
@@ -32,6 +32,27 @@ ENV LC_ALL=en_US.UTF-8 \
     LC_CTYPE=en_US.UTF-8 \
     LANG=en_US.UTF-8
 
+# manually install mariadb
+RUN apt-get update \
+    # add repo from mariadb mirrors
+    # https://downloads.mariadb.org/mariadb/repositories
+    && apt-get install -y software-properties-common dirmngr \
+    && apt-key adv --no-tty --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 \
+    && add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://nyc2.mirrors.digitalocean.com/mariadb/repo/10.3/debian stretch main' \
+    # make frontend noninteractive to skip root password change
+    && export DEBIAN_FRONTEND=noninteractive \
+    # install mariadb
+    && apt-get update \
+    && apt-get install -y \
+    # package form bench playbook
+    # https://github.com/frappe/bench/blob/d1810e1dc1849daabace392c55b39057c09e98b9/playbooks/roles/mariadb/tasks/debian.yml#L23
+    mariadb-server \
+    mariadb-client \
+    mariadb-common \
+    libmariadbclient18 \
+    python-mysqldb \
+    python3-mysqldb
+
 # add users without sudo password
 ENV systemUser=frappe
 RUN adduser --disabled-password --gecos "" $systemUser \
@@ -41,6 +62,8 @@ RUN adduser --disabled-password --gecos "" $systemUser \
 # set user and workdir
 USER $systemUser
 WORKDIR /home/$systemUser
+
+COPY ./mariadb.cnf /etc/mysql/conf.d/mariadb.cnf
 
 # install prerequisite for bench with easy install script
 ENV easyinstallRepo='https://raw.githubusercontent.com/frappe/bench/master/playbooks/install.py' \
@@ -59,13 +82,13 @@ ENV easyinstallRepo='https://raw.githubusercontent.com/frappe/bench/master/playb
 ARG pythonVersion=python
 ARG appBranch=master
 
-# [work around] add mariadb apt-key first to skip adding from ansible playbook
-# which will cause error > "gpg: cannot open '/dev/tty': No such device or address" error
-RUN sudo apt-key adv --no-tty --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
-
-RUN git clone $benchRepo /tmp/.bench --depth 1 --branch $benchBranch \
+RUN sudo service mysql start \
+    && mysql --user="root" --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY 'travis';" \
+    && git clone $benchRepo /tmp/.bench --depth 1 --branch $benchBranch \
     # start easy install
     && wget $easyinstallRepo \
+    # remove mariadb from bench playbook
+    && sed -i '/mariadb/d' /tmp/.bench/playbooks/site.yml \
     && python install.py \
     --without-bench-setup \
     # install bench
@@ -90,7 +113,7 @@ RUN git clone $benchRepo /tmp/.bench --depth 1 --branch $benchBranch \
     # clean up installation
     && sudo apt-get autoremove --purge -y \
     && sudo apt-get clean \
-    # install mariadb & init new site
+    # start mariadb & init new site
     && sudo service mysql start \
     && bench new-site $siteName \
     --mariadb-root-password $mysqlPass  \
@@ -104,13 +127,11 @@ RUN sudo sed -i 's/auth       sufficient   pam_shells.so/auth       required   p
 USER $systemUser
 WORKDIR /home/$systemUser/$benchFolderName
 
-# run start mysql service and start bench when container start
-COPY entrypoint.sh /usr/local/bin/
 # copy production config
 COPY production_setup/conf/frappe-docker-conf /home/$systemUser/production_config
-# python script for super basic test
-COPY img_test/test_server.py /home/$systemUser/$benchFolderName/test_server.py
 
+# run start mysql service and start bench when container start
+COPY entrypoint.sh /usr/local/bin/
 # fix for [docker Error response from daemon OCI runtime create failed starting container process caused "permission denied" unknown]
 RUN sudo chmod +x /usr/local/bin/entrypoint.sh
 # image entrypoint script
