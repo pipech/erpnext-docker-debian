@@ -12,11 +12,11 @@ it will run pre-build docker image from Docker hub.
 
 * Pull image
 
-    `docker pull pipech/erpnext-docker-debian:stable`
+    `docker pull pipech/erpnext-docker-debian:mas-py3-latest`
 
 * Run latest erpnext_debian image from pipech Docker hub
 
-    `docker run -d -p 8000-8005:8000-8005 -p 9000-9005:9000-9005 -p 3306-3307:3306-3307 pipech/erpnext-docker-debian:stable`
+    `docker run -d -p 8000-8005:8000-8005 -p 9000-9005:9000-9005 -p 3306-3307:3306-3307 pipech/erpnext-docker-debian:mas-py3-latest`
 
 * Wait 30sec - 1min
 
