@@ -17,9 +17,9 @@ you should change it to suit your environment.
 Example :
 
 Change this >
-`docker run -it -p 8000:8000 -p 9000:9000 --name <container_name> pipech/erpnext-docker-debian:stable bash`
+`docker run -it -p 8000:8000 -p 9000:9000 --name <container_name> pipech/erpnext-docker-debian:mas-py3-latest bash`
 
-To this > `docker run -it -p 8000:8000 -p 9000:9000 --name anything pipech/erpnext-docker-debian:stable bash`
+To this > `docker run -it -p 8000:8000 -p 9000:9000 --name anything pipech/erpnext-docker-debian:mas-py3-latest bash`
 
 ### Prerequisite
 
@@ -31,7 +31,7 @@ To this > `docker run -it -p 8000:8000 -p 9000:9000 --name anything pipech/erpne
 
 * Tag : `latest` > latest image build
 
-* Tag : `stable` > we can login and access ERPNext desk
+* Tag : `mas-py3-latest` > we can login and access ERPNext desk
 
 * Tag : `v10.0.20` > the higher version of ERPNext or Frappe
 
