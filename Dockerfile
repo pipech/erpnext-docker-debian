@@ -133,7 +133,8 @@ COPY production_setup/conf/frappe-docker-conf /home/$systemUser/production_confi
 # run start mysql service and start bench when container start
 COPY entrypoint.sh /usr/local/bin/
 # fix for [docker Error response from daemon OCI runtime create failed starting container process caused "permission denied" unknown]
-RUN sudo chmod +x /usr/local/bin/entrypoint.sh
+RUN sudo chmod +x /home/$systemUser/production_config/entrypoint_prd.sh \
+    && sudo chmod +x /usr/local/bin/entrypoint.sh
 # image entrypoint script
 CMD ["/usr/local/bin/entrypoint.sh"]
 
