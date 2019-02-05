@@ -75,6 +75,10 @@ and domain pointing to those IP address, otherwise it won't work.**
           - "traefik.frontend.rule=Host:example1.com"
         ```
 
+* Change frappe image tag to current version
+
+    You should change `pipech/erpnext-docker-debian:mas-py3-latest` image to specific version number you prefer ie. `pipech/erpnext-docker-debian:11.1.3-py3`
+
 * Create network
 
     `docker network create --driver overlay --scope swarm traefik_proxy`
