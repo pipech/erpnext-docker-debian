@@ -1,4 +1,4 @@
-FROM debian:9.6
+FROM debian:9.6-slim
 
 # install package
 RUN apt-get -y update \
@@ -14,6 +14,8 @@ RUN apt-get -y update \
     # production
     supervisor \
     nginx \
+    # used for envsubst, making nginx cnf from template
+    gettext-base \
     # fixed for wkhtmltopdf SSL problems
     # https://github.com/pipech/erpnext-docker-debian/issues/31
     libssl1.0-dev \
