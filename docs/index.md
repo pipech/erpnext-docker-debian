@@ -29,11 +29,13 @@ To this > `docker run -it -p 8000:8000 -p 9000:9000 --name anything pipech/erpne
 
 ### Images Tags
 
-* Tag : `latest` > latest image build
-
-* Tag : `stable` > we can login and access ERPNext desk
-
-* Tag : `v10.0.20` > the higher version of ERPNext or Frappe
+* **v10.x.x (v10) - v10 [python2]**
+  * v10-py2-latest
+* **Master (mas) - v11 [python2, python3]**
+  * mas-py2-latest
+  * mas-py3-latest
+* **Develop (dev) - v12 [python3]**
+  * dev-py3-latest
 
 # Usage on AWS EC2
 

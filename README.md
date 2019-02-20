@@ -19,11 +19,11 @@ so you will always have usable images and can choose which version you want to u
 Currently there're 3 important branch on frappe.
 So now on latest tag we'll have 4 tags.
 
-* **Master (mas) - v10 [python2]**
+* **v10.x.x (v10) - v10 [python2]**
+  * v10-py2-latest
+* **Master (mas) - v11 [python2, python3]**
   * mas-py2-latest
-* **Staging (sta) - v11 [python2, python3]**
-  * sta-py2-latest
-  * sta-py3-latest
+  * mas-py3-latest
 * **Develop (dev) - v12 [python3]**
   * dev-py3-latest
 
