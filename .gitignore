@@ -1,5 +1,6 @@
 .*
 !/.gitlab-ci.yml
+!/.travis*
 !/.gitignore
 /development_setup/data/
 /docs/_site/

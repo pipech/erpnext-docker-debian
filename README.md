@@ -1,6 +1,8 @@
 #  ERPNext on Docker
 
-**The goal of this repo is stability.**
+[![Build Status](https://travis-ci.com/pipech/erpnext-docker-debian.svg?branch=master)](https://travis-ci.com/pipech/erpnext-docker-debian)
+
+**The goal of this repo is stability.** 
 
 ##### Problem
 

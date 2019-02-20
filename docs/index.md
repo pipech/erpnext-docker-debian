@@ -17,9 +17,9 @@ you should change it to suit your environment.
 Example :
 
 Change this >
-`docker run -it -p 8000:8000 -p 9000:9000 --name <container_name> pipech/erpnext-docker-debian:stable bash`
+`docker run -it -p 8000:8000 -p 9000:9000 --name <container_name> pipech/erpnext-docker-debian:mas-py3-latest bash`
 
-To this > `docker run -it -p 8000:8000 -p 9000:9000 --name anything pipech/erpnext-docker-debian:stable bash`
+To this > `docker run -it -p 8000:8000 -p 9000:9000 --name anything pipech/erpnext-docker-debian:mas-py3-latest bash`
 
 ### Prerequisite
 
