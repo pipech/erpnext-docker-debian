@@ -2,7 +2,7 @@ version: '2'
 
 services:
   frappe:
-    build: ./image/frappe/.
+    image: pipech/erpnext-docker-debian:mas-py3-latest
     ports:
       - "8000-8005:8000-8005" #webserver_port
       - "9000-9005:9000-9005" #socketio_port
@@ -10,7 +10,6 @@ services:
     volumes:
       # persisting data
       - ./data/bench/apps:/home/frappe/bench/apps
-      - ./data/bench/sites:/home/frappe/bench/sites
       # config
       - ./conf/frappe-docker-conf/init.sh:/home/frappe/bench/init.sh
       - ./conf/frappe-docker-conf/init.sql:/home/frappe/bench/init.sql
