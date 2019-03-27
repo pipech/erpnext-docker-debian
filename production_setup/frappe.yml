@@ -1,20 +1,6 @@
 version: '3.3'
 
 services:
-  traefik:
-    image: traefik
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - traefik-certificates-storage-volumes:/etc/traefik/acme
-    networks:
-      - traefik_proxy
-    configs:
-      - source: traefik-conf
-        target: /etc/traefik/traefik.toml
-
   frappe:
     image: pipech/erpnext-docker-debian:mas-py3-latest
     deploy:
@@ -35,25 +21,7 @@ services:
       - "traefik.docker.network=traefik_proxy"
     networks:
       - traefik_proxy
-      - default
-
-  mariadb:
-    image: mariadb:10.3.9
-    deploy:
-      replicas: 1
-    environment:
-      - MYSQL_USER=root
-      - MYSQL_ROOT_PASSWORD=123
-    configs:
-      - source: mariadb-conf
-        target: /etc/mysql/conf.d/mariadb.cnf
-      - source: mariadb-init-conf
-        target: /home/init.sql
-    volumes:
-      - mariadb-data-volumes:/var/lib/mysql
-    ports:
-      - "3307:3306"
-    networks:
+      - frappe_db
       - default
 
   redis-cache:
@@ -92,23 +60,17 @@ services:
 volumes:
   frappe-sites-volumes:
   frappe-logs-volumes:
-  mariadb-data-volumes:
-  traefik-certificates-storage-volumes:
 
 configs:
-  mariadb-conf:
-    file: ./conf/mariadb-conf/mariadb.cnf
-  mariadb-init-conf:
-    file: ./conf/mariadb-conf/init.sql
   redis-cache-conf:
     file: ./conf/redis-conf/redis_cache.conf
   redis-queue-conf:
     file: ./conf/redis-conf/redis_queue.conf
   redis-socketio-conf:
     file: ./conf/redis-conf/redis_socketio.conf
-  traefik-conf:
-    file: ./conf/traefik-conf/traefik.toml
 
 networks:
   traefik_proxy:
+    external: true
+  frappe_db:
     external: true

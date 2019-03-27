@@ -1,0 +1,29 @@
+version: '3.3'
+
+services:
+  traefik:
+    image: traefik
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - traefik-certificates-storage-volumes:/etc/traefik/acme
+      - traefik-logs-volumes:/etc/traefik/logs
+    networks:
+      - traefik_proxy
+    configs:
+      - source: traefik-conf
+        target: /etc/traefik/traefik.toml
+
+volumes:
+  traefik-certificates-storage-volumes:
+  traefik-logs-volumes:
+
+configs:
+  traefik-conf:
+    file: ./conf/traefik-conf/traefik.toml
+
+networks:
+  traefik_proxy:
+    external: true

@@ -83,9 +83,13 @@ and domain pointing to those IP address, otherwise it won't work.**
 
     `docker network create --driver overlay --scope swarm traefik_proxy`
 
+    `docker network create --driver overlay --scope swarm frappe_db`
+
 * Deploy stack using prd.yml as prd1 stack (In production folder where prd.yml is)
 
-    `docker stack deploy -c prd.yml <stack_name>`
+    `docker stack deploy -c proxy.yml <proxy_stack_name>`
+    `docker stack deploy -c db.yml <db_stack_name>`
+    `docker stack deploy -c frappe.yml <frappe_stack_name>`
 
 * Find frappe container id
 

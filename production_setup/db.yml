@@ -1,0 +1,34 @@
+version: '3.3'
+
+services:
+  mariadb:
+    image: mariadb:10.3.9
+    deploy:
+      replicas: 1
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=123
+    configs:
+      - source: mariadb-conf
+        target: /etc/mysql/conf.d/mariadb.cnf
+      - source: mariadb-init-conf
+        target: /home/init.sql
+    volumes:
+      - mariadb-data-volumes:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - frappe_db
+
+volumes:
+  mariadb-data-volumes:
+
+configs:
+  mariadb-conf:
+    file: ./conf/mariadb-conf/mariadb.cnf
+  mariadb-init-conf:
+    file: ./conf/mariadb-conf/init.sql
+
+networks:
+  frappe_db:
+    external: true
