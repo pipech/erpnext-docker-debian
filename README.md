@@ -10,8 +10,6 @@
 
 * ERPNext uses many dependencies, during installation things might go wrong sometimes.
 
-* Chosing the ERPNext version you want to setup is not straight-forward for beginners.
-
 ##### Solution
 
 Using docker we can pre-build an image and push it to [Docker hub](https://hub.docker.com/r/pipech/erpnext-docker-debian/),
