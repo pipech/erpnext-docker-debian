@@ -6,20 +6,19 @@
 
 ##### Problem
 
-* ERPNext development tend to go very fast, new update comes every days 
-and some will be bugs.
+* ERPNext development is fast, there are new updates every day and some contain bugs.
 
-* ERPNext use many dependencies, during installation sometimes somethings might went wrong.
+* ERPNext uses many dependencies, during installation things might go wrong sometimes.
 
 ##### Solution
 
-Using docker we can pre-build images and push it to [Docker hub](https://hub.docker.com/r/pipech/erpnext-docker-debian/),
+Using docker we can pre-build an image and push it to [Docker hub](https://hub.docker.com/r/pipech/erpnext-docker-debian/),
 so you will always have usable images and can choose which version you want to use.
 
 ## Image tag
 
-Currently there're 3 important branch on frappe.
-So now on latest tag we'll have 4 tags.
+Currently, there are three important branches on frappe. 
+So now on latest tag we'll have 4 tags, including Python 3 variants.
 
 * **v10.x.x (v10) - v10 [python2]**
   * v10-py2-latest
@@ -29,21 +28,21 @@ So now on latest tag we'll have 4 tags.
 * **Develop (dev) - v12 [python3]**
   * dev-py3-latest
 
-After latest tag is create image will be test and tag version to it. (Testing process is now very very simple, it only run image and get response code if it return 200 it'll pass.)
+After a latest tag is created, the new image will be tested and tagged. (Testing process is now very simple, it only run image and return response code 200 if it passes.)
 
 ie. `11.0.3-beta.39-py2`
 
-Image tag is host and list at [Docker hub](https://hub.docker.com/r/pipech/erpnext-docker-debian/)
+Image tags are hosted and list on [Docker hub](https://hub.docker.com/r/pipech/erpnext-docker-debian/)
 
-Image will be automatically create Every Monday at Mid-night UTC.
+Images will be automatically created every Monday at Mid-night UTC.
 
-## Usage
+## Setup
 
-Read at [https://pipech.github.io/erpnext-docker-debian](https://pipech.github.io/erpnext-docker-debian)
+Read [the Docs](https://github.com/pipech/erpnext-docker-debian/wiki)
 
 ## Contributing
 
-Pull requests for new features, bug fixes, and suggestions are welcome!
+Pull requests for new features, bug fixes, documentation improvements (and typo fixes) and suggestions are welcome!
 
 ## License
 
