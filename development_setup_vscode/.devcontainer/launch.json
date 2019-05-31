@@ -1,0 +1,35 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "bench-start",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/frappe/frappe/utils/bench_helper.py",
+            "args": [
+                "frappe", "serve", "--port", "8000"
+            ],
+            "pythonPath": "${workspaceFolder}/../env/bin/python",
+            "cwd": "${workspaceFolder}/../sites"
+        },
+        {
+            "name": "bench-py-debug",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/frappe/frappe/utils/bench_helper.py",
+            "args": [
+                "frappe", "serve", "--port", "8000", "--noreload", "--nothreading"
+            ],
+            "pythonPath": "${workspaceFolder}/../env/bin/python",
+            "cwd": "${workspaceFolder}/../sites",
+        },
+        {
+            "name": "js",
+            "type": "chrome",
+            "request": "attach",
+            "port": 9005,
+            "url": "http://site1.local:8000/desk",
+            "webRoot": "${workspaceFolder}/../sites"
+        }
+    ]
+}
