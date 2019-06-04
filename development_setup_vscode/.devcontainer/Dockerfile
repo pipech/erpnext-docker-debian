@@ -6,6 +6,10 @@ COPY ./launch.json /home/frappe/bench/apps/.vscode/launch.json
 # prevent permission denied
 RUN sudo chmod 777 /home/frappe/bench/entrypoint.sh \
     && sudo chown -R frappe:frappe /home/frappe/bench/apps/.vscode \
+    # prevent - vscode error when trying to attatch to container
+    # >> mkdir: cannot create directory ‘/root’: Permission denied
+    # I don't think we need to concern about security in dev container.
+    && sudo chmod 777 /root \
     # install python3 pip
     && curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py" \
     && sudo python3 get-pip.py \
