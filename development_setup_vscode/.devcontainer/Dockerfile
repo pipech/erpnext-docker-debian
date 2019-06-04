@@ -1,4 +1,4 @@
-FROM pipech/erpnext-docker-debian:11.1.14-py3
+FROM pipech/erpnext-docker-debian:mas-py3-latest
 
 COPY ./entrypoint.sh /home/frappe/bench/entrypoint.sh
 COPY ./launch.json /home/frappe/bench/apps/.vscode/launch.json
