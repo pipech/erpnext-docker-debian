@@ -1,6 +1,8 @@
 {
     "version": "0.2.0",
     "configurations": [
+        // Start bench normally
+        // Can use dynamic reload
         {
             "name": "bench-start",
             "type": "python",
@@ -12,6 +14,9 @@
             "pythonPath": "${workspaceFolder}/../env/bin/python",
             "cwd": "${workspaceFolder}/../sites"
         },
+        // Start bench with debug tools
+        // Can't use dynamic reload, have to press (Ctrl + Shift + F5) to reload
+        // https://github.com/frappe/erpnext/wiki/VSCode-Debugging-for-Frappe-Python
         {
             "name": "bench-py-debug",
             "type": "python",
@@ -23,13 +28,17 @@
             "pythonPath": "${workspaceFolder}/../env/bin/python",
             "cwd": "${workspaceFolder}/../sites",
         },
-        {
-            "name": "js",
-            "type": "chrome",
-            "request": "attach",
-            "port": 9005,
-            "url": "http://site1.local:8000/desk",
-            "webRoot": "${workspaceFolder}/../sites"
-        }
+        // // Start JS debug tools
+        // // Have to set remote-debugging-port in chrome
+        // // "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9005
+        // // Can connect to chrome, can stop chrome but can't set breakpoint
+        // {
+        //     "name": "js",
+        //     "type": "chrome",
+        //     "request": "attach",
+        //     "port": 9005,
+        //     "url": "http://site1.local:8000/desk",
+        //     "webRoot": "${workspaceFolder}/../sites/assets"
+        // }
     ]
 }
