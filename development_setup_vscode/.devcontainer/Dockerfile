@@ -3,6 +3,7 @@ FROM pipech/erpnext-docker-debian:mas-py3-latest
 COPY ./entrypoint.sh /home/frappe/bench/entrypoint.sh
 COPY ./launch.json /home/frappe/bench/apps/.vscode/launch.json
 COPY ./set_remote.sql /home/frappe/bench/init.sql
+COPY ./eslint /home/frappe/bench/apps/
 
 # prevent permission denied
 RUN sudo chmod 777 /home/frappe/bench/entrypoint.sh \
@@ -23,7 +24,9 @@ RUN sudo chmod 777 /home/frappe/bench/entrypoint.sh \
     && bench set-config developer_mode 1 \
     # set mysql remote user
     && sudo service mysql start \
-    && mysql -h localhost "-uroot" "-ptravis" < "/home/frappe/bench/init.sql"
+    && mysql -h localhost "-uroot" "-ptravis" < "/home/frappe/bench/init.sql" \
+    # install eslint, using Google JavaScript style guide
+    && sudo npm install -g eslint eslint-config-google
 
 # without this socket.io won't work (don't know why)
 ENV DEV_SERVER=1
