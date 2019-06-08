@@ -19,6 +19,7 @@
         // Can use dynamic reload
         // Won't work with Werkzeug version 0.15++
         // Reinstall Werkzeug to version 0.14
+        // error message > /home/frappe/bench/apps/../env/bin/python: No module named bench_helper
         // > ". /home/frappe/bench/env/bin/activate"
         // > "pip install 'Werkzeug==0.14.1' --force-reinstall"
         // > "deactivate"
