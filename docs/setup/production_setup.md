@@ -68,7 +68,7 @@ and domain pointing to those IP address, otherwise it won't work.**
         - NGINX_SERVER_NAME=example1.com
         ```
 
-    * In production_setup/prd.yml
+    * In production_setup/frappe.yml
 
         ```
         labels:
