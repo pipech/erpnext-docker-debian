@@ -1,0 +1,50 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        // Start bench with debug tools
+        // Can't use dynamic reload, have to press (Ctrl + Shift + F5) to reload
+        // https://github.com/frappe/erpnext/wiki/VSCode-Debugging-for-Frappe-Python
+        {
+            "name": "bench-py-debug",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/frappe/frappe/utils/bench_helper.py",
+            "args": [
+                "frappe", "serve", "--port", "8000", "--noreload", "--nothreading"
+            ],
+            "pythonPath": "${workspaceFolder}/../env/bin/python",
+            "cwd": "${workspaceFolder}/../sites",
+        },
+        // Start bench normally
+        // Can use dynamic reload
+        // Won't work with Werkzeug version 0.15++
+        // Reinstall Werkzeug to version 0.14
+        // error message > /home/frappe/bench/apps/../env/bin/python: No module named bench_helper
+        // > ". /home/frappe/bench/env/bin/activate"
+        // > "pip install 'Werkzeug==0.14.1' --force-reinstall"
+        // > "deactivate"
+        {
+            "name": "bench-start",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/frappe/frappe/utils/bench_helper.py",
+            "args": [
+                "frappe", "serve", "--port", "8000"
+            ],
+            "pythonPath": "${workspaceFolder}/../env/bin/python",
+            "cwd": "${workspaceFolder}/../sites"
+        },
+        // // Start JS debug tools
+        // // Have to set remote-debugging-port in chrome
+        // // "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9005
+        // // Can connect to chrome, can stop chrome but can't set breakpoint
+        // {
+        //     "name": "js",
+        //     "type": "chrome",
+        //     "request": "attach",
+        //     "port": 9005,
+        //     "url": "http://site1.local:8000/desk",
+        //     "webRoot": "${workspaceFolder}/../sites/assets"
+        // }
+    ]
+}
