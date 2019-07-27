@@ -17,20 +17,22 @@ so you will always have usable images and can choose which version you want to u
 
 ## Image tag
 
-Currently, there are three important branches on frappe. 
-So now on latest tag we'll have 4 tags, including Python 3 variants.
+Currently, there are 4 important branches on frappe. 
+So now on latest tag we'll have 5 tags, including Python3 variants.
 
-* **v10.x.x (v10) - v10 [python2]**
+* **Version10 - v10 [python2]**
   * v10-py2-latest
-* **Master (mas) - v11 [python2, python3]**
-  * mas-py2-latest
-  * mas-py3-latest
-* **Develop (dev) - v12 [python3]**
+* **Version11 - v11 [python2, python3]**
+  * v11-py2-latest
+  * v11-py3-latest
+* **Version12 - v12 [python3]**
+  * v12-py3-latest
+* **Develop - [python3]**
   * dev-py3-latest
 
 After a latest tag is created, the new image will be tested and tagged. (Testing process is now very simple, it only run image and return response code 200 if it passes.)
 
-ie. `11.0.3-beta.39-py2`
+You can also pulling image by version such as `12.0.2-py3`
 
 Image tags are hosted and list on [Docker hub](https://hub.docker.com/r/pipech/erpnext-docker-debian/)
 
