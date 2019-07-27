@@ -17,7 +17,14 @@ echo "python_abbr: ${python_abbr}"
 
 echo "## branch"
 echo "app_branch: ${app_branch}"
-export branch_abbr="${app_branch::3}"
+if [ "${app_branch}" == "version-11" ]; then
+    export branch_abbr="v11"
+elif [ "${app_branch}" == "version-12" ]; then
+    export branch_abbr="v12"
+else
+    export branch_abbr="${app_branch::3}"
+fi
+
 echo "branch_abbr: ${branch_abbr}"
 
 echo "# define image tag and container"
