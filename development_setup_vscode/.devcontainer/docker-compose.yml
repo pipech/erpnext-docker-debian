@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  frappe:
+    build: .
+    ports:
+      - "8000-8005:8000-8005" #webserver_port
+      - "9000-9005:9000-9005" #socketio_port
+      - "6787:6787" #file_watcher_port
+      - "3306:3306" #mysql
+    command: ["/home/frappe/bench/entrypoint.sh"]
+    volumes:
+      # for ease of copy file between docker container and host
+      - ../shared_vscode_dev:/home/frappe/bench/apps/shared_vscode_dev

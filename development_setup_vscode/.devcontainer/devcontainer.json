@@ -1,0 +1,24 @@
+{
+	"name": "frappe",
+	"service": "frappe",
+	"dockerComposeFile": "docker-compose.yml",
+	"workspaceFolder": "/home/frappe/bench/apps",
+	"settings": {
+		"python.pythonPath": "/usr/bin/python3",
+		"python.linting.enabled": true,
+		"python.linting.pylintEnabled": false,
+		"python.linting.flake8Enabled": true,
+		"remote.extensionKind": {
+			"msjsdiag.debugger-for-chrome": "ui"
+		},
+		"files.exclude": {
+			"**/__pycache__": true,
+			"**/*.egg-info": true,
+			"**/*.pyc": true
+		}
+	},
+	"extensions": [
+		"dbaeumer.vscode-eslint",
+		"ms-python.python",
+	]
+}
