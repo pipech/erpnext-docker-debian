@@ -4,6 +4,7 @@ COPY --chown=frappe ./entrypoint.sh /home/frappe/bench/entrypoint.sh
 COPY --chown=frappe ./vscode /home/frappe/bench/apps/.vscode/
 COPY --chown=frappe ./sql /home/frappe/bench/
 COPY --chown=frappe ./eslint /home/frappe/bench/apps/
+COPY --chown=frappe ./flake8 /home/frappe/bench/apps/
 
 # prevent - vscode error when trying to attatch to container
 # >> mkdir: cannot create directory ‘/root’: Permission denied
