@@ -8,6 +8,7 @@
 		"python.linting.enabled": true,
 		"python.linting.pylintEnabled": false,
 		"python.linting.flake8Enabled": true,
+		"python.linting.flake8Args": ["--config=.flake8"],
 		"remote.extensionKind": {
 			"msjsdiag.debugger-for-chrome": "ui"
 		},

@@ -1,0 +1,7 @@
+[flake8]
+# since frappe use tabs as Indentation preference we'll also use tabs
+ignore = 
+    # Indentation contains tabs
+    W191,
+    # over-indented
+    E117
