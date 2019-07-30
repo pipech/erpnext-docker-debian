@@ -3,7 +3,7 @@ module.exports = {
     'browser': true,
     'es6': true
   },
-  'extends': 'google',
+  'extends': ['google'],
   'globals': {
     'Atomics': 'readonly',
     'SharedArrayBuffer': 'readonly'
@@ -13,9 +13,13 @@ module.exports = {
     'sourceType': 'module'
   },
   'rules': {
-    // frappe use 4 space indentation style
-    'indent': ['error', 4],
-    // set "Line exceeds the maximum line length of 80" to warning not error
-    'max-len': [1, 80, 4]
+    // frappe use tabs indentation style
+    'indent': ['error', 'tab'],
+    'no-tabs': ['error', {allowIndentationTabs: true}],
+    // set somes setting to warn not error
+    'max-len': [1, 80, 4],  // max-length
+    'camelcase': 'warn',
+    'no-var': 'warn',
+    'require-jsdoc': 'warn', 
   }
 }
