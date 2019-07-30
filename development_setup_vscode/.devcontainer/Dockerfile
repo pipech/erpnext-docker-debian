@@ -23,7 +23,8 @@ RUN sudo chmod 777 /root \
     # install flake8 for vs code
     && /usr/bin/python3 -m pip install -U flake8 --user \
     # install eslint, using Google JavaScript style guide
-    && sudo npm install -g eslint eslint-config-google
+    && cd /home/frappe/bench \
+    && sudo npm install eslint eslint-config-google
 
 # without this socket.io won't work (don't know why)
 ENV DEV_SERVER=1
