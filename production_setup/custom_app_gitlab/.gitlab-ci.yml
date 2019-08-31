@@ -1,0 +1,42 @@
+# Official docker img.
+image: docker:stable
+
+# dind > Docker in Docker
+services:
+  - docker:dind
+
+# predefine variable
+# https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+  # $CI_REGISTRY_USER
+  # $CI_REGISTRY_PASSWORD
+  # $CI_REGISTRY
+  # $CI_REGISTRY_IMAGE
+
+before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+build:
+  stage: build
+  script:
+    # change folder
+    - cd image
+    # create time variable
+    - BUILD_TIME_STAMP="$(date '+%y%m%d%H%M%S')"
+    # copy GITHUB SSH FILE to this folder
+    # GITHUB_REPO Define in Gitlab CI/CD Variables
+    - cp $GITHUB_REPO id_rsa
+    # build image
+    - docker build
+      -t $CI_REGISTRY_IMAGE:latest
+      -t $CI_REGISTRY_IMAGE:$BUILD_TIME_STAMP
+      --no-cache
+      .
+    # push image
+    - docker push $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:$BUILD_TIME_STAMP
+  except:
+    # don't build if changes occurs in stack folder, readme.md, etc.
+    changes:
+      - stack/*
+      - readme.md
+      - .gitignore
