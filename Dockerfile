@@ -1,8 +1,12 @@
 FROM debian:9.6-slim
 
+# fixed for debconf: unable to initialize frontend: Dialog
+# https://github.com/moby/moby/issues/27988
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
 # install package
 RUN apt-get -y update \
-    && apt-get -y install \
+    && apt-get -y -q install \
     # prerequisite
     build-essential \
     python-setuptools \
@@ -81,7 +85,7 @@ ENV easyinstallRepo='https://raw.githubusercontent.com/frappe/bench/master/playb
 
 # for python 2 use = python
 # for python 3 use = python3 or python3.6 for centos
-ARG pythonVersion=python
+ARG pythonVersion=python3
 ARG appBranch=master
 
 RUN sudo service mysql start \
@@ -91,7 +95,7 @@ RUN sudo service mysql start \
     && wget $easyinstallRepo \
     # remove mariadb from bench playbook
     && sed -i '/mariadb/d' /tmp/.bench/playbooks/site.yml \
-    && python install.py \
+    && sudo python3 install.py \
     --without-bench-setup \
     # install bench
     && rm -rf bench \
