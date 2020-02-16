@@ -5,6 +5,8 @@ FROM debian:10.2
 ###############################################
 ARG adminPass=12345
 ARG mysqlPass=12345
+ARG pythonVersion=python3
+ARG appBranch=version-12
 
 ###############################################
 # ENV 
@@ -23,14 +25,12 @@ ENV LANGUAGE=en_US \
 ENV mariadbVersion=10.3 \
     nodejsVersion=10.x
 # frappe
-ENV pythonVersion=python3 \
-    benchPath=bench-repo \
+ENV benchPath=bench-repo \
     benchFolderName=bench \
     benchRepo="https://github.com/frappe/bench" \
     benchBranch=master \
     frappeRepo="https://github.com/frappe/frappe" \
     erpnextRepo="https://github.com/frappe/erpnext" \
-    appBranch=version-12 \
     siteName=site1.local
 
 ###############################################
