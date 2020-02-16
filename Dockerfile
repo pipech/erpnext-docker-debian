@@ -241,6 +241,11 @@ WORKDIR /home/$systemUser/$benchFolderName
 ###############################################
 # FINALIZED
 ###############################################
+# set entrypoint permission
+## prevent: docker Error response from daemon OCI runtime create failed starting container process caused "permission denied" unknown
+RUN sudo chmod +x /home/$systemUser/production_config/entrypoint_prd.sh \
+    && sudo chmod +x /usr/local/bin/entrypoint.sh
+
 # image entrypoint script
 CMD ["/usr/local/bin/entrypoint.sh"]
 
