@@ -1,146 +1,246 @@
-FROM debian:9.6-slim
+FROM debian:10.2
 
-# fixed for debconf: unable to initialize frontend: Dialog
-# https://github.com/moby/moby/issues/27988
-RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+###############################################
+# ARG
+###############################################
+ARG adminPass=12345
+ARG mysqlPass=12345
 
-# install package
+###############################################
+# ENV 
+###############################################
+# user pass
+ENV systemUser=frappe
+# locales
+ENV LANGUAGE=en_US \
+    LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8
+# prerequisite version
+## nodejs version 12 causing error 
+## https://discuss.erpnext.com/t/error-bench-setup-requirements-yarn-install-macos-mojave
+## Node.js 11.x is no longer actively supported!
+## You will not receive security or critical stability updates for this version.
+ENV mariadbVersion=10.3 \
+    nodejsVersion=10.x
+# frappe
+ENV pythonVersion=python3 \
+    benchPath=bench-repo \
+    benchFolderName=bench \
+    benchRepo="https://github.com/frappe/bench" \
+    benchBranch=master \
+    frappeRepo="https://github.com/frappe/frappe" \
+    erpnextRepo="https://github.com/frappe/erpnext" \
+    appBranch=version-12 \
+    siteName=site1.local
+
+###############################################
+# INSTALL PREREQUISITE
+###############################################
 RUN apt-get -y update \
+    ###############################################
+    # config
+    ###############################################
     && apt-get -y -q install \
-    # prerequisite
-    build-essential \
-    python-setuptools \
+    # locale
+    locales locales-all \
+    # [fix] "debconf: delaying package configuration, since apt-utils is not installed"
+    apt-utils \
+    # [fix] "debconf: unable to initialize frontend: Dialog"
+    # https://github.com/moby/moby/issues/27988
+    && echo "debconf debconf/frontend select Noninteractive" | debconf-set-selections \
+    ###############################################
+    # install
+    ###############################################
+    # basic tools
+    && apt-get -y -q install \
     wget \
+    curl \
     cron \
     sudo \
-    locales \
     git \
-    # production
-    supervisor \
-    nginx \
-    # used for envsubst, making nginx cnf from template
-    gettext-base \
-    # fixed for wkhtmltopdf SSL problems
-    # https://github.com/pipech/erpnext-docker-debian/issues/31
-    libssl1.0-dev \
-    # clean up
-    && apt-get autoremove --purge \
-    && apt-get clean
-
-# [work around] for  "cmd": "chsh frappe -s $(which bash)", "stderr": "Password: chsh: PAM: Authentication failure"
-# caused by > bench/playbooks/create_user.yml > shell: "chsh {{ frappe_user }} -s $(which bash)"
-RUN sed -i 's/auth       required   pam_shells.so/auth       sufficient   pam_shells.so/' /etc/pam.d/chsh
-
-# set locales
-RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
-    && locale-gen
-ENV LC_ALL=en_US.UTF-8 \
-    LC_CTYPE=en_US.UTF-8 \
-    LANG=en_US.UTF-8
-
-# manually install mariadb
-RUN apt-get update \
+    nano \
+    openssl \
+    ###############################################
+    # python 3
+    ###############################################
+    && apt-get -y -q install \
+    build-essential \
+    python3-dev \
+    python3-setuptools \
+    python3-pip \
+    ###############################################
+    # [playbook] common
+    ###############################################
+    # debian_family.yml
+    && apt-get -y -q install \
+    dnsmasq \
+    fontconfig \
+    htop \
+    libcrypto++-dev \
+    libfreetype6-dev \
+    liblcms2-dev \
+    libwebp-dev \
+    libxext6 \
+    libxrender1 \
+    libxslt1-dev \
+    libxslt1.1 \
+    libffi-dev \
+    ntp \
+    postfix \
+    python3-dev \
+    python-tk \
+    screen \
+    xfonts-75dpi \
+    xfonts-base \
+    zlib1g-dev \
+    apt-transport-https \
+    libsasl2-dev \
+    libldap2-dev \
+    libcups2-dev \
+    pv \
+    # debian.yml
+    ## pillow prerequisites for Debian >= 10
+    && apt-get -y -q install \
+    libjpeg62-turbo-dev \
+    libtiff5-dev \
+    tcl8.6-dev \
+    tk8.6-dev \
+    ## pdf prerequisites debian
+    && apt-get -y -q install \
+    libssl-dev \
+    ## Setup OpenSSL dependancy
+    && pip3 install --upgrade pyOpenSSL==16.2.0 \
+    ###############################################
+    # [playbook] mariadb
+    ###############################################
     # add repo from mariadb mirrors
     # https://downloads.mariadb.org/mariadb/repositories
-    && apt-get install -y software-properties-common dirmngr \
-    && apt-key adv --no-tty --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 \
-    && add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://nyc2.mirrors.digitalocean.com/mariadb/repo/10.3/debian stretch main' \
-    # make frontend noninteractive to skip root password change
-    && export DEBIAN_FRONTEND=noninteractive \
-    # install mariadb
+    && apt-get install -y -q software-properties-common dirmngr \
+    && apt-key adv --fetch-keys "https://mariadb.org/mariadb_release_signing_key.asc" \
+    && add-apt-repository "deb [arch=amd64] http://nyc2.mirrors.digitalocean.com/mariadb/repo/${mariadbVersion}/debian buster main" \
+    # mariadb.yml
     && apt-get update \
-    && apt-get install -y \
-    # package form bench playbook
-    # https://github.com/frappe/bench/blob/d1810e1dc1849daabace392c55b39057c09e98b9/playbooks/roles/mariadb/tasks/debian.yml#L23
+    && apt-get install -y -q \
     mariadb-server \
     mariadb-client \
     mariadb-common \
     libmariadbclient18 \
-    python-mysqldb \
-    python3-mysqldb
-
-# add users without sudo password
-ENV systemUser=frappe
-RUN adduser --disabled-password --gecos "" $systemUser \
+    python3-mysqldb \
+    ###############################################
+    # psutil
+    ###############################################
+    && pip3 install --upgrade psutil \
+    ###############################################
+    # [playbook] wkhtmltopdf
+    ###############################################
+    # https://github.com/frappe/frappe_docker/blob/master/Dockerfile
+    # https://gitlab.com/castlecraft/erpnext_kubernetes/blob/master/erpnext-python/Dockerfile
+    && apt-get install -y -q \
+    wkhtmltopdf \
+    libssl-dev \
+    fonts-cantarell \
+    xfonts-75dpi \
+    xfonts-base \
+    && wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_amd64.deb \
+    && dpkg -i wkhtmltox_0.12.5-1.buster_amd64.deb \
+    && rm wkhtmltox_0.12.5-1.buster_amd64.deb \
+    ###############################################
+    # redis
+    ###############################################
+    && apt-get install -y -q \
+    redis-server \
+    ###############################################
+    # [production] supervisor
+    ###############################################
+    && apt-get install -y -q \
+    supervisor \
+    ###############################################
+    # [production] nginx
+    ###############################################
+    && apt-get install -y -q \
+    nginx \
+    ###############################################
+    # nodejs
+    ###############################################
+    # https://github.com/nodesource/distributions
+    && curl --silent --location https://deb.nodesource.com/setup_${nodejsVersion} | bash - \
+    && apt-get install -y -q nodejs \
+    && sudo npm install -g -y yarn \
+    ###############################################
+    # add sudoers
+    ###############################################
+    && adduser --disabled-password --gecos "" $systemUser \
     && usermod -aG sudo $systemUser \
-    && echo "%sudo  ALL=(ALL)  NOPASSWD: ALL" > /etc/sudoers.d/sudoers
+    && echo "%sudo  ALL=(ALL)  NOPASSWD: ALL" > /etc/sudoers.d/sudoers \
+    ###############################################
+    # clean-up
+    ###############################################
+    && apt-get autoremove --purge -y \
+    && apt-get clean -y
 
-# set user and workdir
+###############################################
+# SET USER AND WORKDIR
+###############################################
 USER $systemUser
 WORKDIR /home/$systemUser
 
-COPY ./mariadb.cnf /etc/mysql/conf.d/mariadb.cnf
+###############################################
+# COPY
+###############################################
+# mariadb config
+COPY ./mariadb.cnf /etc/mysql/mariadb.cnf
 
-# install prerequisite for bench with easy install script
-ENV easyinstallRepo='https://raw.githubusercontent.com/frappe/bench/master/playbooks/install.py' \
-    benchPath=bench-repo \
-    benchBranch=master \
-    benchFolderName=bench \
-    benchRepo='https://github.com/frappe/bench' \
-    frappeRepo='https://github.com/frappe/frappe' \
-    erpnextRepo='https://github.com/frappe/erpnext' \
-    siteName=site1.local \
-    adminPass=12345 \
-    mysqlPass=travis
-
-# for python 2 use = python
-# for python 3 use = python3 or python3.6 for centos
-ARG pythonVersion=python3
-ARG appBranch=master
-
+###############################################
+# INSTALL FRAPPE
+###############################################
 RUN sudo service mysql start \
-    && mysql --user="root" --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY 'travis';" \
-    && git clone $benchRepo /tmp/.bench --depth 1 --branch $benchBranch \
-    # start easy install
-    && wget $easyinstallRepo \
-    # remove mariadb from bench playbook
-    && sed -i '/mariadb/d' /tmp/.bench/playbooks/site.yml \
-    && sudo python3 install.py \
-    --without-bench-setup \
+    && mysql --user="root" --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY '${mysqlPass}';" \
+    ###############################################
     # install bench
-    && rm -rf bench \
-    && git clone --branch $benchBranch --depth 1 --origin upstream $benchRepo $benchPath  \
-    && sudo pip install -e $benchPath \
-    # init bench folder
+    ###############################################
+    # clone & install
+    && git clone --branch $benchBranch --depth 1 --origin upstream $benchRepo $benchPath \
+    && sudo pip3 install -e $benchPath \
     && bench init $benchFolderName --frappe-path $frappeRepo --frappe-branch $appBranch --python $pythonVersion \
-    # cd to bench folder
+    # cd into bench folder
     && cd $benchFolderName \
     # install erpnext
     && bench get-app erpnext $erpnextRepo --branch $appBranch \
-    # [work around] fix for Setup failed >> Could not start up: Error in setup
+    # [fix] "Setup failed >> Could not start up: Error in setup"
     && bench update --patch \
     # delete unnecessary frappe apps
     && rm -rf \
     apps/frappe_io \
     apps/foundation \
-    && sed -i '/foundation\|frappe_io/d' sites/apps.txt \
+    && sed -i "/foundation\|frappe_io/d" sites/apps.txt \
     # delete temp file
     && sudo rm -rf /tmp/* \
-    # clean up installation
-    && sudo apt-get autoremove --purge -y \
-    && sudo apt-get clean \
-    # start mariadb & init new site
-    && sudo service mysql start \
+    # start new site
     && bench new-site $siteName \
     --mariadb-root-password $mysqlPass  \
     --admin-password $adminPass \
-    && bench --site $siteName install-app erpnext
+    && bench --site $siteName install-app erpnext \
+    # [HOTFIX] No module named ‘werkzeug.contrib’
+    ## https://discuss.erpnext.com/t/modulenotfounderror-no-module-named-werkzeug-contrib-erpnext-12-4-3/57792
+    ## version 12 should upgrade soon
+    && ./env/bin/pip install werkzeug==0.16.1
 
-# [work around] change back config for work around for  "cmd": "chsh frappe -s $(which bash)", "stderr": "Password: chsh: PAM: Authentication failure"
-RUN sudo sed -i 's/auth       sufficient   pam_shells.so/auth       required   pam_shells.so/' /etc/pam.d/chsh
+###############################################
+# COPY
+###############################################
+# production config
+COPY production_setup/conf/frappe-docker-conf /home/$systemUser/production_config
+# image entrypoint
+COPY entrypoint.sh /usr/local/bin/
 
-# set user and workdir
-USER $systemUser
+###############################################
+# WORKDIR
+###############################################
 WORKDIR /home/$systemUser/$benchFolderName
 
-# copy production config
-COPY production_setup/conf/frappe-docker-conf /home/$systemUser/production_config
-
-# run start mysql service and start bench when container start
-COPY entrypoint.sh /usr/local/bin/
-# fix for [docker Error response from daemon OCI runtime create failed starting container process caused "permission denied" unknown]
-RUN sudo chmod +x /home/$systemUser/production_config/entrypoint_prd.sh \
-    && sudo chmod +x /usr/local/bin/entrypoint.sh
+###############################################
+# FINALIZED
+###############################################
 # image entrypoint script
 CMD ["/usr/local/bin/entrypoint.sh"]
 
