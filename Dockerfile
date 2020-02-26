@@ -167,6 +167,12 @@ RUN apt-get -y update \
     && apt-get install -y -q nodejs \
     && sudo npm install -g -y yarn \
     ###############################################
+    # docker production setup
+    ###############################################
+    && apt-get install -y -q \
+    # used for envsubst, making nginx cnf from template
+    gettext-base \
+    ###############################################
     # add sudoers
     ###############################################
     && adduser --disabled-password --gecos "" $systemUser \
