@@ -7,44 +7,50 @@ usage() {
 }
 
 # variable
-STACK_NAME="s1"
-BASE_BACKUP_DIR="/backup"
+STACK_NAME="fp db bi"
+BASE_BACKUP_DIR="/home/user/backup"
 FOLDER_RETAIN_DAYS="7"
 
 backup() {
 	BACKUP_DATE=`date '+%Y-%m-%d-%H%M%S'`
 	BACKUP_DIR="${BASE_BACKUP_DIR}/${BACKUP_DATE}"
 
-	# put output of docker volume into name_volumes array
-	# -q quiet will show only name
-	# -f filter will filter name with STACK_NAME
-	mapfile -t NAME_VOLUMES < <(docker volume ls -q -f "name=${STACK_NAME}_")
-	if [[ ${#NAME_VOLUMES[@]} -eq 0 ]]; then
-		echo "Error: Not found volume"
-		return 0
-	fi
-
-	# make folder
-	mkdir -p ${BACKUP_DIR}
-	if [[ ! -d ${BACKUP_DIR} ]]; then
-		echo "Error: Cannot create folder"
-		return 0
-	fi
-	
-	# backup
-	echo "Starting backup ${BACKUP_DATE}"
-	# loop through array
-	for NAME_VOLUME in "${NAME_VOLUMES[@]}"
+	for STACK in ${STACK_NAME}
 	do
-		echo "Backing up ${NAME_VOLUME}"
-		# backup docker volume using loomchild/volume-backup docker image
-		docker run --rm \
-		-v ${NAME_VOLUME}:/volume \
-		-v ${BACKUP_DIR}:/backup \
-		loomchild/volume-backup \
-		backup \
-		${NAME_VOLUME}
+
+		# put output of docker volume into name_volumes array
+		# -q quiet will show only name
+		# -f filter will filter name with STACK
+		mapfile -t NAME_VOLUMES < <(docker volume ls -q -f "name=${STACK}_")
+		if [[ ${#NAME_VOLUMES[@]} -eq 0 ]]; then
+			echo "Error: Not found volume"
+			return 0
+		fi
+
+		# make folder
+		mkdir -p ${BACKUP_DIR}
+		if [[ ! -d ${BACKUP_DIR} ]]; then
+			echo "Error: Cannot create folder"
+			return 0
+		fi
+		
+		# backup
+		echo "Starting backup ${BACKUP_DATE}"
+		# loop through array
+		for NAME_VOLUME in "${NAME_VOLUMES[@]}"
+		do
+			echo "Backing up ${NAME_VOLUME}"
+			# backup docker volume using loomchild/volume-backup docker image
+			docker run --rm \
+			-v ${NAME_VOLUME}:/volume \
+			-v ${BACKUP_DIR}:/backup \
+			loomchild/volume-backup \
+			backup \
+			${NAME_VOLUME}
+		done
+
 	done
+
 	cp "${BASE_BACKUP_DIR}/backup_logs.txt" "${BACKUP_DIR}/logs.txt"
 	return 1
 }
