@@ -3,17 +3,42 @@
 # usage infomation
 usage() {
     echo "Named volume backup & restore utility"
-    echo "Usage: . frank <backup|restore|delete> <options>"
+    echo "Usage: . frank <init|backup|restore|delete> <options>"
 }
 
-# variable
-STACK_NAME="fp db bi"
-BASE_BACKUP_DIR="/home/user/backup"
-FOLDER_RETAIN_DAYS="7"
+FRANK_CONFIG="frank.config"
+
+init() {
+echo "Stack name to backup, seperate by space:"
+read STACK_NAME
+
+DEFAULT_BASE_BACKUP_DIR="/backup"
+echo "Backup dir (Default: ${DEFAULT_BASE_BACKUP_DIR}):"
+read BASE_BACKUP_DIR
+if [ "${BASE_BACKUP_DIR}" == "" ]; then
+	BASE_BACKUP_DIR="${DEFAULT_BASE_BACKUP_DIR}"
+fi
+
+DEFAULT_FOLDER_RETAIN_DAYS="7"
+echo "Retain folder for n days (Default: ${DEFAULT_FOLDER_RETAIN_DAYS}):"
+read FOLDER_RETAIN_DAYS
+if [ "${FOLDER_RETAIN_DAYS}" == "" ]; then
+	FOLDER_RETAIN_DAYS="${DEFAULT_FOLDER_RETAIN_DAYS}"
+fi
+
+# write variable to config file
+cat > "${FRANK_CONFIG}" <<EOF
+STACK_NAME="${STACK_NAME}"
+BASE_BACKUP_DIR="${BASE_BACKUP_DIR}"
+FOLDER_RETAIN_DAYS="${FOLDER_RETAIN_DAYS}"
+EOF
+}
 
 backup() {
 	BACKUP_DATE=`date '+%Y-%m-%d-%H%M%S'`
 	BACKUP_DIR="${BASE_BACKUP_DIR}/${BACKUP_DATE}"
+
+	echo "Starting backup ${BACKUP_DATE}"
 
 	for STACK in ${STACK_NAME}
 	do
@@ -35,7 +60,7 @@ backup() {
 		fi
 		
 		# backup
-		echo "Starting backup ${BACKUP_DATE}"
+		echo "Stack ${STACK}"
 		# loop through array
 		for NAME_VOLUME in "${NAME_VOLUMES[@]}"
 		do
@@ -130,8 +155,20 @@ datediff() {
 	echo $(( ((D1-D2) > 0 ? (D1-D2) : (D2-D1)) / 86400 ))
 }
 
+# read value from config, if not init
+if [ "$1" != "init" ]; then
+	# TODO:
+	# Using source is dangerous because whatever is in <filename>
+	# will be run in your shell, such as rm -rf /, which could be very dangerous. 
+	# https://askubuntu.com/questions/367136/how-do-i-read-a-variable-from-a-file/367143#367143
+	source "${FRANK_CONFIG}"
+fi
+
 # command
 case $1 in
+	"init")
+		init
+		;;
 	"backup")
 		backup > "${BASE_BACKUP_DIR}/backup_logs.txt"
 		;;
