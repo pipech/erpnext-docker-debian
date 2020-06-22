@@ -214,11 +214,6 @@ RUN sudo service mysql start \
     && bench get-app erpnext $erpnextRepo --branch $appBranch \
     # [fix] "Setup failed >> Could not start up: Error in setup"
     && bench update --patch \
-    # delete unnecessary frappe apps
-    && rm -rf \
-    apps/frappe_io \
-    apps/foundation \
-    && sed -i "/foundation\|frappe_io/d" sites/apps.txt \
     # delete temp file
     && sudo rm -rf /tmp/* \
     # start new site
