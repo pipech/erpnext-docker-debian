@@ -4,8 +4,8 @@ services:
   frappe:
     image: pipech/erpnext-docker-debian:mas-py3-latest
     ports:
-      - "8000-8005:8000-8005" #webserver_port
-      - "9000-9005:9000-9005" #socketio_port
+      - "8000:8000" #webserver_port
+      - "9000:9000" #socketio_port
       - "6787:6787" #file_watcher_port
     volumes:
       # persisting data
