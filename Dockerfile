@@ -225,11 +225,7 @@ RUN sudo service mysql start \
     && bench new-site $siteName \
     --mariadb-root-password $mysqlPass  \
     --admin-password $adminPass \
-    && bench --site $siteName install-app erpnext \
-    # [HOTFIX] No module named ‘werkzeug.contrib’
-    ## https://discuss.erpnext.com/t/modulenotfounderror-no-module-named-werkzeug-contrib-erpnext-12-4-3/57792
-    ## version 12 should upgrade soon
-    && ./env/bin/pip install werkzeug==0.16.1
+    && bench --site $siteName install-app erpnext
 
 ###############################################
 # COPY
