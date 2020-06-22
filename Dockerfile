@@ -212,8 +212,6 @@ RUN sudo service mysql start \
     && cd $benchFolderName \
     # install erpnext
     && bench get-app erpnext $erpnextRepo --branch $appBranch \
-    # [fix] "Setup failed >> Could not start up: Error in setup"
-    && bench update --patch \
     # delete temp file
     && sudo rm -rf /tmp/* \
     # start new site
