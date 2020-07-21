@@ -33,8 +33,13 @@ def get_app_version(src_image):
 
     # find higher version
     higher_app_version = ''
+    # loop all version digit
     for idx, val in enumerate(e):
         if e[idx].isdigit():
+            # convert str to int
+            e[idx] = int(e[idx])
+            f[idx] = int(f[idx])
+
             if e[idx] != f[idx]:
                 if e[idx] > f[idx]:
                     higher_app_version = e
