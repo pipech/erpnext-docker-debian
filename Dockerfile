@@ -218,7 +218,12 @@ RUN sudo service mysql start \
     && bench new-site $siteName \
     --mariadb-root-password $mysqlPass  \
     --admin-password $adminPass \
-    && bench --site $siteName install-app erpnext
+    && bench --site $siteName install-app erpnext \
+    # compile all python file
+    ## the reason for not using python3 -m compileall -q /home/$systemUser/$benchFolderName/apps
+    ## is to ignore frappe/node_modules folder since it will cause syntax error
+    && python3 -m compileall -q /home/$systemUser/$benchFolderName/apps/frappe/frappe \
+    && python3 -m compileall -q /home/$systemUser/$benchFolderName/apps/erpnext/erpnext
 
 ###############################################
 # COPY
