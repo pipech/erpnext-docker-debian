@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   frappe:
-    image: pipech/erpnext-docker-debian:mas-py3-latest
+    image: pipech/erpnext-docker-debian:v12-py3-latest
     deploy:
       replicas: 1
     volumes:

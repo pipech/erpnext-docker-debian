@@ -1,4 +1,4 @@
-FROM pipech/erpnext-docker-debian:mas-py3-latest
+FROM pipech/erpnext-docker-debian:v12-py3-latest
 
 COPY --chown=frappe ./entrypoint.sh /home/frappe/bench/entrypoint.sh
 COPY --chown=frappe ./vscode /home/frappe/bench/apps/.vscode/

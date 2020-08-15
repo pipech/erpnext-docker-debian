@@ -77,7 +77,7 @@ and domain pointing to those IP address, otherwise it won't work.**
 
 * Change frappe image tag to current version
 
-    You should change `pipech/erpnext-docker-debian:mas-py3-latest` image to specific version number you prefer ie. `pipech/erpnext-docker-debian:11.1.3-py3`
+    You should change `pipech/erpnext-docker-debian:v12-py3-latest` image to specific version number you prefer ie. `pipech/erpnext-docker-debian:11.1.3-py3`
 
 * Create network
 
@@ -152,7 +152,7 @@ and domain pointing to those IP address, otherwise it won't work.**
     `docker service ls`
     ```
     ID                  NAME                MODE                REPLICAS            IMAGE                                 PORTS
-    oksm61lfw5xx        sc_frappe           replicated          1/1                 pipech/erpnext-docker-debian:mas-py3-latest   *:6787->6787/tcp,*:8000->8000/tcp,*:9000->9000/tcp
+    oksm61lfw5xx        sc_frappe           replicated          1/1                 pipech/erpnext-docker-debian:v12-py3-latest   *:6787->6787/tcp,*:8000->8000/tcp,*:9000->9000/tcp
     en4yhx1ms6xx        sc_mariadb          replicated          1/1                 mariadb:10.2.12                       *:3307->3306/tcp
     dvp5f01wpexx        sc_redis-cache      replicated          1/1                 redis:alpine
     xnx36yv9onxx        sc_redis-queue      replicated          1/1                 redis:alpine

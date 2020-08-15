@@ -16,7 +16,7 @@ so you could explore the code.
 
 * Pull image
 
-    `docker pull pipech/erpnext-docker-debian:mas-py3-latest`
+    `docker pull pipech/erpnext-docker-debian:v12-py3-latest`
 
 * Change work directory
 

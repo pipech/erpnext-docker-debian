@@ -1,4 +1,4 @@
-FROM pipech/erpnext-docker-debian:mas-py3-latest
+FROM pipech/erpnext-docker-debian:v12-py3-latest
 
 # set workdir
 USER $systemUser
