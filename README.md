@@ -32,11 +32,21 @@ So now on latest tag we'll have 5 tags, including Python3 variants.
 
 After a latest tag is created, the new image will be tested and tagged. (Testing process is now very simple, it only run image and return response code 200 if it passes.)
 
-You can also pulling image by version such as `12.0.2-py3`
+**You can also pulling image by version such as `12-F10.1_E14.3-py3`**
+
+It's recommend to use specific image version rather than latest tag in production setup.
 
 Image tags are hosted and list on [Docker hub](https://hub.docker.com/r/pipech/erpnext-docker-debian/)
 
 Images will be automatically created every Monday at Mid-night UTC.
+
+## Tag version semantic
+
+**`12-F10.1_E14.3-py3`**
+
+* Frappe version 12.10.1
+* ERPNext version 12.14.3
+* Python3
 
 ## Setup
 
