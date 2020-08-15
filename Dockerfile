@@ -222,8 +222,8 @@ RUN sudo service mysql start \
     # compile all python file
     ## the reason for not using python3 -m compileall -q /home/$systemUser/$benchFolderName/apps
     ## is to ignore frappe/node_modules folder since it will cause syntax error
-    && python3 -m compileall -q /home/$systemUser/$benchFolderName/apps/frappe/frappe \
-    && python3 -m compileall -q /home/$systemUser/$benchFolderName/apps/erpnext/erpnext
+    && $pythonVersion -m compileall -q /home/$systemUser/$benchFolderName/apps/frappe/frappe \
+    && $pythonVersion -m compileall -q /home/$systemUser/$benchFolderName/apps/erpnext/erpnext
 
 ###############################################
 # COPY
