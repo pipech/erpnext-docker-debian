@@ -51,10 +51,17 @@ def get_app_version(src_image):
     print('> App version Dict')
     print(apps)
 
-    if higher_app_version == e:
-        return apps['erpnext']['version_str']
-    else:
-        return apps['frappe']['version_str']
+    # construct version tag
+    # 12-F10.1_E14.3
+    version = '{major}-F{frappe_minor}{frappe_patch}_E{erpnext_minor}{erpnext_patch}'.format(
+        major=f[0],
+        frappe_minor=f[1],
+        frappe_patch=f[2],
+        erpnext_minor=e[1],
+        erpnext_patch=e[2],
+    )
+
+    return version
 
 
 def prepare_tag_image(app_version, img_tag):
