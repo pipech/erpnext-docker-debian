@@ -53,7 +53,7 @@ def get_app_version(src_image):
 
     # construct version tag
     # 12-F10.1_E14.3
-    version = '{major}-F{frappe_minor}{frappe_patch}_E{erpnext_minor}{erpnext_patch}'.format(
+    version = '{major}-F{frappe_minor}.{frappe_patch}_E{erpnext_minor}.{erpnext_patch}'.format(
         major=f[0],
         frappe_minor=f[1],
         frappe_patch=f[2],
