@@ -10,5 +10,8 @@ services:
       - "3306:3306" #mysql
     command: ["/home/frappe/bench/entrypoint.sh"]
     volumes:
+      - frappe-mariadb-volume:/var/lib/mysql
       # for ease of copy file between docker container and host
       - ../shared_vscode_dev:/home/frappe/bench/apps/shared_vscode_dev
+volumes:
+  frappe-mariadb-volume:
