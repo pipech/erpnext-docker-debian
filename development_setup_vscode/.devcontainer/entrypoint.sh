@@ -1,6 +1,10 @@
 #!/bin/bash
-
-set -euxo pipefail
-
-sudo service mysql start
-bench start
+{
+	sudo service mysql start
+	bench start
+} || {
+	echo "============================================="
+	echo "ERROR: entrypoint command failed to start"
+	echo "============================================="
+	tail -f /dev/null
+}
