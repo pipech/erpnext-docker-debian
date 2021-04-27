@@ -23,7 +23,7 @@ ENV mariadbVersion=10.3 \
     ## https://discuss.erpnext.com/t/error-bench-setup-requirements-yarn-install-macos-mojave
     ## Node.js 11.x is no longer actively supported!
     ## You will not receive security or critical stability updates for this version.
-    nodejsVersion=10.x
+    nodejsVersion=12.x
 # frappe
 ENV benchPath=bench-repo \
     benchFolderName=bench \
