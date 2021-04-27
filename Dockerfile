@@ -231,7 +231,7 @@ RUN sudo service mysql start \
 # production config
 COPY --chown=frappe:frappe production_setup/conf/frappe-docker-conf /home/$systemUser/production_config
 # image entrypoint
-COPY --chown=frappe:frappe entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY --chown=frappe:frappe entrypoint.sh /home/$systemUser/$benchFolderName/entrypoint.sh
 
 ###############################################
 # WORKDIR
@@ -242,7 +242,7 @@ WORKDIR /home/$systemUser/$benchFolderName
 # FINALIZED
 ###############################################
 # image entrypoint script
-CMD ["/usr/local/bin/entrypoint.sh"]
+CMD ["/home/$systemUser/$benchFolderName/entrypoint.sh"]
 
 # expose port
 EXPOSE 8000 9000 3306
