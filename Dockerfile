@@ -229,9 +229,9 @@ RUN sudo service mysql start \
 # COPY
 ###############################################
 # production config
-COPY --chown=1000:1000 production_setup/conf/frappe-docker-conf /home/$systemUser/production_config
+COPY --chown=frappe:frappe production_setup/conf/frappe-docker-conf /home/$systemUser/production_config
 # image entrypoint
-COPY --chown=1000:1000 entrypoint.sh /usr/local/bin/
+COPY --chown=frappe:frappe entrypoint.sh /usr/local/bin/entrypoint.sh
 
 ###############################################
 # WORKDIR
