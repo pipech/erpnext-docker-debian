@@ -228,12 +228,10 @@ RUN sudo service mysql start \
 ###############################################
 # COPY
 ###############################################
-# The --chown feature is only supported on Dockerfiles used to build Linux containers, and will not work on Windows containers
-## So we still need seperate command to set file permission (2020-08-15)
 # production config
-COPY production_setup/conf/frappe-docker-conf /home/$systemUser/production_config
+COPY --chown=$systemUser:$systemUser production_setup/conf/frappe-docker-conf /home/$systemUser/production_config
 # image entrypoint
-COPY entrypoint.sh /usr/local/bin/
+COPY --chown=$systemUser:$systemUser entrypoint.sh /usr/local/bin/
 
 ###############################################
 # WORKDIR
@@ -243,11 +241,6 @@ WORKDIR /home/$systemUser/$benchFolderName
 ###############################################
 # FINALIZED
 ###############################################
-# set entrypoint permission
-## prevent: docker Error response from daemon OCI runtime create failed starting container process caused "permission denied" unknown
-RUN sudo chmod +x /home/$systemUser/production_config/entrypoint_prd.sh \
-    && sudo chmod +x /usr/local/bin/entrypoint.sh
-
 # image entrypoint script
 CMD ["/usr/local/bin/entrypoint.sh"]
 
