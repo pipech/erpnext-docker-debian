@@ -6,7 +6,7 @@ FROM debian:10.2
 ARG adminPass=12345
 ARG mysqlPass=12345
 ARG pythonVersion=python3
-ARG appBranch=version-12
+ARG appBranch=version-13
 
 ###############################################
 # ENV 
