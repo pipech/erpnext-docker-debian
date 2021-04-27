@@ -141,7 +141,7 @@ RUN apt-get -y update \
     fonts-cantarell \
     xfonts-75dpi \
     xfonts-base \
-    && wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_amd64.deb \
+    && wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_amd64.deb \
     && dpkg -i wkhtmltox_0.12.6-1.buster_amd64.deb \
     && rm wkhtmltox_0.12.6-1.buster_amd64.deb \
     ###############################################
