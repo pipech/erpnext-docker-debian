@@ -1,32 +1,30 @@
-#  ERPNext on Docker
+# :whale: ERPNext on Docker
 
 [![Build Status](https://travis-ci.com/pipech/erpnext-docker-debian.svg?branch=master)](https://travis-ci.com/pipech/erpnext-docker-debian)
 
-**The goal of this repo is stability.** 
+**The goal of this repo is stability and repeatability.** 
 
-##### Problem
+## Problem
 
 * ERPNext development is fast, there are new updates every day and some contain bugs.
 
 * ERPNext uses many dependencies, during installation things might go wrong sometimes.
 
-##### Solution
+## Solution
 
 Using docker we can pre-build an image and push it to [Docker hub](https://hub.docker.com/r/pipech/erpnext-docker-debian/),
 so you will always have usable images and can choose which version you want to use.
 
+## Setup
+
+Read [the Docs](https://github.com/pipech/erpnext-docker-debian/wiki)
+
 ## Image tag
 
-Currently, there are 4 important branches on frappe. 
-So now on latest tag we'll have 5 tags, including Python3 variants.
-
-* **Version10 - v10 [python2]**
-  * v10-py2-latest
-* **Version11 - v11 [python2, python3]**
-  * v11-py2-latest
-  * v11-py3-latest
 * **Version12 - v12 [python3]**
   * v12-py3-latest
+* **Version13 - v13 [python3]**
+  * v13-py3-latest
 * **Develop - [python3]**
   * dev-py3-latest
 
@@ -47,10 +45,6 @@ Images will be automatically created every Monday at Mid-night UTC.
 * Frappe version 12.10.1
 * ERPNext version 12.14.3
 * Python3
-
-## Setup
-
-Read [the Docs](https://github.com/pipech/erpnext-docker-debian/wiki)
 
 ## Contributing
 
