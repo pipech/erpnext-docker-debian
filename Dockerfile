@@ -19,16 +19,14 @@ ENV LANGUAGE=en_US \
     LC_ALL=en_US.UTF-8
 # prerequisite version
 ENV mariadbVersion=10.3 \
-    ## nodejs version 12 will causing error 
-    ## https://discuss.erpnext.com/t/error-bench-setup-requirements-yarn-install-macos-mojave
-    ## Node.js 11.x is no longer actively supported!
-    ## You will not receive security or critical stability updates for this version.
     nodejsVersion=12.x
 # frappe
 ENV benchPath=bench-repo \
     benchFolderName=bench \
     benchRepo="https://github.com/frappe/bench" \
-    benchBranch=master \
+    # Hot-fix: master branch didn't get jinja version bump and causing the error
+    # https://github.com/frappe/bench/pull/1270
+    benchBranch=v5.x \
     frappeRepo="https://github.com/frappe/frappe" \
     erpnextRepo="https://github.com/frappe/erpnext" \
     siteName=site1.local
