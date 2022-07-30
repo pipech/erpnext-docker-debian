@@ -63,6 +63,7 @@ RUN apt-get -y update \
     ###############################################
     && apt-get -y -q install \
     build-essential \
+    python3-venv \
     python3-dev \
     python3-setuptools \
     python3-pip \
@@ -197,14 +198,13 @@ COPY ./mariadb.cnf /etc/mysql/mariadb.cnf
 ###############################################
 # INSTALL FRAPPE
 ###############################################
-RUN sudo service mysql start \
+RUN sudo chmod 644 /etc/mysql/my.cnf \
+    && sudo service mysql start \
     && mysql --user="root" --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY '${mysqlPass}';" \
     ###############################################
     # install bench
     ###############################################
-    # clone & install
-    && git clone --branch $benchBranch --depth 1 --origin upstream $benchRepo $benchPath \
-    && sudo pip3 install -e $benchPath \
+    && sudo pip3 install frappe-bench \
     && bench init $benchFolderName --frappe-path $frappeRepo --frappe-branch $appBranch --python $pythonVersion \
     # cd into bench folder
     && cd $benchFolderName \
