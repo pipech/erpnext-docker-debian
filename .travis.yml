@@ -8,8 +8,8 @@ env:
   - dh_user="pipech"
   - secure: gxjANDRWXC9J0LVXkrHgKyDtNoKcnfnswTNY+ZTFOeuzeFrHkXEXqkOqdVakAVTR8efNLltqFa+FcWKOoRR3fS/5VWYL38lyi5rphG2ZmQ/wK6+LEge5lM8GLpr+9MUTTsqqo3C+DXa59Akcq8LxWEvXtCLTmLSy9uHJg/7sB4Mj1VRV3RIIeIuQRZ/pOzGtpBaDPdVW9gHasfe9YLSszxI//OmcHTMccatcqCiyOTLmFfavefyQqUJGb33JY4+S3u/7QshCE+9YFEus8Ym0ZmuZ6B61hZBs332GPx8+ruEEYAEp5+d1HeocKUSWZIBUEgOdjo4lWnx5V3xkG7skwUKBxYGddDL2aN8Xfam6tcBBP1Zbp2NGUau3GYl29LyT3L5tTOrKUui9ugOPt5iQ6suwyYCus5A0Nor3Q5WqpHaiM0zTKvW953AYWG+FApefFfp+XC7AHOhk3q2UddAd0w2biYQyr3OIpsd/lLnqFfChJYqqG6iwCRHHq8Qz7d4W36mDon2TcwTd1Cd8dBp3TzLCFMdVnkz1bmgJ3Yyyycxd6g39ITlellwIEYziK2SqF5ZOiDKR+SmB6tIgrzBUQDPxBSf3eQgq6AqmQF7pJ16RHI5X3a+L0RoG/U5PnePtfYjXvubP0NNupuHGaSubUGoOJjK9fjOXcnlQAlmE400=
   matrix:
-  - python_version="python3" app_branch="version-12"
-  - python_version="python3" app_branch="version-13"
+  - python_version="python3" app_branch="version-14"
+  - python_version="python3" app_branch="version-15"
   - python_version="python3" app_branch="develop"
 services:
 - docker
