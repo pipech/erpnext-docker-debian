@@ -53,7 +53,7 @@ jobs:
           docker run --rm ${{ env.IMAGE_ACTION_TAG }} bench version > version.txt
 
       - name: Formatting and set version variable
-        run: python tag_image.py
+        run: python scripts/tag_image.py
 
       - name: Tag and push
         uses: docker/build-push-action@v5
