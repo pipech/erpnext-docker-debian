@@ -21,7 +21,7 @@ jobs:
         app_branch: [version-15]
     steps:
       - name: Generate action image tag
-        run: echo "IMAGE_ACTION_TAG=${{ env.IMAGE_REPO }}/{{ env.IMAGE_NAME }}:${{ github.actor_id }}" >> $GITHUB_ENV
+        run: echo "IMAGE_ACTION_TAG=${{ env.IMAGE_REPO }}/${{ env.IMAGE_NAME }}:${{ github.actor_id }}" >> $GITHUB_ENV
 
       - name: Checkout
         uses: actions/checkout@v4
