@@ -47,7 +47,7 @@ jobs:
             appBranch=${{ matrix.app_branch }}
 
       - name: Start container
-        run |
+        run: |
           docker run -d -p 8000:8000 -p 9000:9000 --name "TEST_CONTAINER" "${{ env.IMAGE_ACTION_TAG }}"
 
       - name: Wait for 2 minutes and check status
