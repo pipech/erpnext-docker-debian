@@ -41,4 +41,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.LATEST_TAG }}
+          tags: ${{ env.TEST_TAG }}
