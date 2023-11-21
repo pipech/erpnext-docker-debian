@@ -19,7 +19,7 @@ jobs:
       matrix:
         app_branch: [version-15]
     steps:
-      - name: Generate action image tag
+      - name: Generate action image action tag
         run: echo "IMAGE_ACTION_TAG=${{ env.IMAGE_REPO }}/${{ env.IMAGE_NAME }}:${{ github.actor_id }}" >> $GITHUB_ENV
 
       - name: Checkout
@@ -58,4 +58,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.IMAGE_VERSION_TAG }}
+          tags: ${{ env.IMAGE_REPO }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION_TAG }}
