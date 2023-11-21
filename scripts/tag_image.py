@@ -1,4 +1,4 @@
-# used in .github/workflows/push-docker.yml
+# Script for: .github/workflows/push-docker.yml
 
 import json
 import os
