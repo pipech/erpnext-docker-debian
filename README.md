@@ -2,54 +2,46 @@
 
 ![push-docker](https://github.com/pipech/erpnext-docker-debian/actions/workflows/push-docker.yml/badge.svg)
 
-**The goal of this repo is stability and repeatability.**
+**This repository prioritizes stability and repeatability, and is not designed as the ideal approach for a production environment.**
 
 ## Problem
 
-- ERPNext development is fast, there are new updates every day and some contain bugs.
+- ERPNext development progresses rapidly, with new updates released daily. Some of these updates may contain bugs.
 
-- ERPNext uses many dependencies, during installation things might go wrong sometimes.
+- ERPNext depends on numerous external components. During installation, these dependencies can sometimes cause issues, and without a pre-built image, it might be impossible to build or use older versions.
 
 ## Solution
 
-Using docker we can pre-build an image and push it to [Docker hub](https://hub.docker.com/r/pipech/erpnext-docker-debian/),
-so you will always have usable images and can choose which version you want to use.
+By using Docker, we can pre-build images and push them to [Docker hub](https://hub.docker.com/r/pipech/erpnext-docker-debian/). This ensures that usable images are always available, and you can select the version that best suits your needs.
 
 ## Setup
 
 Read [the Docs](https://github.com/pipech/erpnext-docker-debian/wiki)
 
-## Image tag
+## Build Process
 
-- **Version12 - v12 [python3]**
-  - v12-py3-latest
-- **Version13 - v13 [python3]**
-  - v13-py3-latest
-- **Develop - [python3]**
-  - dev-py3-latest
+For detailed information on the build process, please review the [`Dockerfile`](./Dockerfile) and [`.github/workflows/push-docker.yml`](./.github/workflows.push-docker.yml).
 
-After a latest tag is created, the new image will be tested and tagged. (Testing process is now very simple, it only run image and return response code 200 if it passes.)
+In summary:
 
-**You can also pulling image by version such as `12-F10.1_E14.3-py3`**
+- Starts with the `frappe/bench` image as the base.
+- Integrates all necessary production dependencies like MariaDB, Redis, etc.
+- Sets up new sites and verifies their functionality by checking for a response code of 200.
+- Upon successful verification, tags and pushes the images to [Docker hub](https://hub.docker.com/r/pipech/erpnext-docker-debian/).
 
-It's recommend to use specific image version rather than latest tag in production setup.
-
-Image tags are hosted and list on [Docker hub](https://hub.docker.com/r/pipech/erpnext-docker-debian/)
-
-Images will be automatically created every Monday at Mid-night UTC.
+Images will be automatically generated every Sunday at 00:00.
 
 ## Tag version semantic
 
-**`12-F10.1_E14.3-py3`**
+**`15-F1.0_E2.0`** represents:
 
-- Frappe version 12.10.1
-- ERPNext version 12.14.3
-- Python3
+- Frappe version 15.1.0
+- ERPNext version 15.2.0
 
 ## Contributing
 
-Pull requests for new features, bug fixes, documentation improvements (and typo fixes) and suggestions are welcome!
+We welcome pull requests for new features, bug fixes, enhancements to documentation (including typo corrections), and suggestions. Your contributions help improve the project!
 
 ## License
 
-MIT
+This project is licensed under the MIT License.
