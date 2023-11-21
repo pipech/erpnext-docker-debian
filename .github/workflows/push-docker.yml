@@ -20,6 +20,9 @@ jobs:
         python_version: [3.6]
         app_branch: [version-15]
     steps:
+      - name: Formatting and set version variable
+        run: python scripts/tag_image.py
+
       - name: Generate action image tag
         run: echo "IMAGE_ACTION_TAG=${{ env.IMAGE_REPO }}/${{ env.IMAGE_NAME }}:${{ github.actor_id }}" >> $GITHUB_ENV
 
