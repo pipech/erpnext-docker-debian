@@ -1,31 +1,44 @@
 # used in .github/workflows/push-docker.yml
 
-import re
+import json
 
 
 def read_version_from_file(file_path):
-    """ Reads the first line of the file and returns it. """
+    """
+    Data from file should be some thing like this:
+    erpnext 12.10.1
+    frappe 12.8.1
+
+    :param file_path: path to file
+    :return: dict of app version
+        {
+            'erpnext': '12.10.1',
+            'frappe': '12.8.1',
+        }
+    """
+    values = {}
     with open(file_path, 'r') as file:
-        return file.readline().strip()
+        for line in file:
+            parts = line.split()
+            if len(parts) >= 2:
+                key = parts[0]
+                value = parts[1]
+                values[key] = value
+    return values
 
 
 def get_app_version(apps_version):
-    # clean app version str & get version list
-    apps = {
-        'erpnext': {},
-        'frappe': {},
+    """
+    :param apps_version: dict of app version
+        {
+            'erpnext': '12.10.1',
+            'frappe': '12.8.1',
         }
-    for app in apps:
-        app_version = re.search('{}(.+?)\\n'.format(app), apps_version)
-        app_version = app_version.group(0)
-        app_version = app_version.replace(app, '')
-        app_version = app_version.strip()
-        apps[app]['version_str'] = app_version
-        app_version = re.findall(r"[\w']+", app_version)
-        apps[app]['version_list'] = app_version
-
-    e = apps['erpnext']['version_list']
-    f = apps['frappe']['version_list']
+    :return: version tag string
+        12-F10.1_E14.3
+    """
+    e = apps_version['erpnext'].split('.')
+    f = apps_version['frappe'].split('.')
 
     # construct version tag
     # 12-F10.1_E14.3
@@ -41,9 +54,9 @@ def get_app_version(apps_version):
 
 def main():
     print('>>> Prepare image tagging')
-    raw_app_version = read_version_from_file('version.txt')
-    print(f'> Raw app version: {raw_app_version}')
-    app_version = get_app_version(raw_app_version)
+    version_dict = read_version_from_file('version.txt')
+    print(f'> Raw app version: {json.dumps(version_dict)}')
+    app_version = get_app_version(version_dict)
     print(f'> App version: {app_version}')
 
     # Print the command to set the new tag in the GitHub Actions environment variable
