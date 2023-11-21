@@ -9,7 +9,8 @@ on:
       - master
 
 env:
-  TEST_TAG: pipech/erpnext-docker-debian:v15-py3-latest
+  IMAGE_REPO: pipech
+  IMAGE_NAME: erpnext-docker-debian
 
 jobs:
   build-tag-push:
@@ -19,26 +20,44 @@ jobs:
         python_version: [3.6]
         app_branch: [version-15]
     steps:
+      - name: Generate action image tag
+        run: echo "IMAGE_ACTION_TAG=${{ IMAGE_REPO }}/{{IMAGE_NAME}}:${{ github.actor_id }}" >> $GITHUB_ENV
+
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build and export to Docker
         uses: docker/build-push-action@v5
         with:
           context: .
           load: true
-          tags: ${{ env.TEST_TAG }}
+          tags: ${{ env.IMAGE_ACTION_TAG }}
+          build-args: |
+            PYTHON_VERSION=${{ matrix.python_version }}
+            APP_BRANCH=${{ matrix.app_branch }}
+
+      - name: Getting app version from image
+        run: |
+          docker run --rm ${{ env.IMAGE_ACTION_TAG }} bench version > version.txt
+
+      - name: Formatting version
+        run:
+
       - name: Tag and push
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ env.TEST_TAG }}
+          tags: ${{ env.IMAGE_ACTION_TAG }}
