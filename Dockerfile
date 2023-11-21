@@ -110,6 +110,8 @@ RUN sudo apt-get update \
     --mariadb-root-password $mysqlPass  \
     --admin-password $adminPass \
     && bench --site $siteName install-app erpnext \
+    # use site
+    && bench use $siteName \
     # compile all python file
     ## the reason for not using python3 -m compileall -q /home/$systemUser/$benchFolderName/apps
     ## is to ignore frappe/node_modules folder since it will cause syntax error
