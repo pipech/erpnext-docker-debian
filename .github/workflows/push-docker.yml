@@ -6,7 +6,7 @@ on:
     - cron: '0 0 * * 0'
   push:
     branches:
-      - main
+      - master
 
 env:
   TEST_TAG: pipech/erpnext-docker-debian:v15-py3-latest
