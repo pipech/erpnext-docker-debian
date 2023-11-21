@@ -1,6 +1,7 @@
 # used in .github/workflows/push-docker.yml
 
 import json
+import os
 
 
 def read_version_from_file(file_path):
@@ -60,7 +61,7 @@ def main():
     print(f'> App version: {app_version}')
 
     # Print the command to set the new tag in the GitHub Actions environment variable
-    print(f"echo \"IMAGE_VERSION_TAG={app_version}\" >> $GITHUB_ENV")
+    os.system(f"echo \"IMAGE_VERSION_TAG={app_version}\" >> $GITHUB_ENV")
 
 
 if __name__ == "__main__":
