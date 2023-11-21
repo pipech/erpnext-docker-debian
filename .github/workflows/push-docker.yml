@@ -60,7 +60,9 @@ jobs:
       - name: Check HTTP Response
         run: |
           response=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000)
-          if [ "$response" -ne 200 ]; then
+          if [ "$response" == 200 ]; then
+            echo "Received a 200 response!"
+          else
             echo "Failed to receive a 200 response, got: $response"
             exit 1
           fi
@@ -77,4 +79,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.IMAGE_REPO }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION_TAG }}
+          tags: ${{ env.IMAGE_REPO }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION_TAG }},${{ env.IMAGE_REPO }}/${{ env.IMAGE_NAME }}:${{ matrix.app_branch }}-latest
