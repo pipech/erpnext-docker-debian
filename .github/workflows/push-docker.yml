@@ -17,7 +17,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python_version: [3.6]
         app_branch: [version-15]
     steps:
       - name: Generate action image tag
@@ -45,8 +44,7 @@ jobs:
           load: true
           tags: ${{ env.IMAGE_ACTION_TAG }}
           build-args: |
-            PYTHON_VERSION=${{ matrix.python_version }}
-            APP_BRANCH=${{ matrix.app_branch }}
+            appBranch=${{ matrix.app_branch }}
 
       - name: Getting app version from image
         run: |
