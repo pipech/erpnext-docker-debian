@@ -46,9 +46,28 @@ jobs:
           build-args: |
             appBranch=${{ matrix.app_branch }}
 
+      - name: Start container
+        run |
+          docker run -d -p 8000:8000 -p 9000:9000 --name "TEST_CONTAINER" "${{ env.IMAGE_ACTION_TAG }}"
+
+      - name: Wait for 2 minutes and check status
+        run: |
+          sleep 180s
+          docker ps -a
+          docker logs TEST_CONTAINER
+          docker inspect TEST_CONTAINER
+
+      - name: Check HTTP Response
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000)
+          if [ "$response" -ne 200 ]; then
+            echo "Failed to receive a 200 response, got: $response"
+            exit 1
+          fi
+
       - name: Getting app version from image
         run: |
-          docker run --rm ${{ env.IMAGE_ACTION_TAG }} bench version > version.txt
+          docker exec TEST_CONTAINER bench version > version.txt
 
       - name: Formatting and set version variable
         run: python ./scripts/tag_image.py
