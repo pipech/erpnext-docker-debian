@@ -52,12 +52,12 @@ jobs:
         run: |
           docker run --rm ${{ env.IMAGE_ACTION_TAG }} bench version > version.txt
 
-      - name: Formatting version
-        run:
+      - name: Formatting and set version variable
+        run: python tag_image.py
 
       - name: Tag and push
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ env.IMAGE_ACTION_TAG }}
+          tags: ${{ env.IMAGE_VERSION_TAG }}
