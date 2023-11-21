@@ -26,13 +26,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Test
-        run: |
-          echo "helo" > version.txt
-
-      - name: Formatting and set version variable
-        run: python ./scripts/tag_image.py
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -60,7 +53,7 @@ jobs:
           docker run --rm ${{ env.IMAGE_ACTION_TAG }} bench version > version.txt
 
       - name: Formatting and set version variable
-        run: python scripts/tag_image.py
+        run: python ./scripts/tag_image.py
 
       - name: Tag and push
         uses: docker/build-push-action@v5

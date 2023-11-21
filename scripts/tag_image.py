@@ -9,7 +9,7 @@ def read_version_from_file(file_path):
         return file.readline().strip()
 
 
-def get_app_version(app_version):
+def get_app_version(apps_version):
     # clean app version str & get version list
     apps = {
         'erpnext': {},
