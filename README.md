@@ -1,6 +1,6 @@
 # :whale: ERPNext on Docker
 
-[![Build Status](https://app.travis-ci.com/pipech/erpnext-docker-debian.svg?branch=master)](https://app.travis-ci.com/github/pipech/erpnext-docker-debian)
+![push-docker](https://github.com/pipech/erpnext-docker-debian/actions/workflows/push-docker.yml/badge.svg)
 
 **The goal of this repo is stability and repeatability.**
 
