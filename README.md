@@ -2,7 +2,7 @@
 
 ![push-docker](https://github.com/pipech/erpnext-docker-debian/actions/workflows/push-docker.yml/badge.svg)
 
-**This repository prioritizes stability and repeatability, and is not designed as the ideal approach for a production environment.**
+**This repository prioritizes stability, repeatability and simplicity, and is not designed as the ideal approach for a production environment.**
 
 ## Problem
 
@@ -14,9 +14,51 @@
 
 By using Docker, we can pre-build images and push them to [Docker hub](https://hub.docker.com/r/pipech/erpnext-docker-debian/). This ensures that usable images are always available, and you can select the version that best suits your needs.
 
-## Setup
+## User & Password
 
-Read [the Docs](https://github.com/pipech/erpnext-docker-debian/wiki)
+```
+# Website
+U: administrator
+P: 12345
+
+# MariaDB
+U: root
+P: 12345
+```
+
+## Usage
+
+### Trial Setup
+
+This setup is designed for users who want to explore the system and is not suitable for production use.
+
+```sh
+docker pull pipech/erpnext-docker-debian:version-15-latest
+
+docker run -d -p 8000:8000 -p 9000:9000 -p 3306:3306 pipech/erpnext-docker-debian:version-15-latest
+```
+
+The site should be available at http://localhost:8000 after 1-2 minutes.
+
+### Development Setup
+
+This is a self-contained development setup. Developers can fully isolate their environment. The setup utilizes Visual Studio Code and its Dev Containers feature.
+
+1. Open Visual Studio Code.
+1. Open the Command Palette (View > Command Palette or Ctrl + Shift + P).
+1. Type: `Open Folder in Container`.
+1. Select the `setup_development` folder.
+
+For every startup, run:
+
+```sh
+sudo service mariadb start
+bench start
+```
+
+### Production Setup
+
+For best practices in a production environment, [Official Frappe Docker](https://github.com/frappe/frappe_docker).
 
 ## Build Process
 

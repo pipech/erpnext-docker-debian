@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  frappe:
+    image: pipech/erpnext-docker-debian:15-F1.0_E2.0
+    ports:
+      - '8000:8000' #webserver_port
+      - '9000:9000' #socketio_port
+      - '3306:3306' #mysql_port
+    command: sleep infinity

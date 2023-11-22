@@ -1,0 +1,6 @@
+{
+  "name": "frappe",
+  "service": "frappe",
+  "dockerComposeFile": "docker-compose.yml",
+  "workspaceFolder": "/home/frappe/bench/apps"
+}
