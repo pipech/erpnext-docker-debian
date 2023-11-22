@@ -20,7 +20,7 @@ Read [the Docs](https://github.com/pipech/erpnext-docker-debian/wiki)
 
 ## Build Process
 
-For detailed information on the build process, please review the [`Dockerfile`](./Dockerfile) and [`.github/workflows/push-docker.yml`](./.github/workflows.push-docker.yml).
+For detailed information on the build process, please review the [`Dockerfile`](./Dockerfile) and [`.github/workflows/push-docker.yml`](./.github/workflows/push-docker.yml).
 
 In summary:
 
