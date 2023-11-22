@@ -14,18 +14,6 @@
 
 By using Docker, we can pre-build images and push them to [Docker hub](https://hub.docker.com/r/pipech/erpnext-docker-debian/). This ensures that usable images are always available, and you can select the version that best suits your needs.
 
-## User & Password
-
-```
-# Website
-U: administrator
-P: 12345
-
-# MariaDB
-U: root
-P: 12345
-```
-
 ## Usage
 
 ### Trial Setup
@@ -59,6 +47,13 @@ bench start
 ### Production Setup
 
 For best practices in a production environment, [Official Frappe Docker](https://github.com/frappe/frappe_docker).
+
+## User & Password
+
+```
+ERPNext | U: administrator    P: 12345
+MariaDB | U: root             P: 12345
+```
 
 ## Build Process
 
