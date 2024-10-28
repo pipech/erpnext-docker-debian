@@ -70,10 +70,10 @@ Images will be automatically generated every Sunday at 00:00.
 
 ## Tag version semantic
 
-**`15-F1.0_E2.0`** represents:
+**`15-F45.0_E39.0`** represents:
 
-- Frappe version 15.1.0
-- ERPNext version 15.2.0
+- Frappe version 15.45.0
+- ERPNext version 15.39.0
 
 ## Contributing
 
