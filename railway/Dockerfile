@@ -57,6 +57,8 @@ RUN echo 'Start!' \
     # cleaning up install
     && sudo apt-get clean \
     && sudo rm -rf /var/lib/apt/lists/* \
+    # remove default nginx site
+    sudo rm /etc/nginx/sites-enabled/default \
     # re-build
     && bench build \
     && cp -r /home/$systemUser/$benchFolderName/sites /home/$systemUser/$benchFolderName/built_sites
