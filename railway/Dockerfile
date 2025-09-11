@@ -36,8 +36,8 @@ ENV benchFolderName=bench
 COPY --from=builder --chown=$systemUser /home/$systemUser/$benchFolderName /home/$systemUser/$benchFolderName
 
 # Copy template
-COPY ./temp_nginx.conf /home/$systemUser/temp_nginx.conf
-COPY ./temp_supervisor.conf /home/$systemUser/temp_supervisor.conf
+COPY temp_nginx.conf /home/$systemUser/
+COPY temp_supervisor.conf /home/$systemUser/
 
 USER $systemUser
 WORKDIR /home/$systemUser/$benchFolderName
@@ -59,14 +59,12 @@ RUN echo 'Start!' \
     && sudo rm -rf /var/lib/apt/lists/* \
     # re-build
     && bench build \
-    && cp -r /home/$systemUser/$benchFolderName/sites/assets /home/$systemUser/$benchFolderName/build_assets
+    && cp -r /home/$systemUser/$benchFolderName/sites /home/$systemUser/$benchFolderName/built_sites
 
 USER root
 
 COPY docker-cmd.sh /usr/local/bin/
 CMD ["docker-cmd.sh"]
 
-# nginx / frappe webserver and websocket
+# nginx
 EXPOSE 80
-# fastapi
-EXPOSE 8080

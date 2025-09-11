@@ -2,7 +2,7 @@
 set -e
 
 echo "-> Bench build"
-ln -s /home/$systemUser/$benchFolderName/build_assets /home/$systemUser/$benchFolderName/sites/assets
+ln -s /home/$systemUser/$benchFolderName/built_sites/assets /home/$systemUser/$benchFolderName/sites/assets
 
 echo "-> Bursting env into config"
 envsubst '$DOMAIN_PANICH_ADMIN' < /home/$systemUser/temp_nginx.conf > /etc/nginx/conf.d/default.conf
