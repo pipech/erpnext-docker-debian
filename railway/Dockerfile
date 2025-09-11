@@ -36,8 +36,8 @@ ENV benchFolderName=bench
 COPY --from=builder --chown=$systemUser /home/$systemUser/$benchFolderName /home/$systemUser/$benchFolderName
 
 # Copy template
-COPY temp_nginx.conf /home/$systemUser/
-COPY temp_supervisor.conf /home/$systemUser/
+COPY ./temp_nginx.conf /home/$systemUser/temp_nginx.conf
+COPY ./temp_supervisor.conf /home/$systemUser/temp_supervisor.conf
 
 USER $systemUser
 WORKDIR /home/$systemUser/$benchFolderName
@@ -63,7 +63,7 @@ RUN echo 'Start!' \
 
 USER root
 
-COPY docker-cmd.sh /usr/local/bin/
+COPY ./docker-cmd.sh /usr/local/bin/docker-cmd.sh
 CMD ["docker-cmd.sh"]
 
 # nginx
