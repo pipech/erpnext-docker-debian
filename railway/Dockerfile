@@ -64,11 +64,11 @@ RUN echo "-> Install nginx & supervisor" \
     && bench build \
     && cp -r /home/$systemUser/$benchFolderName/sites /home/$systemUser/$benchFolderName/built_sites
 
-COPY --chown=$systemUser /railway/railway-setup.sh /home/$systemUser/$benchFolderName/railway-setup.sh
-COPY --chown=$systemUser /railway/railway-entrypoint.sh /usr/local/bin/railway-entrypoint.sh
-COPY --chown=$systemUser /railway/railway-cmd.sh /usr/local/bin/railway-cmd.sh
+COPY --chown=$systemUser --chmod=0755 /railway/railway-setup.sh /home/$systemUser/$benchFolderName/railway-setup.sh
+COPY --chown=$systemUser --chmod=0755 /railway/railway-entrypoint.sh /usr/local/bin/railway-entrypoint.sh
+COPY --chown=$systemUser --chmod=0755 /railway/railway-cmd.sh /usr/local/bin/railway-cmd.sh
 
-ENTRYPOINT ["railway-entrypoint.sh"]
-CMD ["railway-cmd.sh"]
+ENTRYPOINT ["/usr/local/bin/railway-entrypoint.sh"]
+CMD ["/usr/local/bin/railway-cmd.sh"]
 
 EXPOSE 80
