@@ -1,9 +1,12 @@
 #!/bin/bash
 set -e
 
-echo "-> Linking assets"
-ln -s /home/$systemUser/$benchFolderName/built_sites/assets /home/$systemUser/$benchFolderName/sites/assets
+echo "-> Create empty common site config"
+echo "{}" > /home/$systemUser/$benchFolderName/common_site_config.json
 
 echo "-> Create new site with ERPNext"
-bench new-site ${RFP_DOMAIN_NAME} --admin-password ${RFP_SITE_ADMIN_PASSWORD} --no-mariadb-socket --install-app erpnext
+bench new-site ${RFP_DOMAIN_NAME} --admin-password ${RFP_SITE_ADMIN_PASSWORD} --no-mariadb-socket --db-root-password ${RFP_DB_ROOT_PASSWORD} --install-app erpnext
 bench use ${RFP_DOMAIN_NAME}
+
+echo "-> Enable scheduler"
+bench enable-scheduler

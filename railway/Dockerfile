@@ -11,11 +11,12 @@ FROM pipech/erpnext-docker-debian:version-15-latest AS builder
 USER $systemUser
 WORKDIR /home/$systemUser/$benchFolderName
 
-RUN echo "Start" \
-    ### remove unused sites
-    && rm -rf /home/$systemUser/$benchFolderName/sites/site1.local
-### install your custom apps here
-# && bench get-app https://github.com/your-repo/custom_app
+RUN echo "-> Start builder" \
+    ### remove unused sites, created by base image
+    && rm -rf /home/$systemUser/$benchFolderName/sites/site1.local \
+    ### install your custom apps here
+    # && bench get-app https://github.com/your-repo/custom_app
+    echo "-> Builder done!"
 
 
 # ------------------------------------------
@@ -46,7 +47,7 @@ WORKDIR /home/$systemUser/$benchFolderName
 # https://github.com/moby/moby/issues/27988
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN echo 'Start!' \
+RUN echo "-> Install nginx & supervisor" \
     # apt-get update
     && sudo apt-get update \
     && sudo apt-get install -y \
@@ -54,17 +55,20 @@ RUN echo 'Start!' \
     nginx \
     # supervisor to run multiple server per container
     supervisor \
-    # cleaning up install
+    echo "-> Cleaning installation" \
     && sudo apt-get clean \
     && sudo rm -rf /var/lib/apt/lists/* \
-    # remove default nginx site
+    echo "-> Remove nginx default site" \
     sudo rm /etc/nginx/sites-enabled/default \
-    # re-build
+    echo "-> Rebuilding bench" \
     && bench build \
     && cp -r /home/$systemUser/$benchFolderName/sites /home/$systemUser/$benchFolderName/built_sites
 
-COPY --chown=$systemUser /railway/railway-cmd.sh /home/$systemUser/$benchFolderName/railway-cmd.sh
+COPY --chown=$systemUser /railway/railway-setup.sh /home/$systemUser/$benchFolderName/railway-setup.sh
+COPY --chown=$systemUser /railway/railway-entrypoint.sh /usr/local/bin/railway-entrypoint.sh
 COPY --chown=$systemUser /railway/railway-cmd.sh /usr/local/bin/railway-cmd.sh
+
+ENTRYPOINT ["railway-entrypoint.sh"]
 CMD ["railway-cmd.sh"]
 
 EXPOSE 80
