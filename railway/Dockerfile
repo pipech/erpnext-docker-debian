@@ -40,7 +40,7 @@ COPY --from=builder --chown=$systemUser /home/$systemUser/$benchFolderName /home
 COPY /railway/temp_nginx.conf /home/$systemUser/temp_nginx.conf
 COPY /railway/temp_supervisor.conf /home/$systemUser/temp_supervisor.conf
 
-USER $systemUser
+USER root
 WORKDIR /home/$systemUser/$benchFolderName
 
 # [fix] "debconf: unable to initialize frontend: Dialog"
@@ -49,20 +49,20 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN echo "-> Install nginx & supervisor" \
     # apt-get update
-    && sudo apt-get update \
-    && sudo apt-get install -y \
+    && apt-get update \
+    && apt-get install -y \
     # nginx for serving files
     nginx \
     # supervisor to run multiple server per container
     supervisor \
     && echo "-> Cleaning installation" \
-    && sudo apt-get clean \
-    && sudo rm -rf /var/lib/apt/lists/* \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
     && echo "-> Remove nginx default site" \
-    && sudo rm /etc/nginx/sites-enabled/default \
+    && rm /etc/nginx/sites-enabled/default \
     && echo "-> Rebuilding bench" \
-    && bench build \
-    && cp -r /home/$systemUser/$benchFolderName/sites /home/$systemUser/$benchFolderName/built_sites
+    && su $systemUser -c "bench build" \
+    && su $systemUser -c "cp -r /home/$systemUser/$benchFolderName/sites /home/$systemUser/$benchFolderName/built_sites"
 
 COPY --chown=$systemUser --chmod=0755 /railway/railway-setup.sh /home/$systemUser/$benchFolderName/railway-setup.sh
 COPY --chown=$systemUser --chmod=0755 /railway/railway-entrypoint.sh /usr/local/bin/railway-entrypoint.sh

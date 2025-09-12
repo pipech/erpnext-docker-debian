@@ -2,7 +2,7 @@
 set -e
 
 echo "-> Set ownership of sites folder"
-sudo chown frappe:frappe /home/frappe/bench/sites
+chown frappe:frappe /home/frappe/bench/sites
 
 echo "-> Linking assets"
 ln -sf /home/frappe/bench/built_sites/assets /home/frappe/bench/sites/assets
