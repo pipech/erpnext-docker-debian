@@ -1,8 +1,10 @@
-# :whale: ERPNext on Docker
+# :whale: ERPNext on Docker 
 
 ![push-docker](https://github.com/pipech/erpnext-docker-debian/actions/workflows/push-docker.yml/badge.svg)
 
 **This repository prioritizes stability, repeatability and simplicity, and is not designed as the ideal approach for a production environment.**
+
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/gfm6Se?referralCode=0XIWba&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Problem
 

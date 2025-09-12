@@ -38,7 +38,7 @@ ENV \
 # MariaDB config
 COPY ./mariadb.cnf /home/$systemUser/mariadb.cnf
 # image entrypoint
-COPY --chown=1000:1000 entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY --chown=1000:1000 ./entrypoint.sh /usr/local/bin/entrypoint.sh
 
 # set entrypoint permission
 ## prevent: docker Error response from daemon OCI runtime create failed starting container process caused "permission denied" unknown
