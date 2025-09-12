@@ -16,7 +16,7 @@ RUN echo "-> Start builder" \
     && rm -rf /home/$systemUser/$benchFolderName/sites/site1.local \
     ### install your custom apps here
     # && bench get-app https://github.com/your-repo/custom_app
-    echo "-> Builder done!"
+    && echo "-> Builder done!"
 
 
 # ------------------------------------------
@@ -55,12 +55,12 @@ RUN echo "-> Install nginx & supervisor" \
     nginx \
     # supervisor to run multiple server per container
     supervisor \
-    echo "-> Cleaning installation" \
+    && echo "-> Cleaning installation" \
     && sudo apt-get clean \
     && sudo rm -rf /var/lib/apt/lists/* \
-    echo "-> Remove nginx default site" \
-    sudo rm /etc/nginx/sites-enabled/default \
-    echo "-> Rebuilding bench" \
+    && echo "-> Remove nginx default site" \
+    && sudo rm /etc/nginx/sites-enabled/default \
+    && echo "-> Rebuilding bench" \
     && bench build \
     && cp -r /home/$systemUser/$benchFolderName/sites /home/$systemUser/$benchFolderName/built_sites
 
