@@ -63,10 +63,8 @@ RUN echo 'Start!' \
     && bench build \
     && cp -r /home/$systemUser/$benchFolderName/sites /home/$systemUser/$benchFolderName/built_sites
 
-USER root
+COPY --chown=$systemUser /railway/railway-cmd.sh /home/$systemUser/$benchFolderName/railway-cmd.sh
+COPY --chown=$systemUser /railway/railway-cmd.sh /usr/local/bin/railway-cmd.sh
+CMD ["railway-cmd.sh"]
 
-COPY /railway/docker-cmd.sh /usr/local/bin/docker-cmd.sh
-CMD ["docker-cmd.sh"]
-
-# nginx
 EXPOSE 80
