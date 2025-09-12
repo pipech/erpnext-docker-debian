@@ -5,8 +5,8 @@ echo "-> Set ownership of sites folder"
 sudo chown frappe:frappe /home/frappe/bench/sites
 
 echo "-> Linking assets"
-ln -s /home/frappe/bench/built_sites/assets /home/frappe/bench/sites/assets
-ln -s /home/frappe/bench/built_sites/apps.json /home/frappe/bench/sites/apps.json
-ln -s /home/frappe/bench/built_sites/apps.txt /home/frappe/bench/sites/apps.txt
+ln -sf /home/frappe/bench/built_sites/assets /home/frappe/bench/sites/assets
+ln -sf /home/frappe/bench/built_sites/apps.json /home/frappe/bench/sites/apps.json
+ln -sf /home/frappe/bench/built_sites/apps.txt /home/frappe/bench/sites/apps.txt
 
 exec "$@"
