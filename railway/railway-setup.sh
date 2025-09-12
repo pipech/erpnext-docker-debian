@@ -2,9 +2,6 @@
 set -e
 
 echo "-> Create empty common site config"
-sudo chown frappe:frappe /home/frappe/bench/sites
-
-echo "-> Create empty common site config"
 echo "{}" > /home/frappe/bench/sites/common_site_config.json
 
 echo "-> Create new site with ERPNext"
