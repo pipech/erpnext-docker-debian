@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+# -> Run entrypoint
+# somehow when specify custom cmd in railway,
+# it doesn't run entrypoint first, so we need to run it here.
+sudo /usr/local/bin/railway-entrypoint.sh
+
 echo "-> Create empty common site config"
 echo "{}" > /home/frappe/bench/sites/common_site_config.json
 
