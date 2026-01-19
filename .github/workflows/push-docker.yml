@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        app_branch: [version-14, version-15, version-16]
+        app_branch: [version-16]
     steps:
       - name: Generate action image action tag
         run: echo "IMAGE_ACTION_TAG=${{ env.IMAGE_REPO }}/${{ env.IMAGE_NAME }}:${{ github.actor_id }}" >> $GITHUB_ENV
