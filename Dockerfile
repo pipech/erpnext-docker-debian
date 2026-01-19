@@ -1,5 +1,5 @@
-FROM frappe/bench:v5.19.0
-# https://github.com/frappe/frappe_docker/blob/947fbae8bb051ec85ec2a817b2fa3fe2d9eea779/images/bench/Dockerfile
+FROM frappe/bench:v5.29.0
+# https://github.com/frappe/frappe_docker/blob/bc254c2b4ceb9d01dbdd598ace2053326120d27f/images/bench/Dockerfile
 # frappe/bench use debian:bookworm-slim as a base image
 # then it install dependencies for bench (python, nodejs)
 
@@ -14,18 +14,20 @@ ARG appBranch=version-15
 ###############################################
 # ENV 
 ###############################################
+# https://docs.frappe.io/framework/user/en/installation
 ENV \
     # [Note] frappe user has been set from frappe/bench image
     systemUser=frappe \
     # Dependencies version
-    # [Note] Frappe only support up to mariadb 10.8 (as of 2023-Nov)
-    # but 10.8 isn't lts version so I use 10.6 instead
-    mariadbVersion=10.6 \
+    # https://github.com/frappe/frappe_docker/blob/bc254c2b4ceb9d01dbdd598ace2053326120d27f/overrides/compose.mariadb.yaml#L11
+    # https://github.com/frappe/frappe_docker/blob/bc254c2b4ceb9d01dbdd598ace2053326120d27f/docs/02-setup/05-overrides.md?plain=1#L9-L13
+    mariadbVersion=11.8 \
     # Frappe Related
     benchPath=bench-repo \
     benchFolderName=bench \
     benchRepo="https://github.com/frappe/bench" \
     # [Note] Some how bench use v5.x as Master and Master didn't get the updates
+    # Updated: 2026-01-19, This is still the case, master branch is gone now, use v5.x instead
     # https://github.com/frappe/bench/pull/1270
     benchBranch=v5.x \
     frappeRepo="https://github.com/frappe/frappe" \
@@ -60,7 +62,7 @@ RUN sudo apt-get update \
     && sudo apt-get install -y -q apt-transport-https curl \
     && sudo mkdir -p /etc/apt/keyrings \
     && sudo curl -o /etc/apt/keyrings/mariadb-keyring.pgp "https://mariadb.org/mariadb_release_signing_key.pgp" \
-    && echo "deb [signed-by=/etc/apt/keyrings/mariadb-keyring.pgp] https://mirror.kku.ac.th/mariadb/repo/10.11/debian bookworm main" | sudo tee /etc/apt/sources.list.d/mariadb.list \
+    && echo "deb [signed-by=/etc/apt/keyrings/mariadb-keyring.pgp] https://mirror.kku.ac.th/mariadb/repo/${mariadbVersion}/debian bookworm main" | sudo tee /etc/apt/sources.list.d/mariadb.list \
     && sudo apt-get update \
     && sudo apt-get install -y -q \
     mariadb-server \
