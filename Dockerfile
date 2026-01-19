@@ -97,6 +97,8 @@ RUN sudo apt-get update \
     && sudo cp /home/$systemUser/mariadb.cnf /etc/mysql/mariadb.cnf \
     && sudo service mariadb start \
     && sudo mariadb --user="root" --password="${mysqlPass}" --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY '${mysqlPass}';" \
+    # start redis service
+    && sudo redis-server --port 11000 --daemonize yes \
     ###############################################
     # Init Bench
     ###############################################
