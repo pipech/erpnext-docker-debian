@@ -9,7 +9,7 @@ FROM frappe/bench:v5.29.0
 ARG adminPass=12345
 ARG mysqlPass=12345
 ARG pythonVersion=python3
-ARG appBranch=version-15
+ARG appBranch=version-16
 
 ###############################################
 # ENV 
