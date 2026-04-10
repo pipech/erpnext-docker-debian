@@ -86,6 +86,14 @@ RUN sudo apt-get update \
     && sudo apt-get install -y -q \
     nginx \
     ###############################################
+    # Install dependencies: Node.js 20
+    ###############################################
+    # Fetch and execute the NodeSource setup script for Node.js 20.x
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - \
+    && sudo apt-get install -y -q nodejs \
+    # Reinstall/update yarn to ensure compatibility with the new Node version
+    && sudo npm install -g yarn \
+    ###############################################
     # clean-up
     ###############################################
     && sudo apt-get autoremove --purge -y \
