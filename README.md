@@ -1,5 +1,7 @@
 # :whale: ERPNext on Docker 
 
+[![Deploy to Railyard](https://app.railyard.run/deploy/badge)](https://app.railyard.run/deploy?repo=https://github.com/pipech/erpnext-docker-debian)
+
 ![push-docker](https://github.com/pipech/erpnext-docker-debian/actions/workflows/push-docker.yml/badge.svg)
 
 **This repository prioritizes stability, repeatability and simplicity, and is not designed as the ideal approach for a production environment.**
